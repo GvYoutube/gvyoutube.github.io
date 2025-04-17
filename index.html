@@ -74,7 +74,6 @@
         // Initialize variables
         let clickCount = 0;
         const countdownText = document.getElementById("countdownText");
-        const audio = document.getElementById("bdayAudio");
         const cornerTexts = [
             document.getElementById("topLeftText"),
             document.getElementById("topRightText"),
@@ -114,12 +113,6 @@
 
                 // Remove click event listener
                 document.body.removeEventListener("click", handleClick);
-
-                //Plays audio
-                const audioElement = new Audio("bdaymusic.wav");
-                audioElement.loop = true; // Enable looping
-                audioElement.autoplay = true; // Enable autoplay
-                audioElement.play(); // Start playing the audio
             }
         }
 
