@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hmmmm...?</title>
+     <link id="favicon" rel="icon" href="favicon1.svg" type="image/svg+xml">
     <style>
         /* General styling */
         body {
@@ -73,6 +74,11 @@
     <audio id="bdayAudio" src="bdaymusic.wav" loop></audio>
 
     <script>
+        //init favicon change
+        function changeFavicon() {
+    const favicon = document.getElementById('favicon');
+    favicon.href = 'favicon2.svg';
+}
         // Initialize variables
         let clickCount = 0;
         const countdownText = document.getElementById("countdownText");
@@ -106,7 +112,9 @@
                 document.body.removeEventListener("click", arguments.callee);
             }
         });
-
+        // favicon change in JS 
+        // Call the function to change the favicon
+        changeFavicon();
         // Confetti animation
         function startConfetti() {
             const confettiSettings = { target: 'confettiCanvas' };
