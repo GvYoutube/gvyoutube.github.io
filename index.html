@@ -64,14 +64,12 @@
     <div id="countdownText" class="center-text">Click 5 times for a surprise...</div>
 
     <!-- Birthday wishes in corners -->
-    <div id="topLeftText" class="shaking-text top-left hidden">Happy Birthday, Van!</div>
+    <div id="topLeftText" class="shaking-text top-left hidden">Big Ol' 13!</div>
     <div id="topRightText" class="shaking-text top-right hidden">Wishing you a great year!</div>
     <div id="bottomLeftText" class="shaking-text bottom-left hidden">Cheers to your special day!</div>
     <div id="bottomRightText" class="shaking-text bottom-right hidden">Party Time!</div>
 
     <!-- Audio -->
-    <audio id="bdayAudio" src="/bdaymusic.wav" autoplay loop></audio>
-
     <script>
         // Initialize variables
         let clickCount = 0;
@@ -116,6 +114,12 @@
 
                 // Remove click event listener
                 document.body.removeEventListener("click", handleClick);
+
+                //Plays audio
+                const audioElement = new Audio("bdaymusic.wav");
+                audioElement.loop = true; // Enable looping
+                audioElement.autoplay = true; // Enable autoplay
+                audioElement.play(); // Start playing the audio
             }
         }
 
