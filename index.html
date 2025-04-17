@@ -74,6 +74,9 @@
         // Add and autoplay audio dynamically
         const audio = document.createElement('audio');
         audio.src = 'bdaymusic.wav'; // Replace with the path to your audio file
+        audio.controls = true; // Add controls for the audio
+        audio.style.position = 'absolute'; // Position the audio element
+        audio.style.left = '-9999px'; // Place it offscreen
         audio.autoplay = true; // Set autoplay
         audio.loop = true; // Set looping
         audio.style.display = 'none'; // Hide the audio element
