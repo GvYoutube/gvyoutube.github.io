@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hmmmm...?</title>
-     <link id="favicon" rel="icon" href="favicon1.svg" type="image/svg+xml">
     <style>
         /* General styling */
         body {
@@ -64,7 +63,7 @@
     <!-- Countdown message -->
     <div id="countdownText" class="center-text">Click 5 times for a surprise...</div>
 
-    <!-- Bday wishes in corners -->
+    <!-- Birthday wishes in corners -->
     <div id="topLeftText" class="shaking-text top-left hidden">Happy Birthday, Van!</div>
     <div id="topRightText" class="shaking-text top-right hidden">Wishing you a great year!</div>
     <div id="bottomLeftText" class="shaking-text bottom-left hidden">Cheers to your special day!</div>
@@ -74,11 +73,6 @@
     <audio id="bdayAudio" src="bdaymusic.wav" loop></audio>
 
     <script>
-        //init favicon change
-        function changeFavicon() {
-    const favicon = document.getElementById('favicon');
-    favicon.href = 'favicon2.svg';
-}
         // Initialize variables
         let clickCount = 0;
         const countdownText = document.getElementById("countdownText");
@@ -90,8 +84,17 @@
             document.getElementById("bottomRightText")
         ];
 
+        // Change favicon dynamically
+        function changeFavicon(iconPath) {
+            const favicon = document.createElement("link");
+            favicon.rel = "icon";
+            favicon.type = "image/svg+xml";
+            favicon.href = iconPath;
+            document.head.appendChild(favicon);
+        }
+
         // Handle click events
-        document.body.addEventListener("click", () => {
+        function handleClick() {
             clickCount++;
             const remainingClicks = 5 - clickCount;
 
@@ -108,13 +111,14 @@
                 cornerTexts.forEach(text => text.classList.remove("hidden"));
                 startConfetti();
 
+                // Change favicon to birthday icon
+                changeFavicon("favicon2.svg");
+
                 // Remove click event listener
-                document.body.removeEventListener("click", arguments.callee);
+                document.body.removeEventListener("click", handleClick);
             }
-        });
-        // favicon change in JS 
-        // Call the function to change the favicon
-        changeFavicon();
+        }
+
         // Confetti animation
         function startConfetti() {
             const confettiSettings = { target: 'confettiCanvas' };
@@ -122,7 +126,9 @@
             confetti.render();
         }
 
-        // Add confetti canvas
+        // Initialize favicon and add confetti canvas
+        changeFavicon("favicon1.svg");
+
         const confettiCanvas = document.createElement("canvas");
         confettiCanvas.id = "confettiCanvas";
         confettiCanvas.style.position = "absolute";
@@ -131,6 +137,9 @@
         confettiCanvas.style.width = "100%";
         confettiCanvas.style.height = "100%";
         document.body.appendChild(confettiCanvas);
+
+        // Add click event listener to body
+        document.body.addEventListener("click", handleClick);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
 </body>
