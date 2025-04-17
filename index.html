@@ -1,1 +1,49 @@
-<h1>9.5 magnitude is pretty big bro idk</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gooooooogol</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 100px;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .output {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gooooooogol</h1>
+    <input type="text" id="searchBox" placeholder="Type your query here...">
+    <button onclick="search()">Search</button>
+    <div class="output" id="output"></div>
+
+    <script>
+        function search() {
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            const output = document.getElementById('output');
+            
+            if (query.includes('how many dinosaurs are there')) {
+                output.textContent = "bro theres 0 like what the hell";
+            } else {
+                output.textContent = "sorry, i don't understand your question.";
+            }
+        }
+    </script>
+</body>
+</html>
