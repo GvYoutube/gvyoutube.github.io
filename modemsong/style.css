@@ -1,0 +1,91 @@
+body {
+        background-color: #0c0c0c;
+            color: #00ff41;
+                font-family: 'VT323', monospace;
+                    display: flex;
+                        justify-content: center;
+                            align-items: center;
+                                height: 100vh;
+                                    margin: 0;
+                                        overflow: hidden;
+                                            text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
+                                            }
+
+                                            #start-overlay {
+                                                position: fixed;
+                                                    top: 0;
+                                                        left: 0;
+                                                            width: 100%;
+                                                                height: 100%;
+                                                                    background-color: #0c0c0c;
+                                                                        display: flex;
+                                                                            justify-content: center;
+                                                                                align-items: center;
+                                                                                    z-index: 10;
+                                                                                        text-align: center;
+                                                                                        }
+
+                                                                                        #start-box {
+                                                                                            border: 2px solid #00ff41;
+                                                                                                padding: 2rem 4rem;
+                                                                                                    box-shadow: 0 0 15px #00ff41 inset;
+                                                                                                    }
+
+                                                                                                    h1 {
+                                                                                                        font-size: 3rem;
+                                                                                                            margin: 0;
+                                                                                                            }
+
+                                                                                                            h2 {
+                                                                                                                font-size: 2rem;
+                                                                                                                    margin: 0.5rem 0 1.5rem 0;
+                                                                                                                        color: #ffff00;
+                                                                                                                            text-shadow: 0 0 5px #ffff00;
+                                                                                                                            }
+
+                                                                                                                            #start-button {
+                                                                                                                                background-color: #00ff41;
+                                                                                                                                    color: #0c0c0c;
+                                                                                                                                        border: none;
+                                                                                                                                            font-family: 'VT323', monospace;
+                                                                                                                                                font-size: 1.5rem;
+                                                                                                                                                    padding: 0.5rem 1rem;
+                                                                                                                                                        cursor: pointer;
+                                                                                                                                                            text-shadow: none;
+                                                                                                                                                                animation: pulse 1.5s infinite;
+                                                                                                                                                                }
+
+                                                                                                                                                                @keyframes pulse {
+                                                                                                                                                                    0% {
+                                                                                                                                                                            transform: scale(1);
+                                                                                                                                                                                    box-shadow: 0 0 5px #00ff41;
+                                                                                                                                                                                        }
+                                                                                                                                                                                            50% {
+                                                                                                                                                                                                    transform: scale(1.05);
+                                                                                                                                                                                                            box-shadow: 0 0 15px #00ff41;
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                    100% {
+                                                                                                                                                                                                                            transform: scale(1);
+                                                                                                                                                                                                                                    box-shadow: 0 0 5px #00ff41;
+                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                        }
+
+
+                                                                                                                                                                                                                                        #animation-container {
+                                                                                                                                                                                                                                            font-size: 1rem;
+                                                                                                                                                                                                                                                text-align: center;
+                                                                                                                                                                                                                                                    width: 90%;
+                                                                                                                                                                                                                                                        white-space: pre-wrap;
+                                                                                                                                                                                                                                                            line-height: 1.2;
+                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                            .blink {
+                                                                                                                                                                                                                                                                animation: blink-animation 1s steps(2, start) infinite;
+                                                                                                                                                                                                                                                                }
+
+                                                                                                                                                                                                                                                                @keyframes blink-animation {
+                                                                                                                                                                                                                                                                    to {
+                                                                                                                                                                                                                                                                            visibility: hidden;
+                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                }
+}
