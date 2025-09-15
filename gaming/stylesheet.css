@@ -1,0 +1,30 @@
+/* Import a modern, angular font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+:root {
+  --primary-color: #00fffb; /* Neon cyan */
+  --secondary-color: #ff00ff; /* Neon magenta */
+  --dark-background: #121212;
+  --dark-surface: #1e1e1e;
+  --font-color: #f0f0f0;
+  --glitch-animation-duration: 0.5s;
+}
+
+body {
+  font-family: 'Orbitron', sans-serif;
+  background-color: var(--dark-background);
+  color: var(--font-color);
+  margin: 0;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--secondary-color);
+}
