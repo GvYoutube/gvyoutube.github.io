@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI vs AI Betting Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #232323; color: #f4f4f4; text-align: center; padding:40px; }
+    .container { background: #333; padding: 30px; border-radius: 10px; display: inline-block; }
+    button { padding: 10px 25px; margin:10px; border:none; border-radius:5px; font-size:18px; cursor:pointer; }
+    .team-btn { background:#18a2e2; color:white; }
+    .bet-btn {background:#44c768; color:white;}
+    .game-btn {background:#f3b434; color:white;}
+    .disabled { opacity: 0.5; cursor: not-allowed;}
+    #result { margin: 20px; font-size: 1.3em;}
+    #money { font-weight: bold; margin:15px; font-size:1.2em;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>AI vs AI Betting Game</h2>
+    <div id="money">Your money: $100</div>
+    <form id="betForm" onsubmit="event.preventDefault(); placeBet();">
+      <div>
+        <button type="button" class="team-btn" onclick="selectTeam('A')" id="btnA">Team A</button>
+        <button type="button" class="team-btn" onclick="selectTeam('B')" id="btnB">Team B</button>
+      </div>
+      <div style="margin:15px;">
+        Bet Amount: $ <input type="number" min="1" max="100" id="betAmount" value="10" style="width:80px;">
+      </div>
+      <div>
+        <button type="submit" class="bet-btn">Place Bet</button>
+      </div>
+    </form>
+
+    <div id="gameBox" style="margin-top:30px;">
+      <button class="game-btn" onclick="startGame();" id="startBtn" disabled>Start Game!</button>
+      <div id="result"></div>
+      <div id="stats"></div>
+    </div>
+  </div>
+  <script>
+    // STATE
+    let playerMoney = 100;
+    let selectedTeam = null;
+    let betAmount = 10;
+    let currentBetTeam = null;
+    let currentBetValue = 0;
+
+    let teamStrength = {
+      'A': 10,
+      'B': 10
+    };
+
+    // Select Team
+    function selectTeam(team) {
+      selectedTeam = team;
+      document.getElementById("btnA").style.background = team === 'A' ? "#86c9ff" : "#18a2e2";
+      document.getElementById("btnB").style.background = team === 'B' ? "#86c9ff" : "#18a2e2";
+    }
+
+    // Place Bet
+    function placeBet() {
+      betAmount = parseInt(document.getElementById("betAmount").value);
+      if (!selectedTeam) {
+        alert("Select a team first!");
+        return;
+      }
+      if (isNaN(betAmount) || betAmount < 1) {
+        alert("Enter a valid bet amount.");
+        return;
+      }
+      if (betAmount > playerMoney) {
+        alert("Not enough money!");
+        return;
+      }
+      currentBetTeam = selectedTeam;
+      currentBetValue = betAmount;
+      // Increase the strength of the chosen team based on bet
+      teamStrength[selectedTeam] += Math.floor(betAmount / 5); // Each $5 adds 1 strength
+      // Deduct money
+      playerMoney -= betAmount;
+      updateMoney();
+      // Update bet buttons
+      document.getElementById("betForm").querySelectorAll("button, input").forEach(ele => ele.disabled = true);
+      document.getElementById("startBtn").disabled = false;
+      document.getElementById("result").textContent = `Bet placed on Team ${selectedTeam} for $${betAmount}. Start the game!`;
+    }
+
+    function updateMoney() {
+      document.getElementById("money").textContent = `Your money: $${playerMoney}`;
+    }
+
+    // Start Game Logic: simulated round-robin battle
+    function startGame() {
+      document.getElementById("startBtn").disabled = true;
+      let rounds = 10;
+      let aScore = 0, bScore = 0;
+      let aStrength = teamStrength['A'];
+      let bStrength = teamStrength['B'];
+      let battleStats = '';
+
+      for (let i = 1; i <= rounds; i++) {
+        let aRoll = Math.floor(Math.random() * aStrength) + 1;
+        let bRoll = Math.floor(Math.random() * bStrength) + 1;
+        battleStats += `Round ${i}: Team A(${aRoll}) vs Team B(${bRoll}) &mdash; `;
+        if (aRoll > bRoll) {
+          aScore++;
+          battleStats += '<b>A wins</b><br>';
+        } else if (bRoll > aRoll) {
+          bScore++;
+          battleStats += '<b>B wins</b><br>';
+        } else {
+          battleStats += '<em>Tie</em><br>';
+        }
+      }
+      let winner = aScore > bScore ? 'A' : (bScore > aScore ? 'B' : 'Tie');
+      let resStr = '';
+      if (winner === 'Tie') {
+        resStr = "It's a tie! Your bet is returned.";
+        playerMoney += currentBetValue; // refund
+      } else if (winner === currentBetTeam) {
+        let winAmt = currentBetValue * 2;
+        resStr = `Congratulations! Team ${winner} wins. You earn $${winAmt}.`;
+        playerMoney += winAmt;
+      } else {
+        resStr = `Team ${winner} wins. You lost your bet.`;
+      }
+      updateMoney();
+      document.getElementById("result").innerHTML = resStr;
+      document.getElementById("stats").innerHTML = `Team A: ${aScore} | Team B: ${bScore}<br>`+battleStats;
+
+      // Reset for next round
+      teamStrength['A'] = 10;
+      teamStrength['B'] = 10;
+      selectedTeam = null;
+      currentBetTeam = null;
+      currentBetValue = 0;
+      document.getElementById("btnA").style.background = "#18a2e2";
+      document.getElementById("btnB").style.background = "#18a2e2";
+      document.getElementById("betAmount").value = Math.min(10, playerMoney);
+      // Reactivate form if player still has money
+      if (playerMoney > 0) {
+        document.getElementById("betForm").querySelectorAll("button, input").forEach(ele => ele.disabled = false);
+      } else {
+        document.getElementById("result").innerHTML += "<br><b>Game over! You ran out of money.</b>";
+      }
+    }
+  </script>
+</body>
+</html>
