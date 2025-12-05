@@ -1,0 +1,43 @@
+name: "Join our Team!"
+about: "JoinRequest"
+title: "Request to join the team for GvYoutube Gaming."
+labels: "join"
+body:
+  - type: dropdown
+    id: usage
+    attributes:
+      label: Activity Level
+      description: |
+        How do you see your activity level to be?
+        - **minimal** 
+        - **medium** 
+        - **very** 
+
+        If you have selected **minimal**, please explain why in **Additional Information**.
+      options:
+      - minimal
+      - medium
+      - very
+  - type: textarea
+    id: extrainfo
+    attributes:
+      label: Additional Information
+      description: Anything else that we need to know?
+      value:
+  - type: textarea
+    id: work
+    attributes:
+      label: Email Address
+      description: |
+        Please provide your email address so we can share documents with you via Google Docs.
+      value:
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: Statement
+      description: By submitting this request, you agree to the following statements...
+      options:
+        - label: I understand I may be rejected.
+          required: true
+        - label: I understand that I cannot leak any confedential documents about GvYoutube Gaming.
+          required: true
