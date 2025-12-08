@@ -31,9 +31,13 @@ body:
       description: |
         Please provide your email address so we can share documents with you via Google Docs.
   - type: dropdown
+    id: adminapply
     attributes:
-        label: 
-      value:
+        label: Are you appliying to be an admin?
+        description: If so, please add a 15 page essay in additional information.
+      options:
+      - Yes
+      - No.
   - type: checkboxes
     id: agreement
     attributes:
