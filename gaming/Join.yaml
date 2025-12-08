@@ -28,8 +28,7 @@ body:
     id: work
     attributes:
       label: Email Address
-      description: |
-        Please provide your email address so we can share documents with you via Google Docs.
+      description: Please provide your email address so we can share documents with you via Google Docs.
   - type: dropdown
     id: adminapply
     attributes:
