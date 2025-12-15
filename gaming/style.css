@@ -11,6 +11,11 @@
   --card-bg: #f7f7f7;
   --focus-ring: rgba(21,156,228,0.3);
   --focus-border: rgba(21,156,228,0.6);
+  --gap: 0.6rem;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
@@ -22,26 +27,32 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-bottom: 2rem;
 }
 
 a {
   color: var(--primary-color);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease, transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 a:hover {
   color: var(--secondary-color);
 }
 
-/* Fixed announcement selector */
+/* Announcement */
 #announcementNotice {
   color: red;
-  margin: 0.5rem 1rem;
-  font-size: 1.1rem;
+  margin: 0.75rem 1rem 0.25rem;
+  font-size: 1.05rem;
 }
 
-/* Basic hero */
+.announcement-text {
+  margin: 0 1rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+/* Hero */
 .hero-section {
   padding: 1.25rem 1rem;
   text-align: center;
@@ -52,65 +63,65 @@ a:hover {
   letter-spacing: 0.06em;
 }
 
-/* Games section and horizontal-scrolling list */
+/* Games section (vertical list: one on top of each other) */
 .games-section {
   padding: 1rem;
 }
 
 .games-list {
-  display: flex;
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding: 0.75rem;
-  -webkit-overflow-scrolling: touch; /* iOS momentum */
-  scroll-behavior: smooth;
+  display: block; /* vertical flow */
   background: var(--muted-bg);
   border-radius: 8px;
+  padding: 0.5rem;
   margin-top: 0.5rem;
 }
 
-/* Each link is a non-shrinking “card” */
+/* Each link becomes a full-width "card" stacked vertically */
 .games-list a {
-  flex: 0 0 auto;
-  display: inline-block;
-  padding: 0.5rem 0.9rem;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.9rem 1rem;
+  margin-bottom: var(--gap);
   background: var(--card-bg);
   color: var(--font-color);
-  text-decoration: none;
   border-radius: 6px;
   border: 1px solid rgba(0,0,0,0.06);
-  white-space: nowrap; /* keep link text on one line */
-  transition: transform 120ms ease, box-shadow 120ms ease;
-  font-size: 0.95rem;
+  white-space: normal; /* allow wrapping */
+  font-size: 1rem;
 }
 
-/* hover / focus visual */
+/* Last item spacing */
+.games-list a:last-child {
+  margin-bottom: 0;
+}
+
+/* Hover / focus */
 .games-list a:hover,
 .games-list a:focus {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
   outline: none;
 }
 
-/* Make focus visible for keyboard users */
+/* Keyboard focus visible */
 .games-list a:focus-visible {
   outline: 3px solid var(--focus-ring);
   border-color: var(--focus-border);
 }
 
-/* Scrollbar styling (WebKit) */
-.games-list::-webkit-scrollbar {
-  height: 8px;
-}
-.games-list::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.12);
-  border-radius: 999px;
-}
-
-/* Small screens: slightly larger tappable targets */
+/* Make tap targets larger on small screens */
 @media (max-width: 480px) {
   .games-list a {
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
+    padding: 1.1rem 1rem;
+    font-size: 1.05rem;
+  }
+}
+
+/* A tiny utility to keep main centered on wide screens */
+@media (min-width: 900px) {
+  main {
+    max-width: 900px;
+    margin: 0 auto;
   }
 }
