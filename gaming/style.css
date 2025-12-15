@@ -2,12 +2,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
 :root {
-  --primary-color: #ff0000; /* Neon cyan */
-  --secondary-color: #00eeff; /* Neon magenta */
-  --dark-background: rgb(255, 255, 255);
+  --primary-color: #ff0000;
+  --secondary-color: #00eeff;
+  --dark-background: #ffffff;
   --dark-surface: #1e1e1e;
   --font-color: #000000;
-  --glitch-animation-duration: 0.5s;
+  --muted-bg: rgba(0,0,0,0.03);
+  --card-bg: #f7f7f7;
+  --focus-ring: rgba(21,156,228,0.3);
+  --focus-border: rgba(21,156,228,0.6);
 }
 
 body {
@@ -17,6 +20,8 @@ body {
   margin: 0;
   line-height: 1.6;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -28,6 +33,84 @@ a {
 a:hover {
   color: var(--secondary-color);
 }
-announcementNotice {
-  color: red
+
+/* Fixed announcement selector */
+#announcementNotice {
+  color: red;
+  margin: 0.5rem 1rem;
+  font-size: 1.1rem;
+}
+
+/* Basic hero */
+.hero-section {
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+.hero-title {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+}
+
+/* Games section and horizontal-scrolling list */
+.games-section {
+  padding: 1rem;
+}
+
+.games-list {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.75rem;
+  -webkit-overflow-scrolling: touch; /* iOS momentum */
+  scroll-behavior: smooth;
+  background: var(--muted-bg);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+/* Each link is a non-shrinking “card” */
+.games-list a {
+  flex: 0 0 auto;
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  background: var(--card-bg);
+  color: var(--font-color);
+  text-decoration: none;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.06);
+  white-space: nowrap; /* keep link text on one line */
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  font-size: 0.95rem;
+}
+
+/* hover / focus visual */
+.games-list a:hover,
+.games-list a:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  outline: none;
+}
+
+/* Make focus visible for keyboard users */
+.games-list a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  border-color: var(--focus-border);
+}
+
+/* Scrollbar styling (WebKit) */
+.games-list::-webkit-scrollbar {
+  height: 8px;
+}
+.games-list::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12);
+  border-radius: 999px;
+}
+
+/* Small screens: slightly larger tappable targets */
+@media (max-width: 480px) {
+  .games-list a {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
 }
