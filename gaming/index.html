@@ -1,44 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student and Parent Sign In</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <!-- Icon for the website -->
-    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link rel="icon" href="favicon.png" type="image/x-icon" />
 </head>
 <body class="animated-background">
-    <h1 id="announcementNotice">Announcement!:</h1> <a href="https://sites.google.com/lsr7.net/free-games/">Math Games</a> is officially merging with GvYoutube Gaming!
-    <!-- Hero Section -->
+    <h1 id="announcementNotice">Announcement!:</h1>
+    <a href="https://sites.google.com/lsr7.net/free-games/">Math Games</a> is officially merging with GvYoutube Gaming!
+
+    <!-- Mobile-size check -->
     <script>
-        // we are checking if the screen is mobile-sized if yes then show alert
+        // we are checking if the screen is mobile-sized; if yes then show alert
         if (window.innerWidth < 1024) {
-            alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or just have a small screen. We reccomend playing on a PC/Chromebook. If your window is small, please resize it for best experience.');
+            alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or just have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for best experience.');
         }
     </script>
+
     <main>
         <section class="hero-section">
             <h1 class="hero-title">gvyoutube gaming</h1>
         </section>
-        <section>
-            <h1> CURRENT GAMES/WEBSITES:</h1>
-            <a href="/gaming/internal/games/ADOFI.html">A Dance of Fire and Ice</a></br>
-            <a href="/gaming/internal/games/BarryHasASecret.html">Barry Has A Secret</a></br>
-            <a href="/gaming/internal/games/CarCrash3.html">Car Crash 3</a></br>
-            <a href="/gaming/internal/games/BankRobbery2.html">Bank Robbery 2</a></br>
-            <a href="/gaming/internal/games/CrazyCattle3D.html">Crazy Cattle 3D</a></br>
-            <a href="/gaming/internal/games/DedZed.html">Ded Zed</a></br>
-            <a href="/gaming/internal/games/Unblocker.html">Unbloxker</a></br>
-            <a href="/gaming/internal/games/AIBet.html">AI Betting Game (Made by GH Copilot)</a></br>
-            <a href="/gaming/internal/games/TheDeepestSword.html">Deepest Sword</a></br>
-            <a href="/gaming/internal/games/RopePolice.html">Rope Police</a></br>
-            <a href="/gaming/internal/games/PitFall.html">Pit Fall</a></br>
-            <a href="/gaming/internal/games/Amongus.html">Among Us</a></br>
-            <a href="/gaming/internal/games/Granny2.html">Granny 2</a></br>
-            <a href="/gaming/internal/games/Hobo.html">Hobo</a></br>
 
+        <section class="games-section" aria-labelledby="gamesHeading">
+            <h2 id="gamesHeading">CURRENT GAMES / WEBSITES:</h2>
+
+            <!-- Horizontal scrollable list -->
+            <div class="games-list" role="list" aria-label="Current games and websites">
+                <a role="listitem" href="/gaming/internal/games/ADOFI.html">A Dance of Fire and Ice</a>
+                <a role="listitem" href="/gaming/internal/games/BarryHasASecret.html">Barry Has A Secret</a>
+                <a role="listitem" href="/gaming/internal/games/CarCrash3.html">Car Crash 3</a>
+                <a role="listitem" href="/gaming/internal/games/BankRobbery2.html">Bank Robbery 2</a>
+                <a role="listitem" href="/gaming/internal/games/CrazyCattle3D.html">Crazy Cattle 3D</a>
+                <a role="listitem" href="/gaming/internal/games/DedZed.html">Ded Zed</a>
+                <a role="listitem" href="/gaming/internal/games/Unblocker.html">Unbloxker</a>
+                <a role="listitem" href="/gaming/internal/games/AIBet.html">AI Betting Game (Made by GH Copilot)</a>
+                <a role="listitem" href="/gaming/internal/games/TheDeepestSword.html">Deepest Sword</a>
+                <a role="listitem" href="/gaming/internal/games/RopePolice.html">Rope Police</a>
+                <a role="listitem" href="/gaming/internal/games/PitFall.html">Pit Fall</a>
+                <a role="listitem" href="/gaming/internal/games/Amongus.html">Among Us</a>
+                <a role="listitem" href="/gaming/internal/games/Granny2.html">Granny 2</a>
+                <a role="listitem" href="/gaming/internal/games/Hobo.html">Hobo</a>
+            </div>
         </section>
-
+    </main>
 </body>
 </html>
