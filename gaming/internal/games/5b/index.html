@@ -5,27 +5,27 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-	<script src="ruffle.js"></script> <!-- Using local ruffle.js -->
+	<script src="ruffle.js"></script>
 </head>
 <body>
 <div id="center">
 	<script>
 	window.RufflePlayer = window.RufflePlayer || {};
 	window.RufflePlayer.config = {
+		"publicPath": "https://gvyoutube.codeberg.page/gaming/internal/games/5b/", // Base path for resources (wasm file)
 		"allowScriptAccess": true,
-		"base": "https://gvyoutube.codeberg.page/gaming/internal/games/5b/",
 		"autoplay": "auto"
 	};
 
-	// Initialize the Ruffle player
+	// Initialize Ruffle player
 	window.addEventListener("load", () => {
 		try {
-			const ruffle = window.RufflePlayer.newest(); // Use the newest Ruffle player
+			const ruffle = window.RufflePlayer.newest(); // Use the latest Ruffle version
 			const player = ruffle.createPlayer(); // Create a new Ruffle player instance
 			const container = document.getElementById("center");
 			container.appendChild(player);
 
-			// Load the SWF file
+			// Load your SWF file
 			player.load("c.swf?path=5b.swf");
 		} catch (error) {
 			console.error("Error initializing Ruffle player:", error);
