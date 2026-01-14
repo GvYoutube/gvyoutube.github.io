@@ -15,6 +15,7 @@
 		"allowScriptAccess": true,
 		"base": "https://gvyoutube.codeberg.page/gaming/internal/games/5b/",
 		"autoplay": "auto",
+		"logLevel": "debug" // Enable debug mode
 	};
 	</script>
 	<script>
@@ -24,7 +25,7 @@
 	        const player = ruffle.createPlayer();
 	        const container = document.getElementById("center");
 	        container.appendChild(player);
-	        player.load("c.swf");
+	        player.load("c.swf?path=5b.swf"); // Include required query parameter
 	    });
 	</script>
 	<p>
