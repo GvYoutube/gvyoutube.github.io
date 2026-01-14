@@ -5,23 +5,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-	<style>
-		#debug-log {
-			display: none; /* Hidden initially */
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			height: 200px;
-			overflow-y: auto;
-			background-color: black;
-			color: white;
-			font-family: monospace;
-			padding: 10px;
-			z-index: 1000;
-		}
-	</style>
+	<script src="ruffle.js"></script> <!-- Using local ruffle.js -->
 </head>
 <body>
 <div id="center">
@@ -33,51 +17,18 @@
 		"autoplay": "auto"
 	};
 
-	// Custom debug logger
-	function logToPage(message) {
-		const logContainer = document.getElementById('debug-log');
-		logContainer.style.display = 'block'; // Show debug log automatically
-		const logEntry = document.createElement('div');
-		logEntry.textContent = message;
-		logContainer.appendChild(logEntry);
-
-		// Scroll to the bottom for latest logs
-		logContainer.scrollTop = logContainer.scrollHeight;
-	}
-
-	// SWF Player initialization with logging
-	window.addEventListener("load", (event) => {
+	// Initialize the Ruffle player
+	window.addEventListener("load", () => {
 		try {
-			const ruffle = window.RufflePlayer.newest();
-			const player = ruffle.createPlayer();
+			const ruffle = window.RufflePlayer.newest(); // Use the newest Ruffle player
+			const player = ruffle.createPlayer(); // Create a new Ruffle player instance
 			const container = document.getElementById("center");
 			container.appendChild(player);
 
-			logToPage("INFO: Initializing Ruffle player...");
-			player.load("c.swf?path=5b.swf")
-				.then(() => {
-					logToPage("SUCCESS: SWF loaded successfully.");
-				})
-				.catch(error => {
-					logToPage(`ERROR: Failed to load SWF. Error: ${error}`);
-				});
-
+			// Load the SWF file
+			player.load("c.swf?path=5b.swf");
 		} catch (error) {
-			logToPage(`CRITICAL ERROR: ${error}`);
-		}
-
-		logToPage("INFO: Debug overlay enabled.");
-	});
-
-	// Activate debug log viewer using the key combination
-	let keyLog = [];
-	const debugCombo = "d+e+b+u+g".split("+");
-	document.addEventListener("keydown", (e) => {
-		keyLog.push(e.key.toLowerCase());
-		if (keyLog.slice(-debugCombo.length).join("") === debugCombo.join("")) {
-			const logContainer = document.getElementById("debug-log");
-			logContainer.style.display = logContainer.style.display === "none" ? "block" : "none";
-			console.log("Debug log toggled by key combo.");
+			console.error("Error initializing Ruffle player:", error);
 		}
 	});
 	</script>
@@ -86,8 +37,5 @@
 		<a href="http://htwins.net">HTwins.net</a>
 	</p>
 </div>
-
-<!-- Debug log display -->
-<div id="debug-log"></div>
 </body>
 </html>
