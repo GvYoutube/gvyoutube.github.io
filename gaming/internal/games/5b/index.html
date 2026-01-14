@@ -1,36 +1,36 @@
 <html>
 <head>
-	<title>Student and Parent Sign In</title>
+	<title>5b - Battle for Dream Island</title>
 	<meta name="description" content="A puzzle platformer in the world of Battle for Dream Island.">
 	<meta charset="utf-8">
-  <link rel="stylesheet" href="style.css" type="text/css">
-	<link rel="shortcut icon" type="image/x-icon" href="/pages/gaming/favicon.png">
-<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+	<link rel="stylesheet" href="style.css" type="text/css">
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
 <div id="center">
 	<script>
-window.RufflePlayer = window.RufflePlayer || {};
-window.RufflePlayer.config = {
-"allowScriptAccess": true,
-"base": "https://theghostboi64.github.io/bfdia5b/",
-"autoplay": "auto",	
+	window.RufflePlayer = window.RufflePlayer || {};
+	window.RufflePlayer.config = {
+		"allowScriptAccess": true,
+		"base": "https://gvyoutube.codeberg.page/gaming/internal/games/5b/",
+		"autoplay": "auto",
 	};
 	</script>
-<script>
-    window.RufflePlayer = window.RufflePlayer || {};
-    window.addEventListener("load", (event) => {
-        const ruffle = window.RufflePlayer.newest();
-        const player = ruffle.createPlayer();
-        const container = document.getElementById("center");
-        container.appendChild(player);
-        player.load("c.swf?path=5b.swf");
-    });
-</script>
-<p>
-	This game is part of <a href="http://battlefordreamisland.com">Battle for Dream Island</a>.<br>
-	<a href="http://htwins.net">HTwins.net</a>
-</p>
+	<script>
+	    window.RufflePlayer = window.RufflePlayer || {};
+	    window.addEventListener("load", (event) => {
+	        const ruffle = window.RufflePlayer.newest();
+	        const player = ruffle.createPlayer();
+	        const container = document.getElementById("center");
+	        container.appendChild(player);
+	        player.load("c.swf");
+	    });
+	</script>
+	<p>
+		This game is part of <a href="http://battlefordreamisland.com">Battle for Dream Island</a>.<br>
+		<a href="http://htwins.net">HTwins.net</a>
+	</p>
 </div>
 </body>
 </html>
