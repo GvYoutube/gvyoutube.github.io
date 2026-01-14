@@ -5,37 +5,55 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-	<script src="ruffle.js"></script>
+	<script src="ruffle.js"></script> <!-- Local ruffle.js -->
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			background-color: black;
+		}
+
+		#center {
+			width: 100vw; /* Full viewport width */
+			height: 100vh; /* Full viewport height */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		ruffle-player {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
 </head>
 <body>
 <div id="center">
-	<script>
+	<!-- The Ruffle Player container -->
+</div>
+<script>
 	window.RufflePlayer = window.RufflePlayer || {};
 	window.RufflePlayer.config = {
-		"publicPath": "https://gvyoutube.codeberg.page/gaming/internal/games/5b/", // Base path for resources (wasm file)
 		"allowScriptAccess": true,
-		"autoplay": "auto"
+		"autoplay": "auto",
+		"publicPath": "https://gvyoutube.codeberg.page/gaming/internal/games/5b/" // Adjust to your wasm location
 	};
 
-	// Initialize Ruffle player
+	// Initialize Ruffle
 	window.addEventListener("load", () => {
 		try {
-			const ruffle = window.RufflePlayer.newest(); // Use the latest Ruffle version
-			const player = ruffle.createPlayer(); // Create a new Ruffle player instance
+			const ruffle = window.RufflePlayer.newest(); // Get the newest Ruffle build
+			const player = ruffle.createPlayer(); // Create the player
 			const container = document.getElementById("center");
-			container.appendChild(player);
+			container.appendChild(player); // Append the player to the container
 
-			// Load your SWF file
-			player.load("c.swf?path=5b.swf");
+			// Load the SWF file
+			player.load("c.swf");
 		} catch (error) {
-			console.error("Error initializing Ruffle player:", error);
+			console.error("Error initializing Ruffle:", error);
 		}
 	});
-	</script>
-	<p>
-		This game is part of <a href="http://battlefordreamisland.com">Battle for Dream Island</a>.<br>
-		<a href="http://htwins.net">HTwins.net</a>
-	</p>
-</div>
+</script>
 </body>
 </html>
