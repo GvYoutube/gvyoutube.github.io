@@ -6,32 +6,95 @@
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+	<style>
+		#debug-log {
+			display: none; /* Hidden by default */
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 200px;
+			overflow-y: auto;
+			background: rgba(0, 0, 0, 0.8);
+			color: white;
+			font-family: monospace;
+			padding: 10px;
+			z-index: 9999;
+		}
+	</style>
 </head>
 <body>
 <div id="center">
 	<script>
-	window.RufflePlayer = window.RufflePlayer || {};
-	window.RufflePlayer.config = {
-		"allowScriptAccess": true,
-		"base": "https://gvyoutube.codeberg.page/gaming/internal/games/5b/",
-		"autoplay": "auto",
-		"logLevel": "debug" // Enable debug mode
-	};
-	</script>
-	<script>
-	    window.RufflePlayer = window.RufflePlayer || {};
-	    window.addEventListener("load", (event) => {
-	        const ruffle = window.RufflePlayer.newest();
-	        const player = ruffle.createPlayer();
-	        const container = document.getElementById("center");
-	        container.appendChild(player);
-	        player.load("c.swf?path=5b.swf"); // Include required query parameter
-	    });
+		window.RufflePlayer = window.RufflePlayer || {};
+		window.RufflePlayer.config = {
+			"allowScriptAccess": true,
+			"base": "https://gvyoutube.codeberg.page/gaming/internal/games/5b/",
+			"autoplay": "auto",
+			"logLevel": "debug" // Enable debug logs
+		};
+
+		// Listen for a specific key combo: "d+e+b+u+g"
+		let keyLog = [];
+		const debugSequence = "d+e+b+u+g";
+		window.addEventListener("keydown", function(event) {
+			keyLog.push(event.key.toLowerCase());
+			keyLog = keyLog.slice(-debugSequence.length); // Keep the last n keys
+			if (keyLog.join("+") === debugSequence) {
+				toggleDebug();
+			}
+		});
+
+		// Function to toggle debug logs visibility
+		function toggleDebug() {
+			const debugLog = document.getElementById("debug-log");
+			if (debugLog.style.display === "none") {
+				debugLog.style.display = "block";
+			} else {
+				debugLog.style.display = "none";
+			}
+		}
+
+		// Wrapper for debug logging directly on the page
+		function logToPage(message) {
+			const debugLog = document.getElementById("debug-log");
+			debugLog.style.display = "block";
+			debugLog.textContent += message + "\n";
+			debugLog.scrollTop = debugLog.scrollHeight; // Auto-scroll to the bottom
+		}
+
+		// Ruffle setup and error handling with logs
+		window.addEventListener("load", (event) => {
+			const ruffle = window.RufflePlayer.newest();
+			const player = ruffle.createPlayer();
+			const container = document.getElementById("center");
+
+			// Attach player and load SWF file
+			container.appendChild(player);
+
+			try {
+				player.load("c.swf?path=5b.swf");
+				logToPage("INFO: SWF file 'c.swf?path=5b.swf' loading started...");
+			} catch (error) {
+				logToPage(`ERROR: Failed to load SWF file. Details: ${error}`);
+			}
+
+			// Log debug messages if supported
+			if (ruffle && typeof ruffle.on === "function") {
+				ruffle.on("log", (message) => logToPage(`DEBUG: ${message}`));
+				ruffle.on("error", (error) => logToPage(`ERROR: ${error}`));
+			} else {
+				logToPage("WARNING: Ruffle logging functions not available.");
+			}
+		});
 	</script>
 	<p>
 		This game is part of <a href="http://battlefordreamisland.com">Battle for Dream Island</a>.<br>
 		<a href="http://htwins.net">HTwins.net</a>
 	</p>
 </div>
+
+<!-- Debug log div -->
+<div id="debug-log"></div>
 </body>
 </html>
