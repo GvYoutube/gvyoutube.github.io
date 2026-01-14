@@ -1,33 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BFDIA 5b</title>
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+	<title>5b - Battle for Dream Island</title>
+	<meta name="description" content="A puzzle platformer in the world of Battle for Dream Island.">
+	<meta charset="utf-8">
+  <link rel="stylesheet" href="style.css" type="text/css">
+	<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
-    <h1>Play BFDIA 5b</h1>
-    <p>If the game doesn't load, make sure your browser supports WebAssembly and has JavaScript enabled.</p>
-
-    <!-- Ruffle will replace this <object> tag with the SWF content -->
-    <object 
-        data="bfdia5b.swf" 
-        type="application/x-shockwave-flash" 
-        width="800" 
-        height="600">
-        <param name="movie" value="bfdia5b.swf">
-        <p>Your browser does not support Flash content.</p>
-    </object>
-
-    <!-- Add Ruffle container for user experience -->
-    <script>
-        window.RufflePlayer = window.RufflePlayer || {};
+<div id="center">
+	<script>
+window.RufflePlayer = window.RufflePlayer || {};
+window.RufflePlayer.config = {
+"allowScriptAccess": true,
+"base": "https://gvyoutube.codeberg.page/gaming/internal/games/BFDIA5b",
+"autoplay": "auto",	
+	};
+	</script>
+<script>
+    window.RufflePlayer = window.RufflePlayer || {};
+    window.addEventListener("load", (event) => {
         const ruffle = window.RufflePlayer.newest();
-        ruffle.config = { autoplay: 'on' };
-        document.querySelector('object').outerHTML = ruffle.createPlayer().outerHTML.replace('filename.swf', 'bfdia5b.swf');
-    </script>
+        const player = ruffle.createPlayer();
+        const container = document.getElementById("center");
+        container.appendChild(player);
+        player.load("c.swf?path=5b.swf");
+    });
+</script>
+<p>
+	This game is part of <a href="http://battlefordreamisland.com">Battle for Dream Island</a>.<br>
+	<a href="http://htwins.net">HTwins.net</a>
+</p>
+</div>
 </body>
 </html>
-<!-- As you can tell I just gave up on improting every single .svg file for this crap.
-My hands are crying. -->
