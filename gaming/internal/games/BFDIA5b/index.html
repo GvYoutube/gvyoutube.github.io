@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>google.com</title>
-	<meta name="description" content="An HTML5 port of the puzzle platformer in the world of Battle for Dream Island."/>
-	<meta charset="utf-8"/>
-	<meta name="author" content="coppersalts">
-	<meta property="og:title" content="HTML5b">
-	<meta property="og:type" content="website">
-	<meta property="og:url" content="https://coppersalts.github.io/HTML5b/">
-	<meta property="og:image" content="https://coppersalts.github.io/HTML5b/visuals/bg/bg0002.png">
-	<meta property="og:description" content="An HTML5 port of Cary Huang's BFDIA 5b.">
-	<meta name="theme-color" content="#c92b20">
-	<meta name="twitter:card" content="summary_large_image">
-	<link rel="shortcut icon" type="image/x-icon" href="./visuals/blocks/b0001.svg" />
-	<link rel="stylesheet" href="style.css" type="text/css"/>
-	<script type="text/javascript" src="5b.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFDIA 5b</title>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
-<body style="overflow:hidden;">
-	<div id="center">
-	<div id="hide-contenteditable"><canvas width="960" height="540" id="cnv" contenteditable="false"></canvas></div>
-	</div>
+<body>
+    <h1>Play BFDIA 5b</h1>
+    <p>If the game doesn't load, make sure your browser supports WebAssembly and has JavaScript enabled.</p>
+
+    <!-- Ruffle will replace this <object> tag with the SWF content -->
+    <object 
+        data="bfdia5b.swf" 
+        type="application/x-shockwave-flash" 
+        width="800" 
+        height="600">
+        <param name="movie" value="bfdia5b.swf">
+        <p>Your browser does not support Flash content.</p>
+    </object>
+
+    <!-- Add Ruffle container for user experience -->
+    <script>
+        window.RufflePlayer = window.RufflePlayer || {};
+        const ruffle = window.RufflePlayer.newest();
+        ruffle.config = { autoplay: 'on' };
+        document.querySelector('object').outerHTML = ruffle.createPlayer().outerHTML.replace('filename.swf', 'bfdia5b.swf');
+    </script>
 </body>
 </html>
+<!-- As you can tell I just gave up on improting every single .svg file for this crap.
+My hands are crying. -->
