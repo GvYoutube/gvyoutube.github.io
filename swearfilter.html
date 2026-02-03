@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profanity Warning</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #d6ebd9;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      width: 300px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .modal-header {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .modal-header span {
+      display: block;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 20px; /* Ensures exact width */
+      height: 20px; /* Ensures exact height */
+      border: none;
+      padding: 0; /* Removes default padding */
+      border-radius: 50%; /* Ensures it will always be a circle */
+      background-color: #e0e0e0; /* Light grey background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .modal-close span {
+      color: #000; /* Black X */
+      font-size: 14px; /* Adjusted size for the small circular button */
+      font-weight: bold;
+    }
+
+    .modal-close:hover {
+      background-color: #c1c1c1;
+    }
+
+    .modal hr {
+      border: none;
+      height: 1px;
+      background-color: #ececec;
+      margin: 15px 0;
+    }
+
+    .modal-body {
+      font-size: 16px;
+      color: #555;
+    }
+
+    .modal-footer button {
+      background-color: #67c77f;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .modal-footer button:hover {
+      background-color: #56aa6b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Profanity Checker</h1>
+    <input type="text" id="profanity-input" placeholder="Enter a profanity" />
+    <br />
+    <button onclick="openModal()">Open pop-up</button>
+  </div>
+
+  <div class="modal" id="profanity-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">
+        <span>×</span>
+      </button>
+      <div class="modal-header">
+        <span>Notice</span>
+      </div>
+      <hr />
+      <div class="modal-body">
+        You cannot share your project on AmpMod because we have detected profanities <span id="detected-profanity"></span>. You can save your project for offline use, but you cannot share it until you remove the profanities.
+      </div>
+      <div class="modal-footer">
+        <button onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById("profanity-modal");
+    const profanitySpan = document.getElementById("detected-profanity");
+
+    function openModal() {
+      const input = document.getElementById("profanity-input").value.trim();
+      if (input) {
+        profanitySpan.textContent = `(${input})`;
+        modal.style.display = "flex";
+      } else {
+        alert("Please enter a profanity.");
+      }
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+  </script>
+</body>
+</html>
