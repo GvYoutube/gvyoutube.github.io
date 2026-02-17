@@ -1,0 +1,46 @@
+<!doctype html>
+<HTML>
+   <head>
+      <title>The AI bubble</title>
+   </head>
+   <body>
+      <h1>The AI bubble</h1>
+      <p>DDR5 16GB RAM price: $<span id="ram-prices">156</span></p>
+      <button style="
+         border: 4px #77e solid;
+         background: #bbe;
+         border-radius: 90em;
+         --size: 0px;
+         width: var(--size);
+         height: var(--size);
+         font-size: calc(var(--size) / 9);
+         font-family:sans-serif;
+         cursor: cell
+      " id="bubble">AI Bubble</button>
+   </body>
+   <script>
+      let wasthebubblepopped = false
+      let ramprice = 3
+      let multiplier = 1
+      setInterval(
+      () =>
+   {
+      ramprice = (ramprice >= 3) ? ramprice * (wasthebubblepopped ? 0.995 : (multiplier)) : 3
+      multiplier += (Math.random() * ramprice > 2000 ? 0.001 : 0.0003) / (Math.random() * multiplier + ramprice > 10000 ? ramprice : 3)
+      document.getElementById('ram-prices').textContent= Math.round(ramprice * 52)
+      document.getElementById('ram-prices').style.fontSize = `${(ramprice * 1.5) + 12}px` 
+      document.getElementById('bubble').style.setProperty('--size', `${(ramprice * 40) + 12}px` )
+      document.getElementById('ram-prices').style.color = `rgb(${ramprice * 16}, ${255 - (ramprice * 4)}, ${255 - (ramprice* 90)})` 
+   },150
+      )
+      document.getElementById('bubble').addEventListener('click', () => {
+         if (wasthebubblepopped) return
+         if ((ramprice * 52) < 1000) {
+            alert("you can't pop the bubble yet")
+            return;
+         }         if (document.getElementById('bubble').textContent !== "Pop me") {
+            alert("you need to hack the bubble to pop it")
+            return;
+         } wasthebubblepopped = true})
+   </script>
+</HTML>
