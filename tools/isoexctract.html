@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Image/ISO Inspector</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Image/ISO Inspector</h1>
+    <p class="sub">
+      Client-side ISO/IMG browser. Supports: ISO, IMG (MBR), and wrappers: zip, tar, tgz/tar.gz, gz, xz.
+      FAT partitions supported (stuff like bootfs). No RAR. No writing to disks.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>1) Select file</h2>
+      <input id="file" type="file" />
+      <div class="row">
+        <button id="btnAnalyze" disabled>Analyze</button>
+        <button id="btnReset" disabled>Reset</button>
+      </div>
+      <div id="status" class="status" aria-live="polite"></div>
+      <details>
+        <summary>Notes / troubleshooting</summary>
+        <ul>
+          <li>If your file is <code>.rar</code>, convert it to <code>.zip</code> or <code>.xz</code> first.</li>
+          <li>For huge images, use a desktop tool if the browser runs out of memory.</li>
+          <li>For <code>.img</code>, this app currently parses MBR partitions. GPT images may not show partitions.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="panel">
+      <h2>2) Container / entries</h2>
+      <div id="containerInfo" class="mono muted">No file analyzed yet.</div>
+
+      <div id="archivePicker" class="hidden">
+        <h3>Archive entries</h3>
+        <p class="muted">Select an entry to continue (for zip/tar archives containing multiple files).</p>
+        <div class="row">
+          <select id="entrySelect"></select>
+          <button id="btnUseEntry">Use entry</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>3) Explore</h2>
+      <div id="exploreRoot" class="mono muted">Nothing to explore yet.</div>
+
+      <div id="isoExplorer" class="hidden">
+        <h3>ISO files</h3>
+        <div class="row">
+          <button id="btnIsoUp" disabled>Up</button>
+          <div id="isoPath" class="mono"></div>
+        </div>
+        <div id="isoList" class="list"></div>
+      </div>
+
+      <div id="imgExplorer" class="hidden">
+        <h3>IMG partitions (MBR)</h3>
+        <div id="partitions" class="list"></div>
+
+        <div id="fatExplorer" class="hidden">
+          <h4>FAT partition browser</h4>
+          <div class="row">
+            <button id="btnFatUp" disabled>Up</button>
+            <div id="fatPath" class="mono"></div>
+          </div>
+          <div id="fatList" class="list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="muted">
+      This tool only reads files you choose and processes them in your browser. It cannot write to partitions/devices.
+    </p>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
