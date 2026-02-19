@@ -1,0 +1,10 @@
+{
+  "name": "image-iso-inspector",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "lint": "echo \"(no lint configured)\""
+  }
+}
