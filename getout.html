@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Totally Normal Page</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 2rem; }
+      .card { max-width: 720px; margin: 0 auto; padding: 1.25rem 1.5rem; border: 1px solid #ddd; border-radius: 12px; }
+      button { font-size: 1rem; padding: 0.7rem 1rem; border-radius: 10px; border: 1px solid #ccc; cursor: pointer; }
+      .note { color: #555; font-size: 0.95rem; line-height: 1.4; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Loading…</h1>
+      <p class="note">
+        Your browser may block autoplay with sound. If it does, click the button below.
+      </p>
+
+      <!-- Safer/cleaner than forcing autoplay: user-initiated click -->
+      <p><button id="go">Continue</button></p>
+
+      <!-- Embedded video (starts once user clicks, or if autoplay is allowed) -->
+      <div style="position:relative;padding-top:56.25%;overflow:hidden;border-radius:12px;">
+        <iframe
+          id="player"
+          title="Video"
+          src=""
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+          style="position:absolute;inset:0;width:100%;height:100%;border:0;"
+        ></iframe>
+      </div>
+    </div>
+
+    <script>
+      // Rick Astley - Never Gonna Give You Up (official video)
+      const videoId = "dQw4w9WgXcQ";
+
+      function rickroll() {
+        // Use YouTube embed with autoplay. (Many browsers require a click for sound.)
+        const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&rel=0&modestbranding=1`;
+        document.getElementById("player").src = src;
+
+        // Optional: also redirect after a moment (uncomment if you want a hard redirect)
+        // setTimeout(() => window.location.href = `https://www.youtube.com/watch?v=${videoId}`, 1200);
+      }
+
+      // Try immediately (works if autoplay allowed)
+      rickroll();
+
+      // Fallback button for browsers that block autoplay
+      document.getElementById("go").addEventListener("click", rickroll);
+    </script>
+  </body>
+</html>
