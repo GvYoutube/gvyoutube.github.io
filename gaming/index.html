@@ -57,12 +57,25 @@
                 <a role="listitem" href="/gaming/internal/games/RopePolice.html">Rope Police</a>
                 <a role="listitem" href="/gaming/internal/games/RiddleSchool/">Riddle School</a>
                 <a role="listitem" href="/gaming/internal/games/RiddleSchool2/">Riddle School 2</a>
+
+                <!-- Add an id so we can target it -->
+                <a id="sperlunkyLink" role="listitem" href="/gaming/internal/games/Sperlunky/">Sperlunky</a>
+
                 <a role="listitem" href="/gaming/internal/games/SniperShot.html">Sniper Shot</a>
                 <a role="listitem" href="/gaming/internal/games/SnowRider.html">Snow Rider 3D</a>
                 <a role="listitem" href="/gaming/internal/games/Territorialio.html">Territorial.io</a>
             </div>
         </section>
     </main>
+
+    <!-- Put this at the end so the link exists before we query it -->
+    <script>
+        const sperlunkyLink = document.getElementById('sperlunkyLink');
+
+        sperlunkyLink.addEventListener('click', (e) => {
+            alert('NOTICE: Sperlunky changes the tab title, and sadly we cannot hide it under a PoweSchool tab title as the game changes it in an uneditible file. Please make sure you hide the gametab really well.');
+        });
+    </script>
 </body>
 
 </html>
