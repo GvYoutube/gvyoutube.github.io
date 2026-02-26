@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>404</title>
+  <style>
+    :root{
+      --bg0:#03040a;
+      --bg1:#070b18;
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 50% 120%, rgba(40,80,255,.08), transparent 60%),
+                  radial-gradient(1000px 700px at 20% 10%, rgba(255,255,255,.04), transparent 55%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow:hidden;
+    }
+
+    /* "Real-ish" space: multiple randomized star layers + a faint Milky Way band */
+    .space{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .milkyway{
+      position:absolute;
+      inset:-20%;
+      background:
+        radial-gradient(closest-side at 40% 50%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(closest-side at 55% 45%, rgba(180,210,255,.10), transparent 58%),
+        radial-gradient(closest-side at 50% 55%, rgba(255,225,190,.06), transparent 62%),
+        radial-gradient(closest-side at 48% 52%, rgba(255,255,255,.06), transparent 70%);
+      filter: blur(26px) saturate(1.05);
+      opacity:.55;
+      transform: rotate(-18deg);
+      animation: bandDrift 80s ease-in-out infinite alternate;
+    }
+
+    @keyframes bandDrift{
+      from{ transform: rotate(-18deg) translate3d(-2%, -1%, 0) scale(1.05); }
+      to  { transform: rotate(-16deg) translate3d( 2%,  1%, 0) scale(1.08); }
+    }
+
+    /* Stars are rendered with repeated radial-gradients (fast, no canvas) */
+    .stars, .stars::before, .stars::after{
+      position:absolute;
+      inset:-200px;
+      content:"";
+      background-size: 520px 520px;
+      background-image:
+        radial-gradient(1px 1px at 40px 60px, rgba(255,255,255,.9), transparent 65%),
+        radial-gradient(1px 1px at 120px 210px, rgba(255,255,255,.55), transparent 65%),
+        radial-gradient(1px 1px at 280px 140px, rgba(255,255,255,.7), transparent 65%),
+        radial-gradient(2px 2px at 420px 320px, rgba(255,255,255,.85), transparent 60%),
+        radial-gradient(1px 1px at 460px 90px, rgba(200,220,255,.65), transparent 65%),
+        radial-gradient(1px 1px at 70px 420px, rgba(255,240,220,.55), transparent 65%),
+        radial-gradient(2px 2px at 240px 380px, rgba(255,255,255,.75), transparent 60%),
+        radial-gradient(1px 1px at 360px 460px, rgba(255,255,255,.55), transparent 65%),
+        radial-gradient(1px 1px at 500px 260px, rgba(255,255,255,.45), transparent 65%),
+        radial-gradient(1px 1px at 200px 500px, rgba(255,255,255,.55), transparent 65%);
+      opacity:.55;
+      filter: blur(.1px);
+      transform: translate3d(0,0,0);
+      animation: starDrift 120s linear infinite;
+    }
+
+    /* Smaller/further stars */
+    .stars::before{
+      opacity:.32;
+      background-size: 760px 760px;
+      filter: blur(.25px);
+      animation-duration: 190s;
+      animation-direction: reverse;
+      transform: scale(1.1);
+      background-image:
+        radial-gradient(1px 1px at 90px 100px, rgba(255,255,255,.55), transparent 65%),
+        radial-gradient(1px 1px at 240px 360px, rgba(255,255,255,.45), transparent 65%),
+        radial-gradient(1px 1px at 520px 180px, rgba(200,220,255,.5), transparent 65%),
+        radial-gradient(1px 1px at 640px 640px, rgba(255,255,255,.45), transparent 65%),
+        radial-gradient(1px 1px at 700px 260px, rgba(255,240,220,.40), transparent 65%),
+        radial-gradient(1px 1px at 360px 690px, rgba(255,255,255,.40), transparent 65%),
+        radial-gradient(1px 1px at 110px 610px, rgba(255,255,255,.42), transparent 65%);
+    }
+
+    /* A few bright stars + subtle twinkle */
+    .stars::after{
+      opacity:.75;
+      background-size: 980px 980px;
+      filter: blur(0);
+      animation: starDrift 260s linear infinite, twinkle 4.8s ease-in-out infinite;
+      background-image:
+        radial-gradient(2px 2px at 120px 140px, rgba(255,255,255,.95), transparent 60%),
+        radial-gradient(2px 2px at 680px 260px, rgba(255,255,255,.9), transparent 60%),
+        radial-gradient(3px 3px at 820px 760px, rgba(255,255,255,.85), transparent 60%),
+        radial-gradient(2px 2px at 420px 860px, rgba(210,230,255,.85), transparent 60%),
+        radial-gradient(3px 3px at 900px 120px, rgba(255,240,220,.75), transparent 60%);
+    }
+
+    @keyframes starDrift{
+      from{ transform: translate3d(0,0,0); }
+      to  { transform: translate3d(-520px,-520px,0); }
+    }
+
+    @keyframes twinkle{
+      0%,100%{ opacity:.65; }
+      50%{ opacity:.9; }
+    }
+
+    /* Layout */
+    .wrap{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding: clamp(20px, 4vw, 56px);
+      position:relative;
+      z-index:1;
+      text-align:center;
+    }
+
+    .stack{
+      position:relative;
+      width: min(860px, 92vw);
+      padding: 12px 0;
+    }
+
+    .ghost404{
+      position:absolute;
+      top: -26px;
+      left: 0;
+      right: 0;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      font-size: clamp(96px, 18vw, 240px);
+      line-height: 1;
+      color: rgba(255,255,255,.07);
+      text-shadow: 0 0 70px rgba(255,255,255,.06);
+      user-select:none;
+      pointer-events:none;
+    }
+
+    h1{
+      margin: 0;
+      font-size: clamp(28px, 4.2vw, 48px);
+      letter-spacing: -0.03em;
+      text-shadow: 0 12px 40px rgba(0,0,0,.55);
+    }
+
+    .sub{
+      margin: 12px auto 0;
+      max-width: 75ch;
+      color: var(--muted);
+      font-size: clamp(14px, 1.8vw, 16px);
+      line-height: 1.65;
+      text-shadow: 0 12px 40px rgba(0,0,0,.55);
+    }
+
+    .path{
+      color: rgba(255,255,255,.9);
+      font-weight: 750;
+    }
+
+    .actions{
+      margin-top: 22px;
+      display:flex;
+      justify-content:center;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+
+    a, button{
+      border: 1px solid rgba(255,255,255,.20);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      text-decoration:none;
+      font-weight: 650;
+      cursor:pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    a:hover, button:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.32);
+      background: rgba(0,0,0,.26);
+    }
+
+    a.primary{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.32);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .milkyway, .stars, .stars::before, .stars::after{ animation: none !important; }
+      a, button{ transition:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="space" aria-hidden="true">
+    <div class="milkyway"></div>
+    <div class="stars"></div>
+  </div>
+
+  <main class="wrap" role="main" aria-labelledby="title">
+    <section class="stack">
+      <div class="ghost404" aria-hidden="true">404</div>
+
+      <h1 id="title">Page not found!</h1>
+
+      <p class="sub">
+        The page /<span class="path" id="missingPath">/</span> couldn’t be found...
+        Check the spelling or if the page exists.
+      </p>
+
+      <div class="actions">
+        <a class="primary" href="/gaming/">Go home</a>
+        <button type="button" id="back">Go back</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const el = document.getElementById('missingPath');
+      const path = location.pathname || '/';
+      const afterSlash = path.startsWith('/') ? path.slice(1) : path;
+      el.textContent = afterSlash ? afterSlash : '/';
+    })();
+
+    document.getElementById('back').addEventListener('click', () => {
+      if (history.length > 1) history.back();
+      else location.href = '/';
+    });
+  </script>
+</body>
+</html>
