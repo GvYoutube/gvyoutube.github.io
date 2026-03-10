@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student and Parent Sign In</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+    }
+
+    .back-link {
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .article-header {
+      margin-bottom: 30px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 20px;
+    }
+
+    .article-header h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 2em;
+    }
+
+    .article-meta {
+      color: #999;
+      font-size: 0.95em;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #f0f0f0;
+      color: #667eea;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .article-content {
+      line-height: 1.8;
+      color: #333;
+      font-size: 1.05em;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .article-content h2 {
+      margin-top: 30px;
+      margin-bottom: 15px;
+      color: #667eea;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .article-content p {
+      margin-bottom: 15px;
+    }
+
+    .article-content code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .article-content pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin-bottom: 15px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #999;
+      padding: 40px;
+    }
+
+    .error {
+      background: #ffe0e0;
+      color: #c00;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back</a>
+
+    <div id="article-container">
+      <div class="loading">Loading article...</div>
+    </div>
+  </div>
+
+  <script>
+    async function loadArticle() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      if (!id) {
+        document.getElementById('article-container').innerHTML = '<div class="error">Article ID not found</div>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/blog/articles/${id}`);
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const article = await response.json();
+
+        const tagsHtml = article.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+
+        document.getElementById('article-container').innerHTML = `
+          <article>
+            <div class="article-header">
+              <h1>${article.title}</h1>
+              <div class="article-meta">
+                <strong>${article.author}</strong> • ${article.date}
+              </div>
+              <div class="tags">${tagsHtml}</div>
+            </div>
+            <div class="article-content">
+              ${article.content}
+            </div>
+          </article>
+        `;
+      } catch (error) {
+        document.getElementById('article-container').innerHTML = `<div class="error">Error loading article</div>`;
+      }
+    }
+
+    loadArticle();
+  </script>
+</body>
+</html>
