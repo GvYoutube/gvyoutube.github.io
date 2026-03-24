@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student and Parent Sign In</title>
+    <link rel="stylesheet" href="../../../../style.css" />
+    <!-- Icon for the website -->
+    <link rel="icon" href="../../../../favicon.png" type="image/x-icon" />
+</head>
+
+<body class="animated-background">
+    <!-- Mobile-size check -->
+    <script>
+        // we are checking if the screen is mobile-sized; if yes then show alert
+        if (window.innerWidth < 1024) {
+            alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or just have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for best experience.');
+        }
+    </script>
+
+    <main>
+        <section class="hero-section">
+            <h1 class="hero-title">Riddle Transfer</h1>
+        </section>
+
+        <section class="games-section" aria-labelledby="gamesHeading">
+            <h2 id="gamesHeading">SELECT WHICH TO PLAY:</h2>
+
+            <!-- Horizontal scrollable list -->
+            <div class="games-list" role="list" aria-label="Current games and websites">
+                <!-- OI! Put games in alphabetical order please! -->
+                <a role="listitem" href="/gaming/internal/games/RiddleTransfer/RT1/index.html">RT 1</a>
+                <a role="listitem" href="/gaming/internal/games/RiddleTransfer/RT2/index.htm">RT 2</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Damn you, WASM files! -->
+    <script>
+        const sperlunkyLink = document.getElementById('spelunkyLink');
+
+        sperlunkyLink.addEventListener('click', (e) => {
+            alert('NOTICE: Spelunky changes the tab title, and sadly we cannot hide it under a PowerSchool tab title as the game changes it in an uneditible file. Please make sure you hide the gametab really well.');
+        });
+    </script>
+      <script>
+        const bitdatlife = document.getElementById('bitlife');
+
+        bitdatlife.addEventListener('click', (e) => {
+            alert('NOTICE: BitLife loads very slowly. Please allow some time for it to load.');
+        });
+    </script>
+</body>
+
+</html>
