@@ -59,7 +59,7 @@
                 <a role="listitem" href="/gaming/internal/games/RopePolice.html">Rope Police</a>
                 <a role="listitem" href="/gaming/internal/games/RiddleSchool/">Riddle School</a>
                 <a role="listitem" href="/gaming/internal/games/RiddleSchool2/">Riddle School 2</a>
-                <a role="listitem" href="/gaming/internal/games/RiddleSchool3/">Riddle School 3</a>
+                <a id="riddle3" role="listitem" href="/gaming/internal/games/RiddleSchool3/">Riddle School 3</a>
                 <a role="listitem" href="/gaming/internal/games/RiddleTransfer/">Riddle Transfer</a>
 
                 <!-- Add an id so we can target it -->
@@ -85,6 +85,13 @@
 
         bitdatlife.addEventListener('click', (e) => {
             alert('NOTICE: BitLife loads very slowly. Please allow some time for it to load.');
+        });
+    </script>
+  <script>
+        const rs3 = document.getElementById('riddle3');
+
+        bitdatlife.addEventListener('click', (e) => {
+            alert('NOTICE: RS3 is slow loading, but it doesnt take long.');
         });
     </script>
 </body>
