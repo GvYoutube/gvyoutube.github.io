@@ -8,91 +8,180 @@
     <link rel="stylesheet" href="style.css" />
     <!-- Icon for the website -->
     <link rel="icon" href="favicon.png" type="image/x-icon" />
+    <style>
+        #fool-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 2s ease-out;
+        }
+
+        #fool-container.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #fool-content {
+            text-align: center;
+        }
+
+        #fool-image {
+            max-width: 100%;
+            max-height: 60vh;
+            margin-bottom: 30px;
+        }
+
+        #fool-text {
+            font-size: 48px;
+            font-weight: 600;
+            color: #0969da;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
+        }
+
+        .real-content {
+            opacity: 0;
+        }
+
+        .real-content.show {
+            opacity: 1;
+        }
+    </style>
 </head>
 
 <body class="animated-background">
-    <h1 id="announcementNotice">Announcement!:</h1>
-   we be riddling it up.
+    <!-- April Fools Overlay -->
+    <div id="fool-container">
+        <div id="fool-content">
+            <svg id="fool-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <!-- Search icon (magnifying glass) -->
+                <circle cx="85" cy="85" r="50" fill="none" stroke="#0969da" stroke-width="8"/>
+                <line x1="130" y1="130" x2="175" y2="175" stroke="#0969da" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <div id="fool-text">April Fools!</div>
+        </div>
+    </div>
 
-    <!-- Mobile-size check -->
+    <!-- Real Page Content -->
+    <div class="real-content" id="real-content">
+        <h1 id="announcementNotice">Announcement!:</h1>
+        we be riddling it up.
+
+        <!-- Mobile-size check -->
+        <script>
+            // we are checking if the screen is mobile-sized; if yes then show alert
+            if (window.innerWidth < 1024) {
+                alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or just have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for best experience.');
+            }
+        </script>
+
+        <main>
+            <section class="hero-section">
+                <h1 class="hero-title">gvyoutube gaming</h1>
+            </section>
+
+            <section class="games-section" aria-labelledby="gamesHeading">
+                <h2 id="gamesHeading">CURRENT GAMES / WEBSITES:</h2>
+
+                <!-- Horizontal scrollable list -->
+                <div class="games-list" role="list" aria-label="Current games and websites">
+                    <!-- OI! Put games in alphabetical order please! -->
+                    <a role="listitem" href="/gaming/internal/games/ADOFI.html">A Dance of Fire and Ice</a>
+                    <a role="listitem" href="/gaming/internal/games/AhoySurvival.html">Ahoy Survival</a>
+                    <a role="listitem" href="/gaming/internal/games/AIBet.html">AI Betting Game (Made by GH Copilot)</a>
+                    <a role="listitem" href="/gaming/internal/games/Amongus.html">Among Us</a>
+                    <a role="listitem" href="/gaming/internal/games/BaldisBasics.html">Baldis Basics</a>
+                    <a role="listitem" href="/gaming/internal/games/BankRobbery2.html">Bank Robbery 2</a>
+                    <a role="listitem" href="/gaming/internal/games/BarryHasASecret.html">Barry Has A Secret</a>
+                    <a id="bitlife" role="listitem" href="/gaming/internal/games/bitlife.html">BitLife</a>
+                    <a role="listitem" href="/gaming/internal/games/CrazyCattle3D.html">Crazy Cattle 3D</a>
+                    <a role="listitem" href="/gaming/internal/games/DedZed.html">Ded Zed</a>
+                    <a role="listitem" href="/gaming/internal/games/DedZed2.html">Ded Zed 2</a>
+                    <a role="listitem" href="/gaming/internal/games/TheDeepestSword.html">Deepest Sword</a>
+                    <a role="listitem" href="/gaming/internal/games/DouchbagLife.html">Douchbag Life</a>
+                    <a role="listitem" href="/gaming/internal/games/FortzoneBattleRoyal.html">Fortzone Battle Royal</a>
+                    <a role="listiten" href="/gaming/internal/games/Fidget.html">Fidget (Scratch 4 Babies)</a>
+                    <a role="listitem" href="/gaming/internal/games/Gladihoppers.html">Gladihoppers</a>
+                    <a role="listitem" href="/gaming/internal/games/Granny2.html">Granny 2</a>
+                    <a role="listitem" href="/gaming/internal/games/Hobo.html">Hobo</a>
+                    <a role="listitem" href="/gaming/internal/games/Hobo2.html">Hobo 2</a>
+                    <a role="listitem" href="/gaming/internal/games/LevelDevil/">Level Devil</a>
+                    <a role="listitem" href="/gaming/internal/games/Paperio.html">Paper.io</a>
+                    <a role="listitem" href="/gaming/internal/games/PitFall.html">Pit Fall</a>
+                    <a role="listitem" href="/gaming/internal/games/RagdollHit.html">Ragdoll Hit</a>
+                    <a role="listitem" href="/gaming/internal/games/RopePolice.html">Rope Police</a>
+                    <a role="listitem" href="/gaming/internal/games/RiddleSchool/">Riddle School</a>
+                    <a role="listitem" href="/gaming/internal/games/RiddleSchool2/">Riddle School 2</a>
+                    <a id="riddle3" role="listitem" href="/gaming/internal/games/RiddleSchool3/">Riddle School 3</a>
+                    <a role="listitem" href="/gaming/internal/games/RiddleTransfer/">Riddle Transfer</a>
+
+                    <!-- Add an id so we can target it -->
+                    <a id="spelunkyLink" role="listitem" href="/gaming/internal/games/Spelunky/">Spelunky</a>
+
+                    <a role="listitem" href="/gaming/internal/games/SniperShot.html">Sniper Shot</a>
+                    <a role="listitem" href="/gaming/internal/games/SnowRider.html">Snow Rider 3D</a>
+                    <a role="listitem" href="/gaming/internal/games/Territorialio.html">Territorial.io</a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Damn you, WASM files! -->
+        <script>
+            const sperlunkyLink = document.getElementById('spelunkyLink');
+
+            sperlunkyLink.addEventListener('click', (e) => {
+                alert('NOTICE: Spelunky changes the tab title, and sadly we cannot hide it under a PowerSchool tab title as the game changes it in an uneditible file. Please make sure you hide the gametab really well.');
+            });
+        </script>
+        <script>
+            const bitdatlife = document.getElementById('bitlife');
+
+            bitdatlife.addEventListener('click', (e) => {
+                alert('NOTICE: BitLife loads very slowly. Please allow some time for it to load.');
+            });
+        </script>
+        <script>
+            const rs3 = document.getElementById('riddle3');
+
+            rs3.addEventListener('click', (e) => {
+                alert('NOTICE: RS3 is slow loading, but it doesnt take long.');
+            });
+        </script>
+    </div>
+
     <script>
-        // we are checking if the screen is mobile-sized; if yes then show alert
-        if (window.innerWidth < 1024) {
-            alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or just have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for best experience.');
-        }
-    </script>
-
-    <main>
-        <section class="hero-section">
-            <h1 class="hero-title">gvyoutube gaming</h1>
-        </section>
-
-        <section class="games-section" aria-labelledby="gamesHeading">
-            <h2 id="gamesHeading">CURRENT GAMES / WEBSITES:</h2>
-
-            <!-- Horizontal scrollable list -->
-            <div class="games-list" role="list" aria-label="Current games and websites">
-                <!-- OI! Put games in alphabetical order please! -->
-                <a role="listitem" href="/gaming/internal/games/ADOFI.html">A Dance of Fire and Ice</a>
-                <a role="listitem" href="/gaming/internal/games/AhoySurvival.html">Ahoy Survival</a>
-                <a role="listitem" href="/gaming/internal/games/AIBet.html">AI Betting Game (Made by GH Copilot)</a>
-                <a role="listitem" href="/gaming/internal/games/Amongus.html">Among Us</a>
-                <a role="listitem" href="/gaming/internal/games/BaldisBasics.html">Baldis Basics</a>
-                <a role="listitem" href="/gaming/internal/games/BankRobbery2.html">Bank Robbery 2</a>
-                <a role="listitem" href="/gaming/internal/games/BarryHasASecret.html">Barry Has A Secret</a>
-                <a id="bitlife" role="listitem" href="/gaming/internal/games/bitlife.html">BitLife</a>
-                <a role="listitem" href="/gaming/internal/games/CrazyCattle3D.html">Crazy Cattle 3D</a>
-                <a role="listitem" href="/gaming/internal/games/DedZed.html">Ded Zed</a>
-                <a role="listitem" href="/gaming/internal/games/DedZed2.html">Ded Zed 2</a>
-                <a role="listitem" href="/gaming/internal/games/TheDeepestSword.html">Deepest Sword</a>
-                <a role="listitem" href="/gaming/internal/games/DouchbagLife.html">Douchbag Life</a>
-                <a role="listitem" href="/gaming/internal/games/FortzoneBattleRoyal.html">Fortzone Battle Royal</a>
-                <a role="listiten" href="/gaming/internal/games/Fidget.html">Fidget (Scratch 4 Babies)</a>
-                <a role="listitem" href="/gaming/internal/games/Gladihoppers.html">Gladihoppers</a>
-                <a role="listitem" href="/gaming/internal/games/Granny2.html">Granny 2</a>
-                <a role="listitem" href="/gaming/internal/games/Hobo.html">Hobo</a>
-                <a role="listitem" href="/gaming/internal/games/Hobo2.html">Hobo 2</a>
-                <a role="listitem" href="/gaming/internal/games/LevelDevil/">Level Devil</a>
-                <a role="listitem" href="/gaming/internal/games/Paperio.html">Paper.io</a>
-                <a role="listitem" href="/gaming/internal/games/PitFall.html">Pit Fall</a>
-                <a role="listitem" href="/gaming/internal/games/RagdollHit.html">Ragdoll Hit</a>
-                <a role="listitem" href="/gaming/internal/games/RopePolice.html">Rope Police</a>
-                <a role="listitem" href="/gaming/internal/games/RiddleSchool/">Riddle School</a>
-                <a role="listitem" href="/gaming/internal/games/RiddleSchool2/">Riddle School 2</a>
-                <a id="riddle3" role="listitem" href="/gaming/internal/games/RiddleSchool3/">Riddle School 3</a>
-                <a role="listitem" href="/gaming/internal/games/RiddleTransfer/">Riddle Transfer</a>
-
-                <!-- Add an id so we can target it -->
-                <a id="spelunkyLink" role="listitem" href="/gaming/internal/games/Spelunky/">Spelunky</a>
-
-                <a role="listitem" href="/gaming/internal/games/SniperShot.html">Sniper Shot</a>
-                <a role="listitem" href="/gaming/internal/games/SnowRider.html">Snow Rider 3D</a>
-                <a role="listitem" href="/gaming/internal/games/Territorialio.html">Territorial.io</a>
-            </div>
-        </section>
-    </main>
-
-    <!-- Damn you, WASM files! -->
-    <script>
-        const sperlunkyLink = document.getElementById('spelunkyLink');
-
-        sperlunkyLink.addEventListener('click', (e) => {
-            alert('NOTICE: Spelunky changes the tab title, and sadly we cannot hide it under a PowerSchool tab title as the game changes it in an uneditible file. Please make sure you hide the gametab really well.');
-        });
-    </script>
-      <script>
-        const bitdatlife = document.getElementById('bitlife');
-
-        bitdatlife.addEventListener('click', (e) => {
-            alert('NOTICE: BitLife loads very slowly. Please allow some time for it to load.');
-        });
-    </script>
-  <script>
-        const rs3 = document.getElementById('riddle3');
-
-        bitdatlife.addEventListener('click', (e) => {
-            alert('NOTICE: RS3 is slow loading, but it doesnt take long.');
-        });
+        // Start the fade-out animation after 3 seconds
+        setTimeout(() => {
+            const foolContainer = document.getElementById('fool-container');
+            const realContent = document.getElementById('real-content');
+            
+            // Add fade-out class to trigger CSS animation
+            foolContainer.classList.add('fade-out');
+            
+            // Show the real content after fade completes
+            setTimeout(() => {
+                realContent.classList.add('show');
+            }, 2000); // Wait for fade animation to complete (2 seconds)
+        }, 3000); // Wait 3 seconds before starting fade
     </script>
 </body>
 
