@@ -36,11 +36,14 @@
             text-align: center;
             padding: 40px 20px;
             max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         #fool-image {
             margin: 0 auto 30px;
-            max-width: 100%;
+            max-width: 100px;
             height: auto;
         }
 
@@ -48,7 +51,7 @@
             font-size: 56px;
             font-weight: 600;
             color: #0969da;
-            margin-bottom: 30px;
+            margin: 0 0 30px 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
             opacity: 1;
             animation: fadeOutTextContent 1s ease-out 5s forwards;
@@ -58,10 +61,11 @@
             font-size: 56px;
             font-weight: 600;
             color: #0969da;
-            margin-bottom: 30px;
+            margin: 0 0 30px 0;
             opacity: 0;
             animation: fadeInText 1s ease-in 5s forwards, fadeOutText 2s ease-out 6s forwards;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            position: absolute;
         }
 
         .fool-subtext {
@@ -78,6 +82,8 @@
             opacity: 1;
             animation: fadeOutTextContent 1s ease-out 5s forwards;
             margin-bottom: 30px;
+            color: #57606a;
+            font-size: 16px;
         }
 
         .fool-error {
@@ -85,9 +91,10 @@
             color: #24292f;
             font-weight: 600;
             font-size: 16px;
-            padding: 10px 14px;
-            display: inline-block;
-            border-radius: 4px;
+            padding: 6px 8px;
+            display: inline;
+            border-radius: 2px;
+            border: 1px solid #d0d0d0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         }
 
@@ -166,7 +173,7 @@
             <p class="fool-subtext">Sorry, but this page couldn't be served:</p>
             
             <div class="fool-error-wrapper">
-                <p class="fool-error">"could not find a valid repository or branch for repository: <code>gaming</code>"</p>
+                "could not find a valid repository or branch for repository: <span class="fool-error">gaming</span>"
             </div>
             
             <p class="fool-description">The page you tried to reach is hosted on Codeberg Pages, which might currently be experiencing technical difficulties. If that is the case, it could take a little while until this page is available again.</p>
