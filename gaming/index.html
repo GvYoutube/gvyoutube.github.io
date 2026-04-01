@@ -23,6 +23,7 @@
             z-index: 9999;
             opacity: 1;
             transition: opacity 2s ease-out;
+            overflow-y: auto;
         }
 
         #fool-container.fade-out {
@@ -32,29 +33,59 @@
 
         #fool-content {
             text-align: center;
+            padding: 40px 20px;
+            max-width: 600px;
         }
 
         #fool-image {
-            max-width: 100%;
-            max-height: 60vh;
-            margin-bottom: 30px;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
         }
 
-        #fool-text {
+        .fool-heading {
             font-size: 48px;
             font-weight: 600;
             color: #0969da;
-            animation: pulse 1s ease-in-out infinite;
+            margin-bottom: 20px;
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
+        .fool-subtext {
+            color: #57606a;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .fool-error {
+            color: #24292f;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .fool-description {
+            color: #57606a;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .fool-text {
+            font-size: 48px;
+            font-weight: 600;
+            color: #0969da;
+            margin-top: 30px;
+            opacity: 0;
+            animation: fadeInText 1s ease-in 3s forwards;
+        }
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
             }
-            50% {
-                opacity: 0.7;
-                transform: scale(1.05);
+            to {
+                opacity: 1;
             }
         }
 
@@ -77,7 +108,20 @@
                 <circle cx="85" cy="85" r="50" fill="none" stroke="#0969da" stroke-width="8"/>
                 <line x1="130" y1="130" x2="175" y2="175" stroke="#0969da" stroke-width="8" stroke-linecap="round"/>
             </svg>
-            <div id="fool-text">April Fools!</div>
+            
+            <div class="fool-heading">Not Found (Error 404)!</div>
+            
+            <p class="fool-subtext">Sorry, but this page couldn't be served:</p>
+            
+            <p class="fool-error">"could not find a valid repository or branch for repository: gaming"</p>
+            
+            <p class="fool-description">The page you tried to reach is hosted on Codeberg Pages, which might currently be experiencing technical difficulties. If that is the case, it could take a little while until this page is available again.</p>
+            
+            <p class="fool-description">Otherwise, this page might also be unavailable due to a configuration error. If you are the owner of this website, please make sure to check the <a href="#" style="color: #0969da; text-decoration: none;">troubleshooting section in the Docs</a>!</p>
+            
+            <p style="color: #57606a; font-size: 14px; margin-top: 30px;"><img src="https://design.codeberg.org/logo-kit/icon.svg" type="image/svg" /> Static pages made easy - Codeberg Pages</p>
+            
+            <div class="fool-text">April Fools!</div>
         </div>
     </div>
 
