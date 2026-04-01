@@ -24,6 +24,7 @@
             opacity: 1;
             transition: opacity 2s ease-out;
             overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         }
 
         #fool-container.fade-out {
@@ -48,6 +49,7 @@
             font-weight: 600;
             color: #0969da;
             margin-bottom: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         }
 
         .fool-subtext {
@@ -55,6 +57,7 @@
             font-size: 18px;
             line-height: 1.6;
             margin-bottom: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         }
 
         .fool-error {
@@ -62,6 +65,7 @@
             font-weight: 600;
             font-size: 16px;
             margin-bottom: 30px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         }
 
         .fool-description {
@@ -69,6 +73,7 @@
             font-size: 16px;
             line-height: 1.6;
             margin-bottom: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         }
 
         .fool-text {
@@ -77,7 +82,8 @@
             color: #0969da;
             margin-top: 30px;
             opacity: 0;
-            animation: fadeInText 1s ease-in 3s forwards;
+            animation: fadeInText 1s ease-in 5s forwards, fadeOutText 2s ease-out 6s forwards;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         }
 
         @keyframes fadeInText {
@@ -86,6 +92,15 @@
             }
             to {
                 opacity: 1;
+            }
+        }
+
+        @keyframes fadeOutText {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
             }
         }
 
@@ -119,7 +134,7 @@
             
             <p class="fool-description">Otherwise, this page might also be unavailable due to a configuration error. If you are the owner of this website, please make sure to check the <a href="#" style="color: #0969da; text-decoration: none;">troubleshooting section in the Docs</a>!</p>
             
-            <p style="color: #57606a; font-size: 14px; margin-top: 30px;"><img src="https://design.codeberg.org/logo-kit/icon.svg" type="image/svg" /> Static pages made easy - Codeberg Pages</p>
+            <p style="color: #57606a; font-size: 14px; margin-top: 30px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;"><img src="https://design.codeberg.org/logo-kit/icon.svg" type="image/svg" /> Static pages made easy - Codeberg Pages</p>
             
             <div class="fool-text">April Fools!</div>
         </div>
@@ -213,7 +228,7 @@
     </div>
 
     <script>
-        // Start the fade-out animation after 3 seconds
+        // Start the fade-out animation after 7 seconds (5s for text to appear + 2s for it to fade out)
         setTimeout(() => {
             const foolContainer = document.getElementById('fool-container');
             const realContent = document.getElementById('real-content');
@@ -225,7 +240,7 @@
             setTimeout(() => {
                 realContent.classList.add('show');
             }, 2000); // Wait for fade animation to complete (2 seconds)
-        }, 3000); // Wait 3 seconds before starting fade
+        }, 7000); // Wait 7 seconds before starting container fade
     </script>
 </body>
 
