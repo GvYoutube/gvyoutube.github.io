@@ -5,7 +5,135 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student and Parent Sign In</title>
-    <link rel="stylesheet" src="https://gvyoutube.codeberg.page/gaming/style.css" />
+    <style>
+      /* Import a modern, angular font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+:root {
+  --primary-color: #ff0000;
+  --secondary-color: #00eeff;
+  --dark-background: #ffffff;
+  --dark-surface: #1e1e1e;
+  --font-color: #000000;
+  --muted-bg: rgba(0,0,0,0.03);
+  --card-bg: #f7f7f7;
+  --focus-ring: rgba(21,156,228,0.3);
+  --focus-border: rgba(21,156,228,0.6);
+  --gap: 0.6rem;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Orbitron', sans-serif;
+  background-color: var(--dark-background);
+  color: var(--font-color);
+  margin: 0;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-bottom: 2rem;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+a:hover {
+  color: var(--secondary-color);
+}
+
+/* Announcement */
+#announcementNotice {
+  color: red;
+  margin: 0.75rem 1rem 0.25rem;
+  font-size: 1.05rem;
+}
+
+.announcement-text {
+  margin: 0 1rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+/* Hero */
+.hero-section {
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+.hero-title {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+}
+
+/* Games section (vertical list: one on top of each other) */
+.games-section {
+  padding: 1rem;
+}
+
+.games-list {
+  display: block; /* vertical flow */
+  background: var(--muted-bg);
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Each link becomes a full-width "card" stacked vertically */
+.games-list a {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.9rem 1rem;
+  margin-bottom: var(--gap);
+  background: var(--card-bg);
+  color: var(--font-color);
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.06);
+  white-space: normal; /* allow wrapping */
+  font-size: 1rem;
+}
+
+/* Last item spacing */
+.games-list a:last-child {
+  margin-bottom: 0;
+}
+
+/* Hover / focus */
+.games-list a:hover,
+.games-list a:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  outline: none;
+}
+
+/* Keyboard focus visible */
+.games-list a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  border-color: var(--focus-border);
+}
+
+/* Make tap targets larger on small screens */
+@media (max-width: 480px) {
+  .games-list a {
+    padding: 1.1rem 1rem;
+    font-size: 1.05rem;
+  }
+}
+
+/* A tiny utility to keep main centered on wide screens */
+@media (min-width: 900px) {
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}
+    </style>
     <!-- Icon for the website -->
     <link rel="icon" src="https://gvyoutube.codeberg.page/gaming/favicon.png" type="image/x-icon" />
 </head>
