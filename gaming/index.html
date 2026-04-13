@@ -10,14 +10,15 @@
     <link rel="icon" href="favicon.png" type="image/x-icon" />
     <!-- Real Page Content -->
     <div class="real-content" id="real-content">
-        <h1 id="announcementNotice">Announcement!:</h1>
-        Off topic, but good luck Artemis II!
+        <!-- (uncomment if there is a need for an announcement!) 
+        <h1 id="announcementNotice">Announcement!:</h1> -->
+        
 
         <!-- Mobile-size check -->
         <script>
             // we are checking if the screen is mobile-sized; if yes then show alert
             if (window.innerWidth < 1024) {
-                alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or just have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for best experience.');
+                alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for the best experience.');
             }
         </script>
 
@@ -31,7 +32,7 @@
 
                 <!-- Horizontal scrollable list -->
                 <div class="games-list" role="list" aria-label="Current games and websites">
-                    <!-- OI! Put games in alphabetical order please! -->
+                    <!-- OI! Please put the games in alphabetical order! -->
                     <a role="listitem" href="/gaming/internal/games/ADOFI.html">A Dance of Fire and Ice</a>
                     <a role="listitem" href="/gaming/internal/games/AhoySurvival.html">Ahoy Survival</a>
                     <a role="listitem" href="/gaming/internal/games/AIBet.html">AI Betting Game (Made by GH Copilot)</a>
@@ -75,21 +76,21 @@
             const sperlunkyLink = document.getElementById('spelunkyLink');
 
             sperlunkyLink.addEventListener('click', (e) => {
-                alert('NOTICE: Spelunky changes the tab title, and sadly we cannot hide it under a PowerSchool tab title as the game changes it in an uneditible file. Please make sure you hide the gametab really well.');
+                alert('NOTICE: Spelunky changes the tab title, and sadly, we cannot hide it under a PowerSchool tab title as the game changes it in an uneditable file. Please make sure you hide the gametab really well. Press "OK" to proceed.');
             });
         </script>
         <script>
             const bitdatlife = document.getElementById('bitlife');
 
             bitdatlife.addEventListener('click', (e) => {
-                alert('NOTICE: BitLife loads very slowly. Please allow some time for it to load.');
+                alert('NOTICE: BitLife loads very slowly. Please allow some time for it to load. Press "OK" to proceed.');
             });
         </script>
         <script>
             const rs3 = document.getElementById('riddle3');
 
             rs3.addEventListener('click', (e) => {
-                alert('NOTICE: RS3 is slow loading, but it doesnt take long.');
+                alert('NOTICE: RS3 is a bit slow on loading, but it does not take much time. Press "OK" to proceed.');
             });
         </script>
     </div>
