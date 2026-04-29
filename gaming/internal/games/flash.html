@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student and Parent Sign In</title>
+    <title>Flash Launcher</title>
     <link rel="stylesheet" href="../../style.css" />
     <!-- Icon for the website -->
     <link rel="icon" href="../../favicon.png" type="image/x-icon" />
@@ -88,12 +88,7 @@
             padding: 1rem;
             background-color: var(--card-bg);
             border-radius: 6px;
-            display: none;
             border: 1px solid rgba(0, 0, 0, 0.06);
-        }
-
-        .player-section.show {
-            display: block;
         }
 
         .player-section h3 {
@@ -105,35 +100,17 @@
 
         #ruffle-container {
             width: 100%;
-            margin: 0 auto 1rem;
+            margin: 0 auto;
             background-color: var(--dark-surface);
             border-radius: 6px;
             overflow: hidden;
-            min-height: 400px;
+            min-height: 500px;
             border: 1px solid rgba(0, 0, 0, 0.1);
-            position: relative;
         }
 
         #ruffle-player {
             width: 100%;
             height: 100%;
-            display: block;
-        }
-
-        .loading-indicator {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-            color: var(--font-color);
-            font-size: 1rem;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-        }
-
-        .loading-indicator.show {
             display: block;
         }
 
@@ -248,18 +225,15 @@
                         </div>
                     </div>
 
-                    <!-- Player Section -->
-                    <div class="player-section" id="playerSection">
+                    <!-- Player Section (Always Open) -->
+                    <div class="player-section">
                         <h3>Flash Player</h3>
                         <div id="ruffle-container">
-                            <div class="loading-indicator" id="loadingIndicator">
-                                Loading Ruffle player...
-                            </div>
                             <embed id="ruffle-player" type="application/x-shockwave-flash" />
                         </div>
 
                         <div class="controls">
-                            <button class="control-btn" onclick="resetPlayer()">Reset</button>
+                            <button class="control-btn" onclick="clearFile()">Clear File</button>
                             <button class="control-btn" onclick="document.getElementById('flashFileInput').click()">
                                 Load Different File
                             </button>
@@ -271,22 +245,15 @@
     </div>
 
     <script>
-        // Wait for Ruffle to load
-        async function waitForRuffle() {
-            let attempts = 0;
-            while (!window.RufflePlayer && attempts < 50) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-                attempts++;
-            }
-            return window.RufflePlayer;
-        }
+        // Initialize player with stored file on page load
+        window.addEventListener('load', function() {
+            loadStoredFile();
+        });
 
         async function handleFileUpload(event) {
             const file = event.target.files[0];
             const errorMessage = document.getElementById('errorMessage');
             const fileInfo = document.getElementById('fileInfo');
-            const playerSection = document.getElementById('playerSection');
-            const loadingIndicator = document.getElementById('loadingIndicator');
 
             // Reset error message
             errorMessage.classList.remove('show');
@@ -314,83 +281,51 @@
             document.getElementById('fileSize').textContent = formatFileSize(file.size);
             fileInfo.classList.add('show');
 
-            // Show player section and loading indicator
-            playerSection.classList.add('show');
-            loadingIndicator.classList.add('show');
-
-            // Read file and load into Ruffle
+            // Read file and store in localStorage
             const reader = new FileReader();
-            reader.onload = async function(e) {
+            reader.onload = function(e) {
                 try {
-                    await loadFlashPlayer(e.target.result, file.name);
-                    loadingIndicator.classList.remove('show');
+                    // Store file data and name in localStorage
+                    localStorage.setItem('flashFileName', file.name);
+                    localStorage.setItem('flashFileData', e.target.result);
+                    
+                    // Load the file into player
+                    loadFlashPlayer(e.target.result);
                 } catch (error) {
-                    showError('Error loading flash file: ' + error.message);
-                    loadingIndicator.classList.remove('show');
+                    showError('Error: ' + error.message);
                 }
             };
 
             reader.onerror = function() {
                 showError('Error reading file. Please try again.');
-                loadingIndicator.classList.remove('show');
             };
 
-            reader.readAsArrayBuffer(file);
+            reader.readAsDataURL(file);
         }
 
-        async function loadFlashPlayer(arrayBuffer, fileName) {
-            // Wait for Ruffle to be available
-            const RufflePlayer = await waitForRuffle();
-            
-            if (!RufflePlayer) {
-                showError('Error: Ruffle player failed to load. Please refresh the page.');
-                return;
-            }
+        function loadStoredFile() {
+            const storedData = localStorage.getItem('flashFileData');
+            const storedName = localStorage.getItem('flashFileName');
 
-            try {
-                // Create blob URL from array buffer
-                const blob = new Blob([arrayBuffer], { type: 'application/x-shockwave-flash' });
-                const url = URL.createObjectURL(blob);
-
-                // Get the container and player element
-                const container = document.getElementById('ruffle-container');
-                const oldPlayer = document.getElementById('ruffle-player');
-                
-                // Create new embed element
-                const newPlayer = document.createElement('embed');
-                newPlayer.id = 'ruffle-player';
-                newPlayer.type = 'application/x-shockwave-flash';
-                newPlayer.src = url;
-                newPlayer.width = '100%';
-                newPlayer.height = '100%';
-                
-                // Replace old player
-                oldPlayer.parentNode.replaceChild(newPlayer, oldPlayer);
-
-                // Trigger Ruffle to process the new embed element
-                if (RufflePlayer.newest()) {
-                    RufflePlayer.newest().createPlayer();
-                }
-
-            } catch (error) {
-                showError('Error loading player: ' + error.message);
+            if (storedData && storedName) {
+                document.getElementById('fileName').textContent = storedName;
+                document.getElementById('fileSize').textContent = 'Loaded from storage';
+                document.getElementById('fileInfo').classList.add('show');
+                loadFlashPlayer(storedData);
             }
         }
 
-        function resetPlayer() {
-            document.getElementById('playerSection').classList.remove('show');
-            document.getElementById('fileInfo').classList.remove('show');
+        function loadFlashPlayer(dataUrl) {
+            const player = document.getElementById('ruffle-player');
+            player.src = dataUrl;
+        }
+
+        function clearFile() {
+            localStorage.removeItem('flashFileData');
+            localStorage.removeItem('flashFileName');
             document.getElementById('flashFileInput').value = '';
-            
-            // Clear and recreate the player element
-            const container = document.getElementById('ruffle-container');
-            const oldPlayer = document.getElementById('ruffle-player');
-            const newPlayer = document.createElement('embed');
-            newPlayer.id = 'ruffle-player';
-            newPlayer.type = 'application/x-shockwave-flash';
-            oldPlayer.parentNode.replaceChild(newPlayer, oldPlayer);
-            
-            document.getElementById('loadingIndicator').classList.remove('show');
+            document.getElementById('fileInfo').classList.remove('show');
+            document.getElementById('ruffle-player').src = '';
         }
 
         function showError(message) {
@@ -406,14 +341,6 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
         }
-
-        // Check Ruffle on load
-        window.addEventListener('load', async function() {
-            const RufflePlayer = await waitForRuffle();
-            if (!RufflePlayer) {
-                console.warn('Ruffle player failed to load from CDN');
-            }
-        });
     </script>
 </body>
 
