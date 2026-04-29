@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student and Parent Sign In</title>
+    <link rel="stylesheet" href="../../style.css" />
+    <!-- Icon for the website -->
+    <link rel="icon" href="../../favicon.png" type="image/x-icon" />
+    <!-- Ruffle Flash Player -->
+    <script src="https://cdn.jsdelivr.net/npm/ruffle-rs@latest/ruffle.js"></script>
+    <style>
+        .flash-player-container {
+            padding: 1rem;
+        }
+
+        .upload-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 6px;
+            border: 2px dashed var(--primary-color);
+        }
+
+        .upload-section h3 {
+            margin: 0 0 1rem 0;
+            color: var(--font-color);
+            font-size: 1.1rem;
+            letter-spacing: 0.04em;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 0.9rem 1rem;
+            background-color: var(--primary-color);
+            color: var(--dark-background);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.04em;
+            transition: color 0.2s ease, transform 0.12s ease, box-shadow 0.12s ease;
+            font-weight: 700;
+        }
+
+        .upload-btn:hover {
+            color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .upload-btn:focus-visible {
+            outline: 3px solid var(--focus-ring);
+            border-color: var(--focus-border);
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--muted-bg);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 6px;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-info p {
+            margin: 0.4rem 0;
+            font-size: 0.95rem;
+            color: var(--font-color);
+        }
+
+        .player-section {
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 6px;
+            display: none;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .player-section.show {
+            display: block;
+        }
+
+        .player-section h3 {
+            margin: 0 0 1rem 0;
+            color: var(--font-color);
+            font-size: 1.1rem;
+            letter-spacing: 0.04em;
+        }
+
+        #ruffle-container {
+            width: 100%;
+            margin: 0 auto 1rem;
+            background-color: var(--dark-surface);
+            border-radius: 6px;
+            overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        #ruffle-player {
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            margin-top: 1rem;
+            display: flex;
+            gap: var(--gap);
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.8rem 1rem;
+            background-color: var(--secondary-color);
+            color: var(--dark-surface);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            font-weight: 700;
+            transition: color 0.2s ease, transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .control-btn:focus-visible {
+            outline: 3px solid var(--focus-ring);
+        }
+
+        .error-message {
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 6px;
+            color: var(--primary-color);
+            margin-top: 0.75rem;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .supported-formats {
+            margin-top: 1rem;
+            padding: 0.9rem 1rem;
+            background-color: var(--muted-bg);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--font-color);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) {
+            .upload-btn,
+            .control-btn {
+                padding: 1rem 1.1rem;
+                font-size: 1rem;
+            }
+
+            #ruffle-container {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Real Page Content -->
+    <div class="real-content" id="real-content">
+        <main>
+            <section class="hero-section">
+                <h1 class="hero-title">Flash Launcher</h1>
+            </section>
+
+            <section class="games-section" aria-labelledby="gamesHeading">
+                <h2 id="gamesHeading">Have a .swf or Flash file? Upload it and play it here!</h2>
+
+                <div class="flash-player-container">
+                    <!-- Upload Section -->
+                    <div class="upload-section">
+                        <h3>Upload a file</h3>
+                        <div class="file-input-wrapper">
+                            <button class="upload-btn" onclick="document.getElementById('flashFileInput').click()">
+                                Upload file
+                            </button>
+                            <input 
+                                type="file" 
+                                id="flashFileInput" 
+                                accept=".swf,.SWF" 
+                                onchange="handleFileUpload(event)"
+                            />
+                        </div>
+                        
+                        <div class="file-info" id="fileInfo">
+                            <p><strong>File Selected:</strong> <span id="fileName"></span></p>
+                            <p><strong>File Size:</strong> <span id="fileSize"></span></p>
+                        </div>
+
+                        <div class="error-message" id="errorMessage"></div>
+
+                        <div class="supported-formats">
+                            Supported format: .swf (Flash files)<br/>
+                            Max file size: 100MB<br/>
+                        </div>
+                    </div>
+
+                    <!-- Player Section -->
+                    <div class="player-section" id="playerSection">
+                        <h3></h3>
+                        <div id="ruffle-container">
+                            <object id="ruffle-player" data-ruffle-hide="true"></object>
+                        </div>
+
+                        <div class="controls">
+                            <button class="control-btn" onclick="resetPlayer()">↻ Reset</button>
+                            <button class="control-btn" onclick="document.getElementById('flashFileInput').click()">
+                               Load diffrent file
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Ruffle
+        const ruffle = window.RufflePlayer?.newest();
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            const errorMessage = document.getElementById('errorMessage');
+            const fileInfo = document.getElementById('fileInfo');
+            const playerSection = document.getElementById('playerSection');
+
+            // Reset error message
+            errorMessage.classList.remove('show');
+            errorMessage.textContent = '';
+
+            if (!file) {
+                return;
+            }
+
+            // Validate file type
+            if (!file.name.toLowerCase().endsWith('.swf')) {
+                showError('Error: Only .swf files are supported.');
+                return;
+            }
+
+            // Validate file size (100MB max)
+            const maxSize = 100 * 1024 * 1024;
+            if (file.size > maxSize) {
+                showError('Error: File size exceeds 100MB limit.');
+                return;
+            }
+
+            // Display file info
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            fileInfo.classList.add('show');
+
+            // Read file and load into Ruffle
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    loadFlashPlayer(e.target.result, file.name);
+                    playerSection.classList.add('show');
+                } catch (error) {
+                    showError('Error loading flash file: ' + error.message);
+                }
+            };
+
+            reader.onerror = function() {
+                showError('Error reading file. Please try again.');
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function loadFlashPlayer(arrayBuffer, fileName) {
+            if (!ruffle) {
+                showError('Error: Ruffle player failed to load. Please refresh the page.');
+                return;
+            }
+
+            try {
+                // Create blob URL from array buffer
+                const blob = new Blob([arrayBuffer], { type: 'application/x-shockwave-flash' });
+                const url = URL.createObjectURL(blob);
+
+                // Get the player element
+                const player = document.getElementById('ruffle-player');
+                
+                // Clear previous player
+                player.innerHTML = '';
+
+                // Set the data attribute to load the SWF
+                player.setAttribute('data', url);
+                player.setAttribute('type', 'application/x-shockwave-flash');
+                
+                // Initialize with Ruffle
+                if (ruffle) {
+                    ruffle.newest().createPlayer().then(instance => {
+                        instance.load({
+                            url: url
+                        });
+                    }).catch(error => {
+                        showError('Error initializing player: ' + error.message);
+                    });
+                }
+            } catch (error) {
+                showError('Error loading player: ' + error.message);
+            }
+        }
+
+        function resetPlayer() {
+            document.getElementById('playerSection').classList.remove('show');
+            document.getElementById('fileInfo').classList.remove('show');
+            document.getElementById('flashFileInput').value = '';
+            document.getElementById('ruffle-player').innerHTML = '';
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // Check if Ruffle loaded
+        window.addEventListener('load', function() {
+            if (!window.RufflePlayer) {
+                console.warn('Ruffle player failed to load from CDN');
+                showError('Warning: Ruffle player may not have loaded properly. Some features might not work.');
+            }
+        });
+    </script>
+</body>
+
+</html>
