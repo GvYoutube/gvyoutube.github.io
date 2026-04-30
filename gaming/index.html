@@ -117,7 +117,7 @@
 
   // Blocked names that make page blank
   const specialNames = new Set([
-    'jules', 'julian', 'testingname', 'luke'
+    'jules', 'julian', 'testingname', 'luke', "aj"
   ]);
 
   // Get or initialize saved name from cookie
@@ -161,7 +161,7 @@
 
     // Check blocked phrases/swears
     if (blockedNames.has(trimmed)) {
-      return { valid: false, reason: 'Nice try. User your real name.' };
+      return { valid: false, reason: 'No. };
     }
 
     return { valid: true };
