@@ -10,8 +10,9 @@
     <link rel="icon" href="favicon.png" type="image/x-icon" />
     <!-- Real Page Content -->
     <div class="real-content" id="real-content">
-        <!-- (uncomment if there is a need for an announcement!) 
-        <h1 id="announcementNotice">Announcement!:</h1> -->
+        <!--(uncomment (if commented) if there is a need for an announcement!) -->
+        <h1 id="announcementNotice">Announcement!:</h1>
+        type gvyt. i dare ya.
         
 
         <!-- Mobile-size check -->
@@ -28,6 +29,26 @@
             alert("Wha- You're really using WebTV for this? Nothing's gonna work, idiot!");
             }
         </script>
+          <script>
+        const SECRET_CODE = "gvyt";
+        const REDIRECT_URL = "https://gvyotube.codeberg.page/gaming/internal/games/GvSchool/comingsoon.txt";
+        
+        let typedCode = "";
+        
+        document.addEventListener("keypress", function(event) {
+            typedCode += event.key;
+            
+            // Check if last characters match secret code
+            if (typedCode.includes(SECRET_CODE)) {
+                window.location.href = REDIRECT_URL;
+            }
+            
+            // Clear old input if it gets too long
+            if (typedCode.length > SECRET_CODE.length) {
+                typedCode = typedCode.slice(-SECRET_CODE.length);
+            }
+        });
+    </script>
 
         <main>
             <section class="hero-section">
