@@ -11,10 +11,88 @@
     <!-- Real Page Content -->
     <div class="real-content" id="real-content">
         <!--(uncomment (if commented) if there is a need for an announcement!) -->
-        <h1 id="announcementNotice">Announcement!:</h1>
-        We have implemented a webhook (Forejo) to update/show pages faster. The site might be sluggish if the webhook is down/slow.
-        <a href="https://status.codeberg.org">Go here,</a> and scroll to the <strong>Hosted CI/CD</strong> section and look for Forejo Actions to see if there are any issues.
-        
+    <!--
+      <script>
+      // looking into getting a domain for this... heres some unused code made by github copilot until that happens.
+      const OLD_DOMAIN = 'gvyoutube.codeberg.page';
+const NEW_DOMAIN = 'gvyoutube.org/gaming/';
+
+// Check if user is on old domain
+if (window.location.hostname === OLD_DOMAIN) {
+  showDomainNotification();
+else
+      doLiterallyNothing();
+}
+
+function doLitrallyNothing() {
+      console.log("Well, what did ya think the func does?")
+      }
+      
+function showDomainNotification() {
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'domain-migration-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  `;
+
+  // Create modal box
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  `;
+
+  modal.innerHTML = `
+    <h2>We've Moved!</h2>
+    <p>We no longer use a codeberg.page domain anymore.</p>
+    <p>Use the new website at: <strong>${NEW_DOMAIN}</strong></p>
+    <button id="migrate-btn" style="
+      background: #0969da;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    ">Go to New Domain</button>
+    <button id="dismiss-btn" style="
+      background: #f6f8fa;
+      border: 1px solid #d0d7de;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 10px;
+    ">Dismiss</button>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  // Add event listeners
+  document.getElementById('migrate-btn').addEventListener('click', () => {
+    const newUrl = window.location.href.replace(OLD_DOMAIN, NEW_DOMAIN);
+    window.location.href = newUrl;
+  });
+
+  document.getElementById('dismiss-btn').addEventListener('click', () => {
+    overlay.remove();
+  });
+} </script>
+      -->
 
         <!-- Mobile-size check -->
         <script>
