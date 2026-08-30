@@ -52,6 +52,17 @@
         0 0 0 6px var(--ring);
     }
 
+    .img-small {
+    transform: scale(0.5);      /* 50% smaller visually */
+    transform-origin: top left;
+    display: inline-block;
+    margin: 0;
+  }
+
+  .gif-big {
+    transform: scale(0.65);     /* a bit bigger than 0.5 for gifs */
+  }
+
     h1 {
       margin: 0 0 8px;
       font-size: clamp(1.8rem, 3vw, 2.4rem);
@@ -136,12 +147,12 @@
       yes, that last one is deltarune working natively on windows vista on real hardware.
     </p>
 
-    <img src="https://u.cubeupload.com/GvYoutube/blinkiesCafeor.gif" />
-    <img src="https://u.cubeupload.com/GvYoutube/blinkiesCafePo.gif" />
-    <img src="https://u.cubeupload.com/GvYoutube/Screenshot2026083009.png" />
-    <img src="https://u.cubeupload.com/GvYoutube/Screenshot2026071110.jpg" />
-    <img src="https://u.cubeupload.com/GvYoutube/c9undertaletextbox.gif" />
-    <img src="https://u.cubeupload.com/GvYoutube/20260710211940.jpg" />
+<img class="gif-big" src="https://u.cubeupload.com/GvYoutube/blinkiesCafeor.gif" />
+<img class="gif-big" src="https://u.cubeupload.com/GvYoutube/blinkiesCafePo.gif" />
+<img class="img-small" src="https://u.cubeupload.com/GvYoutube/Screenshot2026083009.png" />
+<img class="img-small" src="https://u.cubeupload.com/GvYoutube/Screenshot2026071110.jpg" />
+<img class="img-small gif-big" src="https://u.cubeupload.com/GvYoutube/c9undertaletextbox.gif" />
+<img class="img-small" src="https://u.cubeupload.com/GvYoutube/20260710211940.jpg" />
     
     <div class="card" id="projects">
       <h1>projects</h1>
