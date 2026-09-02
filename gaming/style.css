@@ -125,3 +125,87 @@ a:hover {
     margin: 0 auto;
   }
 }
+
+/* Settings */
+.settings-section {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.settings-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.theme-box,
+.cursor-box {
+  background: var(--muted-bg);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 0.85rem;
+}
+
+.theme-toggle-btn {
+  margin-top: 0.5rem;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: var(--card-bg);
+  color: var(--font-color);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cursor-grid {
+  margin-top: 0.6rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 0.6rem;
+}
+
+.cursor-option {
+  border: 1px solid rgba(0,0,0,0.1);
+  background: var(--card-bg);
+  color: var(--font-color);
+  border-radius: 6px;
+  padding: 0.6rem;
+  text-align: center;
+  font-family: inherit;
+}
+
+.cursor-option img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 0.35rem;
+}
+
+.cursor-option.active {
+  outline: 2px solid var(--focus-border);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.cursor-option.locked {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+/* Dark mode */
+body.dark-mode {
+  --dark-background: #111217;
+  --font-color: #e9eef3;
+  --muted-bg: rgba(255,255,255,0.04);
+  --card-bg: #1a1d24;
+  --focus-ring: rgba(0, 238, 255, 0.25);
+  --focus-border: rgba(0, 238, 255, 0.65);
+}
+
+body.dark-mode .theme-box,
+body.dark-mode .cursor-box,
+body.dark-mode .games-list a,
+body.dark-mode .theme-toggle-btn,
+body.dark-mode .cursor-option {
+  border-color: rgba(255,255,255,0.14);
+}
