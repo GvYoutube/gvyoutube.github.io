@@ -1,235 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student and Parent Sign In</title>
-    <link rel="stylesheet" href="style.css" />
-    <!-- Icon for the website -->
-    <link rel="icon" href="favicon.png" type="image/x-icon" />
-    <!-- Real Page Content -->
-    <div class="real-content" id="real-content">
-        <!--(uncomment (if commented) if there is a need for an announcement!) -->
-    <!--
-      <script>
-      // looking into getting a domain for this... heres some unused code made by github copilot until that happens.
-      const OLD_DOMAIN = 'gvyoutube.codeberg.page';
-const NEW_DOMAIN = 'gvyoutube.org/gaming/';
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student and Parent Sign In</title>
+  <link rel="icon" href="favicon.png" type="image/x-icon" />
 
-// Check if user is on old domain
-if (window.location.hostname === OLD_DOMAIN) {
-  showDomainNotification();
-else
-      doLiterallyNothing();
-}
+  <!-- Keep your existing stylesheet -->
+  <link rel="stylesheet" href="style.css" />
 
-function doLitrallyNothing() {
-      console.log("Well, what did ya think the func does?")
+  <!-- Extra stylesheet inline (as requested, second stylesheet in same HTML) -->
+  <style>
+    /* ===== Settings UI ===== */
+    .settings-panel {
+      margin-top: 1rem;
+      background: var(--muted-bg, rgba(0,0,0,0.03));
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .settings-panel summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.9rem 1rem;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .settings-panel summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .settings-panel summary::after {
+      content: "▸";
+      float: right;
+      transition: transform 0.2s ease;
+    }
+
+    .settings-panel[open] summary::after {
+      transform: rotate(90deg);
+    }
+
+    .settings-section {
+      padding: 0 1rem 1rem;
+      margin-top: 0;
+      text-align: left;
+    }
+
+    .settings-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .theme-box,
+    .cursor-box {
+      background: var(--muted-bg, rgba(0,0,0,0.03));
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 8px;
+      padding: 0.85rem;
+    }
+
+    .theme-toggle-btn {
+      margin-top: 0.5rem;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: var(--card-bg, #f7f7f7);
+      color: var(--font-color, #000);
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cursor-grid {
+      margin-top: 0.6rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .cursor-option {
+      border: 1px solid rgba(0,0,0,0.1);
+      background: var(--card-bg, #f7f7f7);
+      color: var(--font-color, #000);
+      border-radius: 6px;
+      padding: 0.6rem;
+      text-align: center;
+      font-family: inherit;
+    }
+
+    .cursor-option img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 0.35rem;
+    }
+
+    .cursor-option-noimg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 72px;
+    }
+
+    .cursor-option.active {
+      outline: 2px solid var(--focus-border, rgba(21,156,228,0.6));
+      box-shadow: 0 0 0 3px var(--focus-ring, rgba(21,156,228,0.3));
+    }
+
+    .cursor-option.locked {
+      opacity: 0.45;
+      filter: grayscale(1);
+      pointer-events: none;
+    }
+
+    /* ===== Dark mode ===== */
+    body.dark-mode {
+      --dark-background: #111217;
+      --font-color: #e9eef3;
+      --muted-bg: rgba(255,255,255,0.04);
+      --card-bg: #1a1d24;
+      --focus-ring: rgba(0, 238, 255, 0.25);
+      --focus-border: rgba(0, 238, 255, 0.65);
+    }
+
+    body.dark-mode .settings-panel,
+    body.dark-mode .theme-box,
+    body.dark-mode .cursor-box,
+    body.dark-mode .theme-toggle-btn,
+    body.dark-mode .cursor-option {
+      border-color: rgba(255,255,255,0.14);
+    }
+  </style>
+</head>
+<body>
+  <div class="real-content" id="real-content">
+    <!-- mobile warning -->
+    <script>
+      if (window.innerWidth < 1024) {
+        alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for the best experience.');
       }
-      
-function showDomainNotification() {
-  // Create overlay
-  const overlay = document.createElement('div');
-  overlay.id = 'domain-migration-overlay';
-  overlay.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-  `;
-
-  // Create modal box
-  const modal = document.createElement('div');
-  modal.style.cssText = `
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    text-align: center;
-    max-width: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  `;
-
-  modal.innerHTML = `
-    <h2>We've Moved!</h2>
-    <p>We no longer use a codeberg.page domain anymore.</p>
-    <p>Use the new website at: <strong>${NEW_DOMAIN}</strong></p>
-    <button id="migrate-btn" style="
-      background: #0969da;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-    ">Go to New Domain</button>
-    <button id="dismiss-btn" style="
-      background: #f6f8fa;
-      border: 1px solid #d0d7de;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-left: 10px;
-    ">Dismiss</button>
-  `;
-
-  overlay.appendChild(modal);
-  document.body.appendChild(overlay);
-
-  // Add event listeners
-  document.getElementById('migrate-btn').addEventListener('click', () => {
-    const newUrl = window.location.href.replace(OLD_DOMAIN, NEW_DOMAIN);
-    window.location.href = newUrl;
-  });
-
-  document.getElementById('dismiss-btn').addEventListener('click', () => {
-    overlay.remove();
-  });
-} </script>
-      -->
-
-        <!-- Mobile-size check -->
-        <script>
-            // we are checking if the screen is mobile-sized; if yes then show alert
-            if (window.innerWidth < 1024) {
-                alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for the best experience.');
-            }
-        </script>
-        <!-- troll the webtv'ers -->
-        <script>
-            // Check if User Agent contains a specific string (e.g., "Firefox")
-            if (navigator.userAgent.includes("WebTV")) {
-            alert("Wha- You're really using WebTV for this? Nothing's gonna work, idiot!");
-            }
-        </script>
-          <script>
-        const SECRET_CODE = "gvyt";
-        const REDIRECT_URL = "https://gvyoutube.codeberg.page/gaming/internal/games/GvSchool/comingsoon.txt";
-        
-        let typedCode = "";
-        
-        document.addEventListener("keypress", function(event) {
-            typedCode += event.key;
-            
-            // Check if last characters match secret code
-            if (typedCode.includes(SECRET_CODE)) {
-                window.location.href = REDIRECT_URL;
-            }
-            
-            // Clear old input if it gets too long
-            if (typedCode.length > SECRET_CODE.length) {
-                typedCode = typedCode.slice(-SECRET_CODE.length);
-            }
-        });
     </script>
 
-        <main>
-            <section class="hero-section">
-                <h1 class="hero-title">gvyoutube gaming</h1>
-            </section>
-                  <section class="settings-section" aria-labelledby="settingsHeading">
-          <h2 id="settingsHeading">SETTINGS:</h2>
+    <!-- webtv warning -->
+    <script>
+      if (navigator.userAgent.includes("WebTV")) {
+        alert("Wha- You're really using WebTV for this? Nothing's gonna work, idiot!");
+      }
+    </script>
 
-          <div class="settings-grid">
-            <div class="theme-box">
-              <h3>Theme</h3>
-              <button id="themeToggle" type="button" class="theme-toggle-btn">Switch to Dark Mode</button>
-            </div>
+    <!-- secret code -->
+    <script>
+      const SECRET_CODE = "gvyt";
+      const REDIRECT_URL = "https://gvyoutube.codeberg.page/gaming/internal/games/GvSchool/comingsoon.txt";
+      let typedCode = "";
 
-            <div class="cursor-box">
-              <h3>Cursor</h3>
-              <div class="cursor-grid">
-                <button class="cursor-option" data-cursor="normal" type="button">
-                  <img src="cur/normal.png" alt="System default cursor preview" />
-                  <span>Normal (System Default)</span>
-                </button>
-                <button class="cursor-option" data-cursor="cur1" type="button">
-                  <img src="cur/cur1.png" alt="Red Classic cursor preview" />
-                  <span>Red Classic</span>
-                </button>
-                <button class="cursor-option" data-cursor="cur2" type="button">
-                  <img src="cur/cur2.png" alt="No Stem cursor preview" />
-                  <span>No Stem</span>
-                </button>
-                <button class="cursor-option" data-cursor="cur3" type="button">
-                  <img src="cur/cur3.png" alt="Ye Olde Pointing Device cursor preview" />
-                  <span>Ye Olde Pointing Device</span>
-                </button>
-                <button class="cursor-option" data-cursor="cur4" type="button">
-                  <img src="cur/cur4.png" alt="Arrow cursor preview" />
-                  <span>Arrow</span>
-                </button>
-                <button class="cursor-option" data-cursor="cur5" type="button">
-                  <img src="cur/cur5.png" alt="Crosshair cursor preview" />
-                  <span>Crosshair</span>
-                </button>
-                <button class="cursor-option" data-cursor="cur6" type="button">
-                  <img src="cur/cur6.png" alt="I Think it's A Cursor preview" />
-                  <span>I Think it's A Cursor.</span>
-                </button>
+      document.addEventListener("keypress", function(event) {
+        typedCode += event.key;
+        if (typedCode.includes(SECRET_CODE)) {
+          window.location.href = REDIRECT_URL;
+        }
+        if (typedCode.length > SECRET_CODE.length) {
+          typedCode = typedCode.slice(-SECRET_CODE.length);
+        }
+      });
+    </script>
+
+    <main>
+      <section class="hero-section">
+        <h1 class="hero-title">gvyoutube gaming</h1>
+
+        <!-- Openable settings panel directly below title -->
+        <details class="settings-panel">
+          <summary>SETTINGS</summary>
+
+          <section class="settings-section" aria-labelledby="settingsHeading">
+            <h2 id="settingsHeading">SETTINGS:</h2>
+
+            <div class="settings-grid">
+              <div class="theme-box">
+                <h3>Theme</h3>
+                <button id="themeToggle" type="button" class="theme-toggle-btn">Switch to Dark Mode</button>
+              </div>
+
+              <div class="cursor-box">
+                <h3>Cursor</h3>
+                <div class="cursor-grid">
+                  <!-- No image for system cursor -->
+                  <button class="cursor-option cursor-option-noimg" data-cursor="normal" type="button">
+                    <span>Normal (System Default)</span>
+                  </button>
+
+                  <button class="cursor-option" data-cursor="cur1" type="button">
+                    <img src="cur/cur1.png" alt="Red Classic cursor preview" />
+                    <span>Red Classic</span>
+                  </button>
+
+                  <button class="cursor-option" data-cursor="cur2" type="button">
+                    <img src="cur/cur2.png" alt="No Stem cursor preview" />
+                    <span>No Stem</span>
+                  </button>
+
+                  <button class="cursor-option" data-cursor="cur3" type="button">
+                    <img src="cur/cur3.png" alt="Ye Olde Pointing Device cursor preview" />
+                    <span>Ye Olde Pointing Device</span>
+                  </button>
+
+                  <button class="cursor-option" data-cursor="cur4" type="button">
+                    <img src="cur/cur4.png" alt="Arrow cursor preview" />
+                    <span>Arrow</span>
+                  </button>
+
+                  <button class="cursor-option" data-cursor="cur5" type="button">
+                    <img src="cur/cur5.png" alt="Crosshair cursor preview" />
+                    <span>Crosshair</span>
+                  </button>
+
+                  <button class="cursor-option" data-cursor="cur6" type="button">
+                    <img src="cur/cur6.png" alt="I Think it's A Cursor preview" />
+                    <span>I Think it's A Cursor.</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </details>
+      </section>
 
-            <section class="games-section" aria-labelledby="gamesHeading">
-                <h2 id="gamesHeading">CURRENT GAMES / WEBSITES:</h2>
+      <section class="games-section" aria-labelledby="gamesHeading">
+        <h2 id="gamesHeading">CURRENT GAMES / WEBSITES:</h2>
+        <div class="games-list" role="list" aria-label="Current games and websites">
+          <a role="listitem" href="/gaming/internal/games/ADOFI.html">A Dance of Fire and Ice</a>
+          <a role="listitem" href="/gaming/internal/games/AhoySurvival.html">Ahoy Survival</a>
+          <a role="listitem" href="/gaming/internal/games/AIBet.html">AI Betting Game (Made by GH Copilot)</a>
+          <a role="listitem" href="/gaming/internal/games/Amongus.html">Among Us</a>
+          <a role="listitem" href="/gaming/internal/games/BasketRandom/">Basket Random</a>
+          <a role="listitem" href="/gaming/internal/games/BaldisBasics.html">Baldis Basics</a>
+          <a role="listitem" href="/gaming/internal/games/BankRobbery2.html">Bank Robbery 2</a>
+          <a role="listitem" href="/gaming/internal/games/BarryHasASecret.html">Barry Has A Secret</a>
+          <a id="bitlife" role="listitem" href="/gaming/internal/games/bitlife.html">BitLife</a>
+          <a role="listitem" href="/gaming/internal/games/CrazyCattle3D.html">Crazy Cattle 3D</a>
+          <a role="listitem" href="/gaming/internal/games/DedZed.html">Ded Zed</a>
+          <a role="listitem" href="/gaming/internal/games/DedZed2.html">Ded Zed 2</a>
+          <a role="listitem" href="/gaming/internal/games/TheDeepestSword.html">Deepest Sword</a>
+          <a role="listitem" href="/gaming/internal/games/FortzoneBattleRoyal.html">Fortzone Battle Royal</a>
+          <a role="listitem" href="/gaming/internal/games/Fidget.html">Fidget (Scratch 4 Babies)</a>
+          <a role="listitem" href="/gaming/internal/games/Gladihoppers.html">Gladihoppers</a>
+          <a role="listitem" href="/gaming/internal/games/Granny2.html">Granny 2</a>
+          <a role="listitem" href="/gaming/internal/games/Hobo.html">Hobo</a>
+          <a role="listitem" href="/gaming/internal/games/Hobo2.html">Hobo 2</a>
+          <a role="listitem" href="/gaming/internal/games/LevelDevil/">Level Devil</a>
+          <a role="listitem" href="/gaming/internal/games/Paperio.html">Paper.io</a>
+          <a role="listitem" href="/gaming/internal/games/PitFall.html">Pit Fall</a>
+          <a role="listitem" href="/gaming/internal/games/RagdollHit.html">Ragdoll Hit</a>
+          <a role="listitem" href="/gaming/internal/games/RopePolice.html">Rope Police</a>
+          <a role="listitem" href="/gaming/internal/games/RiddleSchool/">Riddle School</a>
+          <a role="listitem" href="/gaming/internal/games/RiddleSchool2/">Riddle School 2</a>
+          <a id="riddle3" role="listitem" href="/gaming/internal/games/RiddleSchool3/">Riddle School 3</a>
+          <a role="listitem" href="/gaming/internal/games/RiddleSchool4/">Riddle School 4</a>
+          <a role="listitem" href="/gaming/internal/games/RiddleSchool5/">Riddle School 5</a>
+          <a role="listitem" href="/gaming/internal/games/RiddleTransfer/">Riddle Transfer</a>
+          <a role="listitem" href="/gaming/internal/games/DriftBoss.html">Drift Boss</a>
+          <a role="listitem" href="/gaming/internal/games/Waterpoolio.html">Waterpool.io</a>
+          <a role="listitem" href="/gaming/internal/games/Basketrandom.html">Basket Random</a>
+          <a id="spelunkyLink" role="listitem" href="/gaming/internal/games/Spelunky/">Spelunky</a>
+          <a role="listitem" href="/gaming/internal/games/SniperShot.html">Sniper Shot</a>
+          <a role="listitem" href="/gaming/internal/games/SnowRider.html">Snow Rider 3D</a>
+          <a role="listitem" href="/gaming/internal/games/Territorialio.html">Territorial.io</a>
+        </div>
+      </section>
+    </main>
 
-                <!-- Horizontal scrollable list -->
-                <div class="games-list" role="list" aria-label="Current games and websites">
-                    <!-- OI! Please put the games in alphabetical order! -->
-                    <a role="listitem" href="/gaming/internal/games/ADOFI.html">A Dance of Fire and Ice</a>
-                    <a role="listitem" href="/gaming/internal/games/AhoySurvival.html">Ahoy Survival</a>
-                    <a role="listitem" href="/gaming/internal/games/AIBet.html">AI Betting Game (Made by GH Copilot)</a>
-                    <a role="listitem" href="/gaming/internal/games/Amongus.html">Among Us</a>
-                    <a role="listitem" href="/gaming/internal/games/BasketRandom/">Basket Random</a>
-                    <a role="listitem" href="/gaming/internal/games/BaldisBasics.html">Baldis Basics</a>
-                    <a role="listitem" href="/gaming/internal/games/BankRobbery2.html">Bank Robbery 2</a>
-                    <a role="listitem" href="/gaming/internal/games/BarryHasASecret.html">Barry Has A Secret</a>
-                    <a id="bitlife" role="listitem" href="/gaming/internal/games/bitlife.html">BitLife</a>
-                    <a role="listitem" href="/gaming/internal/games/CrazyCattle3D.html">Crazy Cattle 3D</a>
-                    <a role="listitem" href="/gaming/internal/games/DedZed.html">Ded Zed</a>
-                    <a role="listitem" href="/gaming/internal/games/DedZed2.html">Ded Zed 2</a>
-                    <a role="listitem" href="/gaming/internal/games/TheDeepestSword.html">Deepest Sword</a>
-                    <a role="listitem" href="/gaming/internal/games/FortzoneBattleRoyal.html">Fortzone Battle Royal</a>
-                    <a role="listiten" href="/gaming/internal/games/Fidget.html">Fidget (Scratch 4 Babies)</a>
-                    <a role="listitem" href="/gaming/internal/games/Gladihoppers.html">Gladihoppers</a>
-                    <a role="listitem" href="/gaming/internal/games/Granny2.html">Granny 2</a>
-                    <a role="listitem" href="/gaming/internal/games/Hobo.html">Hobo</a>
-                    <a role="listitem" href="/gaming/internal/games/Hobo2.html">Hobo 2</a>
-                    <a role="listitem" href="/gaming/internal/games/LevelDevil/">Level Devil</a>
-                    <a role="listitem" href="/gaming/internal/games/Paperio.html">Paper.io</a>
-                    <a role="listitem" href="/gaming/internal/games/PitFall.html">Pit Fall</a>
-                    <a role="listitem" href="/gaming/internal/games/RagdollHit.html">Ragdoll Hit</a>
-                    <a role="listitem" href="/gaming/internal/games/RopePolice.html">Rope Police</a>
-                    <a role="listitem" href="/gaming/internal/games/RiddleSchool/">Riddle School</a>
-                    <a role="listitem" href="/gaming/internal/games/RiddleSchool2/">Riddle School 2</a>
-                    <a id="riddle3" role="listitem" href="/gaming/internal/games/RiddleSchool3/">Riddle School 3</a>
-                    <a role="listitem" href="/gaming/internal/games/RiddleSchool4/">Riddle School 4</a>
-                    <a role="listitem" href="/gaming/internal/games/RiddleSchool5/">Riddle School 5</a>
-                    <a role="listitem" href="/gaming/internal/games/RiddleTransfer/">Riddle Transfer</a>
-                    <a role="listitem" href="/gaming/internal/games/DriftBoss.html/">Drift Boss</a>
-                    <a role="listitem" href="/gaming/internal/games/Waterpoolio.html">Waterpool.io</a>
-                    <a role="listitem" href="/gaming/internal/games/Basketrandom.html">Basket Random</a>
-                    <!-- Add an id so we can target it -->
-                    <a id="spelunkyLink" role="listitem" href="/gaming/internal/games/Spelunky/">Spelunky</a>
-
-                    <a role="listitem" href="/gaming/internal/games/SniperShot.html">Sniper Shot</a>
-                    <a role="listitem" href="/gaming/internal/games/SnowRider.html">Snow Rider 3D</a>
-                    <a role="listitem" href="/gaming/internal/games/Territorialio.html">Territorial.io</a>
-                </div>
-            </section>
-        </main>
-
-        <!-- Damn you, WASM files! -->
     <script>
-      // notices
       const spelunkyLink = document.getElementById('spelunkyLink');
       if (spelunkyLink) {
         spelunkyLink.addEventListener('click', () => {
@@ -251,7 +295,6 @@ function showDomainNotification() {
         });
       }
 
-      // cookies
       function setCookie(name, value, days = 365) {
         const expires = new Date(Date.now() + days * 864e5).toUTCString();
         document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
@@ -262,15 +305,14 @@ function showDomainNotification() {
         return match ? decodeURIComponent(match[2]) : null;
       }
 
-      // cursor config
       const CURSOR_MAP = {
-        normal: 'default', // OS default cursor
-        cur1: 'url("cur/cur1.png"), auto',
-        cur2: 'url("cur/cur2.png"), auto',
-        cur3: 'url("cur/cur3.png"), auto',
-        cur4: 'url("cur/cur4.png"), auto',
-        cur5: 'url("cur/cur5.png"), auto',
-        cur6: 'url("cur/cur6.png"), auto'
+        normal: 'default',
+        cur1: 'url("cur/cur1.png") 0 0, auto',
+        cur2: 'url("cur/cur2.png") 0 0, auto',
+        cur3: 'url("cur/cur3.png") 0 0, auto',
+        cur4: 'url("cur/cur4.png") 0 0, auto',
+        cur5: 'url("cur/cur5.png") 0 0, auto',
+        cur6: 'url("cur/cur6.png") 0 0, auto'
       };
 
       const DARK_ALLOWED = new Set(['normal', 'cur1', 'cur2']);
@@ -281,11 +323,21 @@ function showDomainNotification() {
 
       function applyCursor(cursorKey) {
         const cursorValue = CURSOR_MAP[cursorKey] || CURSOR_MAP.normal;
+
+        document.documentElement.style.cursor = cursorValue;
         document.body.style.cursor = cursorValue;
 
-        document.querySelectorAll('a, button').forEach(el => {
-          el.style.cursor = cursorValue;
-        });
+        let styleTag = document.getElementById('global-cursor-style');
+        if (!styleTag) {
+          styleTag = document.createElement('style');
+          styleTag.id = 'global-cursor-style';
+          document.head.appendChild(styleTag);
+        }
+
+        styleTag.textContent = `
+          * { cursor: ${cursorValue} !important; }
+          *::before, *::after { cursor: ${cursorValue} !important; }
+        `;
 
         document.querySelectorAll('.cursor-option').forEach(btn => {
           btn.classList.toggle('active', btn.dataset.cursor === cursorKey);
@@ -296,6 +348,7 @@ function showDomainNotification() {
 
       function enforceCursorRules() {
         const dark = isDarkMode();
+
         document.querySelectorAll('.cursor-option').forEach(btn => {
           const key = btn.dataset.cursor;
           const locked = dark && !DARK_ALLOWED.has(key);
@@ -310,6 +363,7 @@ function showDomainNotification() {
 
       function applyTheme(mode) {
         const btn = document.getElementById('themeToggle');
+
         if (mode === 'darkmode') {
           document.body.classList.add('dark-mode');
           if (btn) btn.textContent = 'Switch to Light Mode';
@@ -317,6 +371,7 @@ function showDomainNotification() {
           document.body.classList.remove('dark-mode');
           if (btn) btn.textContent = 'Switch to Dark Mode';
         }
+
         setCookie('themeMode', mode);
         enforceCursorRules();
       }
