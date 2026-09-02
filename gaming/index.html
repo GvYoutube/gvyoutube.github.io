@@ -6,12 +6,11 @@
   <title>Student and Parent Sign In</title>
   <link rel="icon" href="favicon.png" type="image/x-icon" />
 
-  <!-- Keep your existing stylesheet -->
+  <!-- Existing stylesheet -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Extra stylesheet inline (as requested, second stylesheet in same HTML) -->
+  <!-- Additional inline stylesheet -->
   <style>
-    /* ===== Settings UI ===== */
     .settings-panel {
       margin-top: 1rem;
       background: var(--muted-bg, rgba(0,0,0,0.03));
@@ -88,6 +87,7 @@
       padding: 0.6rem;
       text-align: center;
       font-family: inherit;
+      position: relative;
     }
 
     .cursor-option img {
@@ -113,10 +113,33 @@
     .cursor-option.locked {
       opacity: 0.45;
       filter: grayscale(1);
-      pointer-events: none;
+      pointer-events: auto; /* allow hover tooltip */
     }
 
-    /* ===== Dark mode ===== */
+    .cursor-option.locked::after {
+      content: attr(data-lock-msg);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%);
+      background: #111;
+      color: #fff;
+      font-size: 0.78rem;
+      line-height: 1.25;
+      padding: 6px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+      z-index: 50;
+    }
+
+    .cursor-option.locked:hover::after,
+    .cursor-option.locked:focus-visible::after {
+      opacity: 1;
+    }
+
     body.dark-mode {
       --dark-background: #111217;
       --font-color: #e9eef3;
@@ -137,22 +160,15 @@
 </head>
 <body>
   <div class="real-content" id="real-content">
-    <!-- mobile warning -->
     <script>
       if (window.innerWidth < 1024) {
         alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for the best experience.');
       }
-    </script>
 
-    <!-- webtv warning -->
-    <script>
       if (navigator.userAgent.includes("WebTV")) {
         alert("Wha- You're really using WebTV for this? Nothing's gonna work, idiot!");
       }
-    </script>
 
-    <!-- secret code -->
-    <script>
       const SECRET_CODE = "gvyt";
       const REDIRECT_URL = "https://gvyoutube.codeberg.page/gaming/internal/games/GvSchool/comingsoon.txt";
       let typedCode = "";
@@ -172,7 +188,6 @@
       <section class="hero-section">
         <h1 class="hero-title">gvyoutube gaming</h1>
 
-        <!-- Openable settings panel directly below title -->
         <details class="settings-panel">
           <summary>SETTINGS</summary>
 
@@ -188,7 +203,6 @@
               <div class="cursor-box">
                 <h3>Cursor</h3>
                 <div class="cursor-grid">
-                  <!-- No image for system cursor -->
                   <button class="cursor-option cursor-option-noimg" data-cursor="normal" type="button">
                     <span>Normal (System Default)</span>
                   </button>
@@ -324,9 +338,6 @@
       function applyCursor(cursorKey) {
         const cursorValue = CURSOR_MAP[cursorKey] || CURSOR_MAP.normal;
 
-        document.documentElement.style.cursor = cursorValue;
-        document.body.style.cursor = cursorValue;
-
         let styleTag = document.getElementById('global-cursor-style');
         if (!styleTag) {
           styleTag = document.createElement('style');
@@ -335,8 +346,10 @@
         }
 
         styleTag.textContent = `
-          * { cursor: ${cursorValue} !important; }
-          *::before, *::after { cursor: ${cursorValue} !important; }
+          html { cursor: ${cursorValue} !important; }
+          body { cursor: inherit !important; }
+          * { cursor: inherit !important; }
+          *::before, *::after { cursor: inherit !important; }
         `;
 
         document.querySelectorAll('.cursor-option').forEach(btn => {
@@ -352,8 +365,17 @@
         document.querySelectorAll('.cursor-option').forEach(btn => {
           const key = btn.dataset.cursor;
           const locked = dark && !DARK_ALLOWED.has(key);
+
           btn.classList.toggle('locked', locked);
-          btn.disabled = locked;
+          btn.disabled = false; // keep hover for tooltip
+
+          if (locked) {
+            btn.setAttribute('data-lock-msg', 'You cannot use this cursor in dark mode!');
+            btn.setAttribute('aria-label', (btn.textContent || '').trim() + ' (locked in dark mode)');
+          } else {
+            btn.removeAttribute('data-lock-msg');
+            btn.removeAttribute('aria-label');
+          }
         });
 
         const saved = getCookie('cursorChoice') || 'normal';
