@@ -133,6 +133,50 @@ function showDomainNotification() {
             <section class="hero-section">
                 <h1 class="hero-title">gvyoutube gaming</h1>
             </section>
+                  <section class="settings-section" aria-labelledby="settingsHeading">
+          <h2 id="settingsHeading">SETTINGS:</h2>
+
+          <div class="settings-grid">
+            <div class="theme-box">
+              <h3>Theme</h3>
+              <button id="themeToggle" type="button" class="theme-toggle-btn">Switch to Dark Mode</button>
+            </div>
+
+            <div class="cursor-box">
+              <h3>Cursor</h3>
+              <div class="cursor-grid">
+                <button class="cursor-option" data-cursor="normal" type="button">
+                  <img src="cur/normal.png" alt="System default cursor preview" />
+                  <span>Normal (System Default)</span>
+                </button>
+                <button class="cursor-option" data-cursor="cur1" type="button">
+                  <img src="cur/cur1.png" alt="Red Classic cursor preview" />
+                  <span>Red Classic</span>
+                </button>
+                <button class="cursor-option" data-cursor="cur2" type="button">
+                  <img src="cur/cur2.png" alt="No Stem cursor preview" />
+                  <span>No Stem</span>
+                </button>
+                <button class="cursor-option" data-cursor="cur3" type="button">
+                  <img src="cur/cur3.png" alt="Ye Olde Pointing Device cursor preview" />
+                  <span>Ye Olde Pointing Device</span>
+                </button>
+                <button class="cursor-option" data-cursor="cur4" type="button">
+                  <img src="cur/cur4.png" alt="Arrow cursor preview" />
+                  <span>Arrow</span>
+                </button>
+                <button class="cursor-option" data-cursor="cur5" type="button">
+                  <img src="cur/cur5.png" alt="Crosshair cursor preview" />
+                  <span>Crosshair</span>
+                </button>
+                <button class="cursor-option" data-cursor="cur6" type="button">
+                  <img src="cur/cur6.png" alt="I Think it's A Cursor preview" />
+                  <span>I Think it's A Cursor.</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
             <section class="games-section" aria-labelledby="gamesHeading">
                 <h2 id="gamesHeading">CURRENT GAMES / WEBSITES:</h2>
@@ -184,29 +228,124 @@ function showDomainNotification() {
         </main>
 
         <!-- Damn you, WASM files! -->
-        <script>
-            const sperlunkyLink = document.getElementById('spelunkyLink');
+    <script>
+      // notices
+      const spelunkyLink = document.getElementById('spelunkyLink');
+      if (spelunkyLink) {
+        spelunkyLink.addEventListener('click', () => {
+          alert('NOTICE: Spelunky changes the tab title, and sadly, we cannot hide it under a PowerSchool tab title as the game changes it in an uneditable file. Please make sure you hide the gametab really well. Press "OK" to proceed.');
+        });
+      }
 
-            sperlunkyLink.addEventListener('click', (e) => {
-                alert('NOTICE: Spelunky changes the tab title, and sadly, we cannot hide it under a PowerSchool tab title as the game changes it in an uneditable file. Please make sure you hide the gametab really well. Press "OK" to proceed.');
-            });
-        </script>
-        <script>
-            const bitdatlife = document.getElementById('bitlife');
+      const bitlife = document.getElementById('bitlife');
+      if (bitlife) {
+        bitlife.addEventListener('click', () => {
+          alert('NOTICE: BitLife loads very slowly. Please allow some time for it to load. Press "OK" to proceed.');
+        });
+      }
 
-            bitdatlife.addEventListener('click', (e) => {
-                alert('NOTICE: BitLife loads very slowly. Please allow some time for it to load. Press "OK" to proceed.');
-            });
-        </script>
-        <script>
-            const rs3 = document.getElementById('riddle3');
+      const riddle3 = document.getElementById('riddle3');
+      if (riddle3) {
+        riddle3.addEventListener('click', () => {
+          alert('NOTICE: Riddle School 3`s Flash file is a biggum! This means it`ll take a bit long to load. Press "OK" to proceed.');
+        });
+      }
 
-            rs3.addEventListener('click', (e) => {
-                alert('NOTICE: Riddle School 3`s Flash file is a biggum! This means it`ll take a bit long to load. Press "OK" to proceed.');
-            });
-        </script>
-    </div>
+      // cookies
+      function setCookie(name, value, days = 365) {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+      }
 
+      function getCookie(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+      }
+
+      // cursor config
+      const CURSOR_MAP = {
+        normal: 'default', // OS default cursor
+        cur1: 'url("cur/cur1.png"), auto',
+        cur2: 'url("cur/cur2.png"), auto',
+        cur3: 'url("cur/cur3.png"), auto',
+        cur4: 'url("cur/cur4.png"), auto',
+        cur5: 'url("cur/cur5.png"), auto',
+        cur6: 'url("cur/cur6.png"), auto'
+      };
+
+      const DARK_ALLOWED = new Set(['normal', 'cur1', 'cur2']);
+
+      function isDarkMode() {
+        return document.body.classList.contains('dark-mode');
+      }
+
+      function applyCursor(cursorKey) {
+        const cursorValue = CURSOR_MAP[cursorKey] || CURSOR_MAP.normal;
+        document.body.style.cursor = cursorValue;
+
+        document.querySelectorAll('a, button').forEach(el => {
+          el.style.cursor = cursorValue;
+        });
+
+        document.querySelectorAll('.cursor-option').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.cursor === cursorKey);
+        });
+
+        setCookie('cursorChoice', cursorKey);
+      }
+
+      function enforceCursorRules() {
+        const dark = isDarkMode();
+        document.querySelectorAll('.cursor-option').forEach(btn => {
+          const key = btn.dataset.cursor;
+          const locked = dark && !DARK_ALLOWED.has(key);
+          btn.classList.toggle('locked', locked);
+          btn.disabled = locked;
+        });
+
+        const saved = getCookie('cursorChoice') || 'normal';
+        if (dark && !DARK_ALLOWED.has(saved)) applyCursor('normal');
+        else applyCursor(saved);
+      }
+
+      function applyTheme(mode) {
+        const btn = document.getElementById('themeToggle');
+        if (mode === 'darkmode') {
+          document.body.classList.add('dark-mode');
+          if (btn) btn.textContent = 'Switch to Light Mode';
+        } else {
+          document.body.classList.remove('dark-mode');
+          if (btn) btn.textContent = 'Switch to Dark Mode';
+        }
+        setCookie('themeMode', mode);
+        enforceCursorRules();
+      }
+
+      (function initSettings() {
+        const savedTheme = getCookie('themeMode') || 'lightmode';
+        const savedCursor = getCookie('cursorChoice') || 'normal';
+
+        applyTheme(savedTheme);
+
+        document.querySelectorAll('.cursor-option').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const key = btn.dataset.cursor;
+            if (isDarkMode() && !DARK_ALLOWED.has(key)) return;
+            applyCursor(key);
+          });
+        });
+
+        const themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) {
+          themeBtn.addEventListener('click', () => {
+            applyTheme(isDarkMode() ? 'lightmode' : 'darkmode');
+          });
+        }
+
+        if (isDarkMode() && !DARK_ALLOWED.has(savedCursor)) applyCursor('normal');
+        else applyCursor(savedCursor);
+      })();
+    </script>
+  </div>
 </body>
-
 </html>
