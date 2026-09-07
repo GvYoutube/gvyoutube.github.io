@@ -369,13 +369,13 @@
       }
 
       const CURSOR_MAP = {
-        normal: 'auto',
-        cur1: "url('cur/cur1.png'), auto",
-        cur2: "url('cur/cur2.png'), auto",
-        cur3: "url('cur/cur3.png'), auto",
-        cur4: "url('cur/cur4.png'), auto",
-        cur5: "url('cur/cur5.png'), auto",
-        cur6: "url('cur/cur6.png'), auto"
+        normal: 'default',
+        cur1: "url('/gaming/cur/cur1.png') 0 0, auto",
+        cur2: "url('/gaming/cur/cur2.png') 0 0, auto",
+        cur3: "url('/gaming/cur/cur3.png') 0 0, auto",
+        cur4: "url('/gaming/cur/cur4.png') 0 0, auto",
+        cur5: "url('/gaming/cur/cur5.png') 0 0, auto",
+        cur6: "url('/gaming/cur/cur6.png') 0 0, auto"
       };
 
       const DARK_ALLOWED = new Set(['normal', 'cur1', 'cur2']);
@@ -395,9 +395,10 @@
     }
 
     styleTag.textContent = `
-      html {
+      html, body, body * {
         cursor: ${cursorValue} !important;
       }
+    `;
 
       body, * {
         cursor: inherit !important;
