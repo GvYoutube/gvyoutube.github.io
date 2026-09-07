@@ -11,40 +11,79 @@
 
   <!-- Additional inline stylesheet -->
   <style>
-    .settings-panel {
+    .settings-trigger-wrap {
       margin-top: 1rem;
-      background: var(--muted-bg, rgba(0,0,0,0.03));
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .settings-open-btn {
+      border: 1px solid rgba(0,0,0,0.12);
+      background: var(--card-bg, #f7f7f7);
+      color: var(--font-color, #000);
       border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .settings-panel summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 0.9rem 1rem;
+      padding: 0.45rem 0.75rem;
+      font-family: inherit;
       font-weight: 700;
-      user-select: none;
+      font-size: 0.9rem;
+      cursor: pointer;
     }
 
-    .settings-panel summary::-webkit-details-marker {
+    .settings-modal {
+      position: fixed;
+      inset: 0;
       display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9998;
+      padding: 1rem;
     }
 
-    .settings-panel summary::after {
-      content: "▸";
-      float: right;
-      transition: transform 0.2s ease;
+    .settings-modal.open {
+      display: flex;
     }
 
-    .settings-panel[open] summary::after {
-      transform: rotate(90deg);
+    .settings-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
     }
 
-    .settings-section {
-      padding: 0 1rem 1rem;
-      margin-top: 0;
+    .settings-window {
+      position: relative;
+      width: min(760px, 94vw);
+      max-height: 88vh;
+      overflow: auto;
+      z-index: 1;
+      background: var(--card-bg, #fff);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      padding: 1rem;
       text-align: left;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .settings-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .settings-close-btn {
+      border: 1px solid rgba(0,0,0,0.14);
+      background: var(--card-bg, #f7f7f7);
+      color: var(--font-color, #000);
+      border-radius: 8px;
+      padding: 0.35rem 0.65rem;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .settings-grid {
@@ -77,6 +116,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
       gap: 0.6rem;
+      overflow: visible;
     }
 
     .cursor-option {
@@ -88,6 +128,7 @@
       text-align: center;
       font-family: inherit;
       position: relative;
+      overflow: visible;
     }
 
     .cursor-option img {
@@ -113,7 +154,7 @@
     .cursor-option.locked {
       opacity: 0.45;
       filter: grayscale(1);
-      pointer-events: auto; /* allow hover tooltip */
+      pointer-events: auto;
     }
 
     .cursor-option.locked::after {
@@ -132,7 +173,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.15s ease;
-      z-index: 50;
+      z-index: 10000;
     }
 
     .cursor-option.locked:hover::after,
@@ -149,11 +190,13 @@
       --focus-border: rgba(0, 238, 255, 0.65);
     }
 
-    body.dark-mode .settings-panel,
+    body.dark-mode .settings-window,
     body.dark-mode .theme-box,
     body.dark-mode .cursor-box,
     body.dark-mode .theme-toggle-btn,
-    body.dark-mode .cursor-option {
+    body.dark-mode .cursor-option,
+    body.dark-mode .settings-open-btn,
+    body.dark-mode .settings-close-btn {
       border-color: rgba(255,255,255,0.14);
     }
   </style>
@@ -162,7 +205,7 @@
   <div class="real-content" id="real-content">
     <script>
       if (window.innerWidth < 1024) {
-        alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or have a small screen. We recommend playing on a PC/Chromebook. If your window is small, please resize it for the best experience.');
+        alert('We have detected that your screen or window is smaller than 1024px. This means you are on mobile or have a small screen. We recommend playing on a PC/Chromebook. If your window is small, make it larger. Press "OK" to continue anyway.');
       }
 
       if (navigator.userAgent.includes("WebTV")) {
@@ -188,11 +231,17 @@
       <section class="hero-section">
         <h1 class="hero-title">gvyoutube gaming</h1>
 
-        <details class="settings-panel">
-          <summary>SETTINGS</summary>
+        <div class="settings-trigger-wrap">
+          <button id="openSettings" class="settings-open-btn" type="button" aria-haspopup="dialog" aria-controls="settingsModal" aria-expanded="false">Settings</button>
+        </div>
 
-          <section class="settings-section" aria-labelledby="settingsHeading">
-            <h2 id="settingsHeading">SETTINGS:</h2>
+        <div id="settingsModal" class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsHeading">
+          <div class="settings-backdrop" id="settingsBackdrop"></div>
+          <section class="settings-window">
+            <div class="settings-header">
+              <h2 id="settingsHeading">SETTINGS</h2>
+              <button id="closeSettings" class="settings-close-btn" type="button" aria-label="Close settings">Close</button>
+            </div>
 
             <div class="settings-grid">
               <div class="theme-box">
@@ -240,7 +289,7 @@
               </div>
             </div>
           </section>
-        </details>
+        </div>
       </section>
 
       <section class="games-section" aria-labelledby="gamesHeading">
@@ -291,7 +340,7 @@
       const spelunkyLink = document.getElementById('spelunkyLink');
       if (spelunkyLink) {
         spelunkyLink.addEventListener('click', () => {
-          alert('NOTICE: Spelunky changes the tab title, and sadly, we cannot hide it under a PowerSchool tab title as the game changes it in an uneditable file. Please make sure you hide the gametab really well. Press "OK" to proceed.');
+          alert('NOTICE: Spelunky changes the tab title, and sadly, we cannot hide it under a PowerSchool tab title as the game changes it in an uneditable file. Please make sure you hide the gametab manually if needed. Press "OK" to proceed.');
         });
       }
 
@@ -320,13 +369,13 @@
       }
 
       const CURSOR_MAP = {
-        normal: 'default',
-        cur1: 'url("cur/cur1.png") 0 0, auto',
-        cur2: 'url("cur/cur2.png") 0 0, auto',
-        cur3: 'url("cur/cur3.png") 0 0, auto',
-        cur4: 'url("cur/cur4.png") 0 0, auto',
-        cur5: 'url("cur/cur5.png") 0 0, auto',
-        cur6: 'url("cur/cur6.png") 0 0, auto'
+        normal: 'auto',
+        cur1: "url('cur/cur1.png'), auto",
+        cur2: "url('cur/cur2.png'), auto",
+        cur3: "url('cur/cur3.png'), auto",
+        cur4: "url('cur/cur4.png'), auto",
+        cur5: "url('cur/cur5.png'), auto",
+        cur6: "url('cur/cur6.png'), auto"
       };
 
       const DARK_ALLOWED = new Set(['normal', 'cur1', 'cur2']);
@@ -346,10 +395,9 @@
         }
 
         styleTag.textContent = `
-          html { cursor: ${cursorValue} !important; }
-          body { cursor: inherit !important; }
-          * { cursor: inherit !important; }
-          *::before, *::after { cursor: inherit !important; }
+          html {
+            cursor: ${cursorValue};
+          }
         `;
 
         document.querySelectorAll('.cursor-option').forEach(btn => {
@@ -367,7 +415,7 @@
           const locked = dark && !DARK_ALLOWED.has(key);
 
           btn.classList.toggle('locked', locked);
-          btn.disabled = false; // keep hover for tooltip
+          btn.disabled = false;
 
           if (locked) {
             btn.setAttribute('data-lock-msg', 'You cannot use this cursor in dark mode!');
@@ -398,6 +446,22 @@
         enforceCursorRules();
       }
 
+      function openSettingsModal() {
+        const modal = document.getElementById('settingsModal');
+        const openBtn = document.getElementById('openSettings');
+        if (!modal || !openBtn) return;
+        modal.classList.add('open');
+        openBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeSettingsModal() {
+        const modal = document.getElementById('settingsModal');
+        const openBtn = document.getElementById('openSettings');
+        if (!modal || !openBtn) return;
+        modal.classList.remove('open');
+        openBtn.setAttribute('aria-expanded', 'false');
+      }
+
       (function initSettings() {
         const savedTheme = getCookie('themeMode') || 'lightmode';
         const savedCursor = getCookie('cursorChoice') || 'normal';
@@ -418,6 +482,21 @@
             applyTheme(isDarkMode() ? 'lightmode' : 'darkmode');
           });
         }
+
+        const openBtn = document.getElementById('openSettings');
+        const closeBtn = document.getElementById('closeSettings');
+        const backdrop = document.getElementById('settingsBackdrop');
+        const modal = document.getElementById('settingsModal');
+
+        if (openBtn) openBtn.addEventListener('click', openSettingsModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeSettingsModal);
+        if (backdrop) backdrop.addEventListener('click', closeSettingsModal);
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal && modal.classList.contains('open')) {
+            closeSettingsModal();
+          }
+        });
 
         if (isDarkMode() && !DARK_ALLOWED.has(savedCursor)) applyCursor('normal');
         else applyCursor(savedCursor);
