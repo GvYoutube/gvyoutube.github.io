@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="favicon.ico" type="xicon" />
+  <link rel="https://gvyoutube.com/gibberishdle/favicon.ico" type="xicon" />
   <title>Gibberishdle - by GvYoutube</title>
   <style>
     :root {
@@ -636,18 +636,35 @@
 
     // dev test
     window.forceWin = function() {
-      if (gameOver) {
-        console.log('Game is already over!');
-        return;
-      }
+  if (gameOver) {
+    console.log('Game is already over!');
+    return;
+  }
 
-      const answerArray = answer.toUpperCase().split('');
-      guesses[currentRow] = answerArray;
-      currentCol = WORD_LENGTH;
-      updateBoard();
-      submitGuess();
-      console.log('Force win activated!');
-    };
+  // sets answer to what the current row says
+  const answerArray = answer.toUpperCase().split('');
+  guesses[currentRow] = answerArray;
+  currentCol = WORD_LENGTH;
+  updateBoard();
+
+  // score
+  const guess = answer;
+  const score = scoreGuess(guess, answer);
+  revealRow(currentRow, score, true);
+
+  // win gameover
+  gameOver = true;
+  saveState();
+
+  // play win and show popup
+  const animationDelay = WORD_LENGTH * 250;
+  setTimeout(() => {
+    winSound.play().catch(e => console.log('audio could not play:', e));
+    showModal(true);
+  }, animationDelay);
+
+  console.log('Force win was used! You can no longer play today.');
+};
 
     function toggleShareForm() {
       shareForm.classList.toggle('visible');
