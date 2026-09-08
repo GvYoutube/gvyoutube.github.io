@@ -3,556 +3,689 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gibberishdle</title>
+  <link rel="favicon.ico" type="xicon" />
+  <title>Gibberishdle - by GvYoutube</title>
   <style>
     :root {
       --bg: #121213;
       --text: #ffffff;
-      --muted: #b5b5b5;
-      --tile-border: #3a3a3c;
-      --tile-filled-border: #565758;
-      --btn: #818384;
-      --btn-hover: #939598;
+      --muted: #818384;
+      --border-empty: #3a3a3c;
+      --border-active: #565758;
+      --correct: #538d4e;
+      --present: #b59f3b;
+      --absent: #3a3a3c;
+      --key-bg: #818384;
+      --key-hover: #939598;
     }
 
     * { box-sizing: border-box; }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       text-align: center;
       margin: 0;
-      padding: 2rem 1rem;
+      padding: 0;
       background: var(--bg);
       color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      border-bottom: 1px solid var(--border-empty);
+      padding: 10px 0;
+      margin-bottom: 20px;
     }
 
     h1 {
-      margin-bottom: 0.25rem;
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: 0.1rem;
+      font-weight: 700;
     }
 
     .subtitle {
-      margin-top: 0;
-      margin-bottom: 1.5rem;
+      margin: 4px 0 0;
       color: var(--muted);
-      font-size: 1rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05rem;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 500px;
+      flex-grow: 1;
+      padding-bottom: 20px;
+    }
+
+    .board-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      padding: 10px;
     }
 
     .board {
       display: grid;
       grid-template-rows: repeat(6, 1fr);
-      gap: 8px;
-      width: min(96vw, 430px);
-      margin: 0 auto 1.5rem;
+      gap: 5px;
+      width: 350px;
+      height: 420px;
     }
 
     .row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
+      gap: 5px;
     }
 
     .tile {
       width: 100%;
-      aspect-ratio: 1 / 1;
-      border: 2px solid var(--tile-border);
+      height: 100%;
+      border: 2px solid var(--border-empty);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(1.4rem, 5vw, 2rem);
+      font-size: 2rem;
       font-weight: bold;
       text-transform: uppercase;
       background: var(--bg);
-      line-height: 1;
-    }
-
-    .tile.filled {
-      border-color: var(--tile-filled-border);
-    }
-
-    .tile.correct {
-      background: #538d4e;
-      border-color: #538d4e;
-      color: white;
-    }
-
-    .tile.present {
-      background: #b59f3b;
-      border-color: #b59f3b;
-      color: white;
-    }
-
-    .tile.absent {
-      background: #3a3a3c;
-      border-color: #3a3a3c;
-      color: white;
-    }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-
-    button {
-      background: var(--btn);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 0.6rem 1rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: var(--btn-hover);
-    }
-
-    .share-form {
-      margin: 1rem auto 0;
-      max-width: 340px;
-      display: none;
-      text-align: left;
-    }
-
-    .share-form.visible {
-      display: block;
-    }
-
-    .share-form label {
-      display: block;
-      margin-bottom: 0.25rem;
-      font-size: 0.9rem;
-      color: #d7dadc;
-    }
-
-    .share-form input {
-      width: 100%;
-      margin-bottom: 0.75rem;
-      padding: 0.55rem 0.6rem;
-      border: 1px solid #3a3a3c;
-      border-radius: 4px;
-      background: #1a1a1b;
-      color: #ffffff;
-    }
-
-    /* NEW: on-screen keyboard */
-    .keyboard {
-      width: min(96vw, 500px);
-      margin: 0 auto;
-      display: grid;
-      gap: 8px;
+      color: var(--text);
       user-select: none;
-      -webkit-user-select: none;
+    }
+
+    .tile[data-state="active"] {
+      border-color: var(--border-active);
+      animation: pop 0.1s ease-in-out;
+    }
+
+    .tile[data-state="correct"] {
+      background: var(--correct);
+      border-color: var(--correct);
+    }
+
+    .tile[data-state="present"] {
+      background: var(--present);
+      border-color: var(--present);
+    }
+
+    .tile[data-state="absent"] {
+      background: var(--absent);
+      border-color: var(--absent);
+    }
+
+    /* feat: tile flipping */
+    .tile.flip {
+      animation: flip 0.5s ease forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes flip {
+      0% { transform: rotateX(0deg); }
+      50% { transform: rotateX(90deg); }
+      100% { transform: rotateX(0deg); }
+    }
+
+    .keyboard {
+      width: 100%;
+      max-width: 500px;
+      padding: 0 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      user-select: none;
     }
 
     .kb-row {
       display: flex;
       justify-content: center;
       gap: 6px;
-    }
-
-    .kb-key {
-      min-width: 34px;
-      height: 52px;
-      padding: 0 0.45rem;
-      border-radius: 4px;
-      border: none;
-      background: #818384;
-      color: #fff;
-      font-weight: bold;
-      text-transform: uppercase;
-      cursor: pointer;
       touch-action: manipulation;
     }
 
-    .kb-key:hover {
-      background: #939598;
+    .kb-key {
+      font-family: inherit;
+      font-weight: bold;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      height: 58px;
+      border-radius: 4px;
+      background-color: var(--key-bg);
+      color: #ffffff;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background-color 0.2s ease;
     }
 
     .kb-key.wide {
-      min-width: 64px;
-      font-size: 0.85rem;
+      flex: 1.5;
+      font-size: 0.75rem;
     }
 
-    .status {
-      min-height: 1.25rem;
-      margin-top: 1rem;
-      color: #d7dadc;
+    .kb-key:hover {
+      background-color: var(--key-hover);
+    }
+
+    .kb-key[data-state="correct"] { background-color: var(--correct); }
+    .kb-key[data-state="present"] { background-color: var(--present); }
+    .kb-key[data-state="absent"] { background-color: var(--absent); }
+
+    .controls {
+      margin-top: 15px;
+    }
+
+    .btn {
+      background: var(--key-bg);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.6rem 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05rem;
+    }
+
+    .btn:hover { background: var(--key-hover); }
+
+    .share-form {
+      margin: 10px auto;
+      max-width: 300px;
+      display: none;
+      text-align: left;
+      background: #1a1a1b;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border-empty);
+    }
+
+    .share-form.visible { display: block; }
+    .share-form label { display: block; margin-bottom: 4px; font-size: 0.8rem; color: #d7dadc; }
+    .share-form input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border: 1px solid var(--border-empty);
+      border-radius: 4px;
+      background: var(--bg);
+      color: #ffffff;
+    }
+
+    /* win/game over popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #181819;
+      border: 1px solid var(--border-empty);
+      padding: 24px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 4px 23px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .modal h2 { margin-top: 0; font-size: 1.5rem; }
+    .modal p { color: #d7dadc; margin-bottom: 20px; line-height: 1.4; }
+    .word-highlight {
+      font-weight: bold;
+      color: var(--correct);
+      letter-spacing: 2px;
     }
   </style>
 </head>
 <body>
-  <h1>Gibberishdle</h1>
-  <p class="subtitle">wordle but gibberish lmao</p>
 
-  <div id="board" class="board"></div>
+  <header>
+    <h1>GIBBERISHDLE</h1>
+    <p class="subtitle">wordle but gibberish lmao</p>
+  </header>
 
-  <div class="controls">
-    <button id="shareToggleBtn" type="button">Share</button>
+  <div class="main-container">
+    <div class="board-container">
+      <div id="board" class="board"></div>
+    </div>
+
+    <div class="controls">
+      <button id="shareToggleBtn" class="btn" type="button">Share Game</button>
+    </div>
+
+    <form id="shareForm" class="share-form" onsubmit="return false;">
+      <label for="shareName">Your Name</label>
+      <input id="shareName" type="text" placeholder="Enter your name" required />
+
+      <label for="shareEmail">Recipient Email</label>
+      <input id="shareEmail" type="email" placeholder="Enter email" required />
+
+      <button id="sendShareBtn" class="btn" type="button" style="width: 100%;">Send</button>
+    </form>
+
+    <div id="keyboard" class="keyboard" aria-label="On-screen keyboard"></div>
   </div>
 
-  <form id="shareForm" class="share-form" onsubmit="return false;">
-    <label for="shareName">Your name</label>
-    <input id="shareName" type="text" placeholder="Enter your name" required />
-
-    <label for="shareEmail">Recipient email</label>
-    <input id="shareEmail" type="email" placeholder="Enter email" required />
-
-    <button id="sendShareBtn" type="button">Send</button>
-  </form>
-
-  <!-- NEW: mobile-friendly keyboard -->
-  <div id="keyboard" class="keyboard" aria-label="On-screen keyboard"></div>
-
-  <p id="status" class="status"></p>
+  <!-- Win/Loss Modal -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+      <h2 id="modalTitle">You won!</h2>
+      <p id="modalBody">You guessed the gibberish word!</p>
+      <button id="modalCloseBtn" class="btn" type="button">Close</button>
+    </div>
+  </div>
 
   <script>
-  const WORD_LENGTH = 5;
-  const MAX_GUESSES = 6;
-  const STORAGE_KEY = 'gibberishdle_state_v1';
+    const WORD_LENGTH = 5;
+    const MAX_GUESSES = 6;
+    const STORAGE_KEY = 'gibberishdle_state_v2';
 
-  // Small gibberish dictionary (must all be 5 letters)
-  const WORD_LIST = [
-    'blorf', 'snarp', 'glint', 'droob', 'flarn',
-    'crint', 'plonk', 'zibby', 'trusk', 'mivor',
-    'quarn', 'vlept', 'jorpy', 'knurl', 'brynt',
-    'thwip', 'grone', 'slorp', 'frizz', 'clunk'
-  ];
+    const boardEl = document.getElementById('board');
+    const shareToggleBtn = document.getElementById('shareToggleBtn');
+    const shareForm = document.getElementById('shareForm');
+    const shareNameInput = document.getElementById('shareName');
+    const shareEmailInput = document.getElementById('shareEmail');
+    const sendShareBtn = document.getElementById('sendShareBtn');
+    const keyboardEl = document.getElementById('keyboard');
 
-  const boardEl = document.getElementById('board');
-  const statusEl = document.getElementById('status');
-  const shareToggleBtn = document.getElementById('shareToggleBtn');
-  const shareForm = document.getElementById('shareForm');
-  const shareNameInput = document.getElementById('shareName');
-  const shareEmailInput = document.getElementById('shareEmail');
-  const sendShareBtn = document.getElementById('sendShareBtn');
-  const keyboardEl = document.getElementById('keyboard');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
 
-  // NEW: win sound
-  const winAudio = new Audio('win.wav');
+    // win.wav audio
+    const winSound = new Audio('win.wav');
 
-  let answer = '';
-  let guesses = Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
-  let currentRow = 0;
-  let currentCol = 0;
-  let gameOver = false;
-  let lockedForToday = false;
-  let todayKey = getTodayKey();
+    let answer = '';
+    let guesses = Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
+    let currentRow = 0;
+    let currentCol = 0;
+    let gameOver = false;
+    let todayKey = getTodayKey();
 
-  function getTodayKey() {
-    // Local date key YYYY-MM-DD
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, '0');
-    const d = String(now.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  }
-
-  function hashString(str) {
-    // Simple deterministic hash
-    let h = 2166136261;
-    for (let i = 0; i < str.length; i++) {
-      h ^= str.charCodeAt(i);
-      h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
-    }
-    return Math.abs(h >>> 0);
-  }
-
-  function getDailyAnswer(dateKey) {
-    const seed = hashString(`gibberishdle-${dateKey}`);
-    return WORD_LIST[seed % WORD_LIST.length];
-  }
-
-  function emptyGuesses() {
-    return Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
-  }
-
-  function getSavedState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  }
-
-  function saveState() {
-    const state = {
-      dateKey: todayKey,
-      guesses,
-      currentRow,
-      currentCol,
-      gameOver,
-      lockedForToday
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
-
-  function loadOrInitState() {
-    const saved = getSavedState();
-    answer = getDailyAnswer(todayKey);
-
-    if (!saved || saved.dateKey !== todayKey) {
-      // New day: reset
-      guesses = emptyGuesses();
-      currentRow = 0;
-      currentCol = 0;
-      gameOver = false;
-      lockedForToday = false;
-      saveState();
-      return;
+    function getTodayKey() {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     }
 
-    // Restore same-day state
-    guesses = Array.isArray(saved.guesses) ? saved.guesses : emptyGuesses();
-    currentRow = Number.isInteger(saved.currentRow) ? saved.currentRow : 0;
-    currentCol = Number.isInteger(saved.currentCol) ? saved.currentCol : 0;
-    gameOver = !!saved.gameOver;
-    lockedForToday = !!saved.lockedForToday;
+    // feat: actually make it generate gibberish
+    function pseudoRandom(seed) {
+      let x = Math.sin(seed++) * 10000;
+      return x - Math.floor(x);
+    }
 
-    // Safety clamps
-    currentRow = Math.max(0, Math.min(MAX_GUESSES, currentRow));
-    currentCol = Math.max(0, Math.min(WORD_LENGTH, currentCol));
-  }
+    function hashString(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+      }
+      return Math.abs(h >>> 0);
+    }
 
-  function buildBoard() {
-    boardEl.innerHTML = '';
-    for (let r = 0; r < MAX_GUESSES; r++) {
-      const row = document.createElement('div');
-      row.className = 'row';
+    function generateGibberish(dateKey) {
+      const vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
+      const consonants = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'];
+      
+      let seed = hashString(`gibberishdle-${dateKey}`);
+      let word = '';
+      
+      // something i guess with vowels and crap
+      let isVowel = pseudoRandom(seed++) > 0.5;
+      
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        if (isVowel) {
+          const idx = Math.floor(pseudoRandom(seed++) * vowels.length);
+          word += vowels[idx];
+        } else {
+          const idx = Math.floor(pseudoRandom(seed++) * consonants.length);
+          word += consonants[idx];
+        }
+        isVowel = !isVowel;
+      }
+      
+      return word;
+    }
 
-      for (let c = 0; c < WORD_LENGTH; c++) {
-        const tile = document.createElement('div');
-        tile.className = 'tile';
-        tile.id = `tile-${r}-${c}`;
-        row.appendChild(tile);
+    function getSavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch { return null; }
+    }
+
+    function saveState() {
+      const state = {
+        dateKey: todayKey,
+        guesses,
+        currentRow,
+        currentCol,
+        gameOver
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadOrInitState() {
+      const saved = getSavedState();
+      answer = generateGibberish(todayKey);
+
+      if (!saved || saved.dateKey !== todayKey) {
+        guesses = Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
+        currentRow = 0;
+        currentCol = 0;
+        gameOver = false;
+        saveState();
+        return;
       }
 
-      boardEl.appendChild(row);
+      guesses = Array.isArray(saved.guesses) ? saved.guesses : guesses;
+      currentRow = Number.isInteger(saved.currentRow) ? saved.currentRow : 0;
+      currentCol = Number.isInteger(saved.currentCol) ? saved.currentCol : 0;
+      gameOver = !!saved.gameOver;
     }
-  }
 
-  // NEW
-  function buildKeyboard() {
-    const rows = [
-      ['Q','W','E','R','T','Y','U','I','O','P'],
-      ['A','S','D','F','G','H','J','K','L'],
-      ['ENTER','Z','X','C','V','B','N','M','⌫']
-    ];
+    function buildBoard() {
+      boardEl.innerHTML = '';
+      for (let r = 0; r < MAX_GUESSES; r++) {
+        const row = document.createElement('div');
+        row.className = 'row';
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tile = document.createElement('div');
+          tile.className = 'tile';
+          tile.id = `tile-${r}-${c}`;
+          row.appendChild(tile);
+        }
+        boardEl.appendChild(row);
+      }
+    }
 
-    keyboardEl.innerHTML = '';
+    function buildKeyboard() {
+      const rows = [
+        ['Q','W','E','R','T','Y','U','I','O','P'],
+        ['A','S','D','F','G','H','J','K','L'],
+        ['ENTER','Z','X','C','V','B','N','M','⌫']
+      ];
 
-    rows.forEach(rowChars => {
-      const row = document.createElement('div');
-      row.className = 'kb-row';
-
-      rowChars.forEach(key => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'kb-key';
-        if (key === 'ENTER' || key === '⌫') btn.classList.add('wide');
-        btn.textContent = key;
-        btn.dataset.key = key;
-        btn.addEventListener('click', () => handleVirtualKey(key));
-        row.appendChild(btn);
+      keyboardEl.innerHTML = '';
+      rows.forEach(rowChars => {
+        const row = document.createElement('div');
+        row.className = 'kb-row';
+        rowChars.forEach(key => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'kb-key';
+          if (key === 'ENTER' || key === '⌫') btn.classList.add('wide');
+          btn.textContent = key;
+          btn.dataset.key = key;
+          btn.addEventListener('click', () => handleVirtualKey(key));
+          row.appendChild(btn);
+        });
+        keyboardEl.appendChild(row);
       });
+    }
 
-      keyboardEl.appendChild(row);
-    });
-  }
+    function updateBoard() {
+      for (let r = 0; r < MAX_GUESSES; r++) {
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tile = document.getElementById(`tile-${r}-${c}`);
+          const letter = guesses[r][c];
+          tile.textContent = letter;
+          if (letter && !tile.dataset.state) {
+            tile.dataset.state = 'active';
+          } else if (!letter) {
+            delete tile.dataset.state;
+          }
+        }
+      }
+    }
 
-  function updateBoard() {
-    for (let r = 0; r < MAX_GUESSES; r++) {
+    function scoreGuess(guess, target) {
+      const result = Array(WORD_LENGTH).fill('absent');
+      const targetArr = target.split('');
+      const guessArr = guess.split('');
+
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        if (guessArr[i] === targetArr[i]) {
+          result[i] = 'correct';
+          targetArr[i] = null;
+          guessArr[i] = null;
+        }
+      }
+
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        if (!guessArr[i]) continue;
+        const idx = targetArr.indexOf(guessArr[i]);
+        if (idx !== -1) {
+          result[i] = 'present';
+          targetArr[idx] = null;
+        }
+      }
+
+      return result;
+    }
+
+    function updateKeyboardKey(letter, state) {
+      const keyBtn = document.querySelector(`.kb-key[data-key="${letter.toUpperCase()}"]`);
+      if (!keyBtn) return;
+      const currentState = keyBtn.dataset.state;
+      if (currentState === 'correct') return; // Best state, don't overwrite
+      if (currentState === 'present' && state === 'absent') return;
+      keyBtn.dataset.state = state;
+    }
+
+    function revealRow(rowIndex, score, animate = true) {
       for (let c = 0; c < WORD_LENGTH; c++) {
-        const tile = document.getElementById(`tile-${r}-${c}`);
-        const letter = guesses[r][c];
-        tile.textContent = letter;
-        tile.classList.remove('filled', 'correct', 'present', 'absent');
-        if (letter) tile.classList.add('filled');
-      }
-    }
-  }
+        const tile = document.getElementById(`tile-${rowIndex}-${c}`);
+        const letter = guesses[rowIndex][c];
 
-  function scoreGuess(guess, target) {
-    const result = Array(WORD_LENGTH).fill('absent');
-    const targetArr = target.split('');
-    const guessArr = guess.split('');
-
-    for (let i = 0; i < WORD_LENGTH; i++) {
-      if (guessArr[i] === targetArr[i]) {
-        result[i] = 'correct';
-        targetArr[i] = null;
-        guessArr[i] = null;
+        if (animate) {
+          setTimeout(() => {
+            tile.classList.add('flip');
+            tile.dataset.state = score[c];
+            updateKeyboardKey(letter, score[c]);
+          }, c * 250);
+        } else {
+          tile.dataset.state = score[c];
+          updateKeyboardKey(letter, score[c]);
+        }
       }
     }
 
-    for (let i = 0; i < WORD_LENGTH; i++) {
-      if (!guessArr[i]) continue;
-      const idx = targetArr.indexOf(guessArr[i]);
-      if (idx !== -1) {
-        result[i] = 'present';
-        targetArr[idx] = null;
+    function restoreBoardState() {
+      for (let r = 0; r < currentRow; r++) {
+        const guess = guesses[r].join('').toLowerCase();
+        if (guess.length === WORD_LENGTH) {
+          revealRow(r, scoreGuess(guess, answer), false);
+        }
       }
     }
 
-    return result;
-  }
-
-  function revealRow(rowIndex, score) {
-    for (let c = 0; c < WORD_LENGTH; c++) {
-      const tile = document.getElementById(`tile-${rowIndex}-${c}`);
-      tile.classList.add(score[c]);
-    }
-  }
-
-  function revealPlayedRowsFromState() {
-    for (let r = 0; r < MAX_GUESSES; r++) {
-      const guess = guesses[r].join('').toLowerCase();
-      if (guess.length === WORD_LENGTH && /^[a-z]{5}$/.test(guess)) {
-        revealRow(r, scoreGuess(guess, answer));
+    function showModal(isWin) {
+      modalTitle.textContent = isWin ? 'Good!' : 'Game Over';
+      if (isWin) {
+        modalBody.innerHTML = `You solved today's gibberish word in <strong>${currentRow}</strong> ${currentRow === 1 ? 'try' : 'tries'}!`;
+      } else {
+        modalBody.innerHTML = `The gibberish word was: <br/><br/><span class="word-highlight">${answer.toUpperCase()}</span>`;
       }
-    }
-  }
-
-  function endGame(message) {
-    statusEl.textContent = message;
-    gameOver = true;
-    lockedForToday = true; // Prevent replay today
-    saveState();
-  }
-
-  function submitGuess() {
-    if (gameOver || lockedForToday) return;
-    if (currentCol < WORD_LENGTH) return;
-
-    const guess = guesses[currentRow].join('').toLowerCase();
-    const score = scoreGuess(guess, answer);
-    revealRow(currentRow, score);
-
-    if (guess === answer) {
-      // NEW: play win sound
-      winAudio.currentTime = 0;
-      winAudio.play().catch(() => {});
-      endGame('You got it! Come back tomorrow for a new gibberish word.');
-      return;
+      modalOverlay.classList.add('active');
     }
 
-    currentRow++;
-    currentCol = 0;
+    function submitGuess() {
+      if (gameOver) return;
+      if (currentCol < WORD_LENGTH) return;
 
-    if (currentRow >= MAX_GUESSES) {
-      endGame(`Game over! The word was ${answer.toUpperCase()}. Come back tomorrow.`);
-      return;
-    }
+      const guess = guesses[currentRow].join('').toLowerCase();
+      const score = scoreGuess(guess, answer);
+      
+      revealRow(currentRow, score, true);
 
-    saveState();
-  }
+      const animationDelay = WORD_LENGTH * 250;
 
-  // NEW: ignore game key input while typing in share fields
-  function isTypingInShareInput() {
-    const active = document.activeElement;
-    return active === shareNameInput || active === shareEmailInput;
-  }
+      setTimeout(() => {
+        if (guess === answer) {
+          gameOver = true;
+          saveState();
+          winSound.play().catch(e => console.log('Audio playback prevented:', e));
+          showModal(true);
+          return;
+        }
 
-  function handleKeydown(e) {
-    if (gameOver || lockedForToday) return;
-    if (isTypingInShareInput()) return;
+        currentRow++;
+        currentCol = 0;
 
-    const key = e.key;
+        if (currentRow >= MAX_GUESSES) {
+          gameOver = true;
+          saveState();
+          showModal(false);
+          return;
+        }
 
-    if (/^[a-zA-Z]$/.test(key)) {
-      if (currentCol < WORD_LENGTH && currentRow < MAX_GUESSES) {
-        guesses[currentRow][currentCol] = key.toUpperCase();
-        currentCol++;
-        updateBoard();
         saveState();
+      }, animationDelay);
+    }
+
+    function isTypingInInput() {
+      const active = document.activeElement;
+      return active === shareNameInput || active === shareEmailInput;
+    }
+
+    function handleKeydown(e) {
+      if (gameOver || isTypingInInput()) return;
+      const key = e.key;
+
+      if (/^[a-zA-Z]$/.test(key)) {
+        if (currentCol < WORD_LENGTH && currentRow < MAX_GUESSES) {
+          guesses[currentRow][currentCol] = key.toUpperCase();
+          currentCol++;
+          updateBoard();
+          saveState();
+        }
+      } else if (key === 'Backspace') {
+        if (currentCol > 0) {
+          currentCol--;
+          guesses[currentRow][currentCol] = '';
+          updateBoard();
+          saveState();
+        }
+      } else if (key === 'Enter') {
+        submitGuess();
       }
-    } else if (key === 'Backspace') {
-      if (currentCol > 0) {
-        currentCol--;
-        guesses[currentRow][currentCol] = '';
-        updateBoard();
-        saveState();
+    }
+
+    function handleVirtualKey(key) {
+      if (gameOver) return;
+
+      if (key === 'ENTER') {
+        submitGuess();
+        return;
       }
-    } else if (key === 'Enter') {
+
+      if (key === '⌫') {
+        if (currentCol > 0) {
+          currentCol--;
+          guesses[currentRow][currentCol] = '';
+          updateBoard();
+          saveState();
+        }
+        return;
+      }
+
+      if (/^[A-Z]$/.test(key)) {
+        if (currentCol < WORD_LENGTH && currentRow < MAX_GUESSES) {
+          guesses[currentRow][currentCol] = key;
+          currentCol++;
+          updateBoard();
+          saveState();
+        }
+      }
+    }
+
+    // dev test
+    window.forceWin = function() {
+      if (gameOver) {
+        console.log('Game is already over!');
+        return;
+      }
+
+      const answerArray = answer.toUpperCase().split('');
+      guesses[currentRow] = answerArray;
+      currentCol = WORD_LENGTH;
+      updateBoard();
       submitGuess();
-    }
-  }
+      console.log('Force win activated!');
+    };
 
-  // NEW: input handler for on-screen keyboard
-  function handleVirtualKey(key) {
-    if (gameOver || lockedForToday) return;
-
-    if (key === 'ENTER') {
-      submitGuess();
-      return;
+    function toggleShareForm() {
+      shareForm.classList.toggle('visible');
     }
 
-    if (key === '⌫') {
-      if (currentCol > 0) {
-        currentCol--;
-        guesses[currentRow][currentCol] = '';
-        updateBoard();
-        saveState();
+    function sendShareInvite() {
+      const name = shareNameInput.value.trim();
+      const email = shareEmailInput.value.trim();
+
+      if (!name || !email) {
+        alert('Please fill out both fields.');
+        return;
       }
-      return;
+
+      const subject = encodeURIComponent(`${name} ivites you to play Gibberishdle!`);
+      const body = encodeURIComponent(`${name} invited you to play Gibberishdle!\n\nPlay here: https://gvyoutube.com/gibberishdle/.\n\n\nGetting spammed these emails? try talking to the sender about it.`);
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     }
 
-    if (/^[A-Z]$/.test(key)) {
-      if (currentCol < WORD_LENGTH && currentRow < MAX_GUESSES) {
-        guesses[currentRow][currentCol] = key;
-        currentCol++;
-        updateBoard();
-        saveState();
+    function init() {
+      todayKey = getTodayKey();
+      loadOrInitState();
+      buildBoard();
+      buildKeyboard();
+      updateBoard();
+      restoreBoardState();
+
+      if (gameOver) {
+        setTimeout(() => showModal(guesses[currentRow] && guesses[currentRow].join('').toLowerCase() === answer), 500);
       }
-    }
-  }
 
-  function toggleShareForm() {
-    shareForm.classList.toggle('visible');
-    if (!gameOver) statusEl.textContent = '';
-  }
-
-  function sendShareInvite() {
-    const name = shareNameInput.value.trim();
-    const email = shareEmailInput.value.trim();
-
-    if (!name || !email) {
-      statusEl.textContent = 'Please enter both a name and an email.';
-      return;
+      document.addEventListener('keydown', handleKeydown);
+      shareToggleBtn.addEventListener('click', toggleShareForm);
+      sendShareBtn.addEventListener('click', sendShareInvite);
+      modalCloseBtn.addEventListener('click', () => modalOverlay.classList.remove('active'));
     }
 
-    const subject = encodeURIComponent('Play Gibberishdle!');
-    const body = encodeURIComponent(
-      `${name} invited you to play Gibberishdle!\nPlay it at https://gvyoutube.com/gibberishdle/*  *Gibberishdle is not endorsed by your email provider, or anyone in your orginization, if you're in one. If you keep\nreciving these messages, talk to\nthe person who's sending them.`
-    );
-    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
-    window.location.href = mailtoLink;
-  }
-
-  function init() {
-    todayKey = getTodayKey();
-    loadOrInitState();
-    buildBoard();
-    buildKeyboard(); // NEW
-    updateBoard();
-    revealPlayedRowsFromState();
-
-    if (lockedForToday || gameOver) {
-      statusEl.textContent = 'You already played today. Come back tomorrow for a new wo- er, gibberish word.';
-      gameOver = true;
-      lockedForToday = true;
-    }
-
-    document.addEventListener('keydown', handleKeydown);
-    shareToggleBtn.addEventListener('click', toggleShareForm);
-    sendShareBtn.addEventListener('click', sendShareInvite);
-  }
-
-  init();
-</script>
- 
+    init();
+  </script>
 </body>
 </html>
