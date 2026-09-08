@@ -646,33 +646,44 @@
       }
     }
 
-    // Dev Command: forceWin()
+   // Dev Command: forceWin()
     window.forceWin = function() {
-      if (gameOver) {
-        console.log('Game is already over for today!');
-        return;
+      // 1. Reset gameOver state in case it was locked
+      gameOver = false;
+
+      // 2. Ensure row pointer is valid (if board was full, use last row)
+      if (currentRow >= MAX_GUESSES) {
+        currentRow = MAX_GUESSES - 1;
       }
 
-      // 1. Fill current row with correct solution
+      // 3. Force replace whatever is on the current row with the answer
       const correctChars = answer.toUpperCase().split('');
       for (let i = 0; i < WORD_LENGTH; i++) {
         guesses[currentRow][i] = correctChars[i];
       }
       currentCol = WORD_LENGTH;
 
-      // 2. Render tiles directly as correct
+      // 4. Update letter display on tiles
       updateBoard();
-      revealRow(currentRow, Array(WORD_LENGTH).fill('correct'), false);
 
-      // 3. Mark game over & lock state in local storage
+      // 5. Instantly style all tiles in current row to green (correct)
+      for (let c = 0; c < WORD_LENGTH; c++) {
+        const tile = document.getElementById(`tile-${currentRow}-${c}`);
+        if (tile) {
+          tile.dataset.state = 'correct';
+          updateKeyboardKey(correctChars[c], 'correct');
+        }
+      }
+
+      // 6. Lock game state for today
       gameOver = true;
       saveState();
 
-      // 4. Play audio and trigger victory popup
+      // 7. Trigger win audio and victory modal
       playWinSound();
       showModal(true);
 
-      console.log('Force win executed. Game locked for the day.');
+      console.log(`force win! ans was: ${answer.toUpperCase()}`);
     };
 
     function toggleShareForm() {
