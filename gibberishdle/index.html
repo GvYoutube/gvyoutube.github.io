@@ -326,7 +326,7 @@
     const modalBody = document.getElementById('modalBody');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
 
-    // win.wav audio
+    // Win audio initialization
     const winSound = new Audio('win.wav');
 
     let answer = '';
@@ -341,7 +341,6 @@
       return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     }
 
-    // feat: actually make it generate gibberish
     function pseudoRandom(seed) {
       let x = Math.sin(seed++) * 10000;
       return x - Math.floor(x);
@@ -363,7 +362,6 @@
       let seed = hashString(`gibberishdle-${dateKey}`);
       let word = '';
       
-      // something i guess with vowels and crap
       let isVowel = pseudoRandom(seed++) > 0.5;
       
       for (let i = 0; i < WORD_LENGTH; i++) {
@@ -501,7 +499,7 @@
       const keyBtn = document.querySelector(`.kb-key[data-key="${letter.toUpperCase()}"]`);
       if (!keyBtn) return;
       const currentState = keyBtn.dataset.state;
-      if (currentState === 'correct') return; // Best state, don't overwrite
+      if (currentState === 'correct') return;
       if (currentState === 'present' && state === 'absent') return;
       keyBtn.dataset.state = state;
     }
@@ -536,7 +534,7 @@
     function showModal(isWin) {
       modalTitle.textContent = isWin ? 'Good!' : 'Game Over';
       if (isWin) {
-        modalBody.innerHTML = `You solved today's gibberish word in <strong>${currentRow}</strong> ${currentRow === 1 ? 'try' : 'tries'}!`;
+        modalBody.innerHTML = `You solved today's gibberish word in <strong>${currentRow + 1}</strong> ${currentRow === 0 ? 'try' : 'tries'}!`;
       } else {
         modalBody.innerHTML = `The gibberish word was: <br/><br/><span class="word-highlight">${answer.toUpperCase()}</span>`;
       }
@@ -558,7 +556,7 @@
         if (guess === answer) {
           gameOver = true;
           saveState();
-          winSound.play().catch(e => console.log('Audio playback prevented:', e));
+          winSound.play().catch(e => console.warn('Audio blocked by browser policy:', e));
           showModal(true);
           return;
         }
@@ -633,37 +631,37 @@
       }
     }
 
-    // dev test
+    // Dev Command: forceWin()
     window.forceWin = function() {
-  if (gameOver) {
-    console.log('Game is already over!');
-    return;
-  }
+      if (gameOver) {
+        console.log('Game is already over for today!');
+        return;
+      }
 
-  // sets answer to what the current row says
-  const answerArray = answer.toUpperCase().split('');
-  guesses[currentRow] = answerArray;
-  currentCol = WORD_LENGTH;
-  updateBoard();
+      // literally just gets the answer and pastes it
+      const correctChars = answer.toUpperCase().split('');
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        guesses[currentRow][i] = correctChars[i];
+      }
+      currentCol = WORD_LENGTH;
 
-  // score
-  const guess = answer;
-  const score = scoreGuess(guess, answer);
-  revealRow(currentRow, score, true);
+      // everything, even empty is green
+      updateBoard();
+      revealRow(currentRow, Array(WORD_LENGTH).fill('correct'), false);
 
-  // win gameover
-  gameOver = true;
-  saveState();
+      // lock play
+      gameOver = true;
+      saveState();
 
-  // play win and show popup
-  const animationDelay = WORD_LENGTH * 250;
-  setTimeout(() => {
-    winSound.play().catch(e => console.log('audio could not play:', e));
-    showModal(true);
-  }, animationDelay);
+      // play win audio
+      winSound.currentTime = 0;
+      winSound.play().catch(e => console.warn('Audio blocked by browser policy:', e));
 
-  console.log('Force win was used! You can no longer play today.');
-};
+      // win modal
+      showModal(true);
+
+      console.log('Force win triggered. Play locked for today.');
+    };
 
     function toggleShareForm() {
       shareForm.classList.toggle('visible');
@@ -678,8 +676,8 @@
         return;
       }
 
-      const subject = encodeURIComponent(`${name} ivites you to play Gibberishdle!`);
-      const body = encodeURIComponent(`${name} invited you to play Gibberishdle!\n\nPlay here: https://gvyoutube.com/gibberishdle/.\n\n\nGetting spammed these emails? try talking to the sender about it.`);
+      const subject = encodeURIComponent('Play Gibberishdle!');
+      const body = encodeURIComponent(`${name} invited you to play Gibberishdle!\n\nPlay here: ${window.location.href}`);
       window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     }
 
@@ -692,8 +690,15 @@
       restoreBoardState();
 
       if (gameOver) {
-        setTimeout(() => showModal(guesses[currentRow] && guesses[currentRow].join('').toLowerCase() === answer), 500);
+        const lastRow = Math.max(0, currentRow);
+        const isWin = guesses[lastRow] && guesses[lastRow].join('').toLowerCase() === answer;
+        setTimeout(() => showModal(isWin), 500);
       }
+
+      // browser audio
+      document.addEventListener('click', () => {
+        winSound.load();
+      }, { once: true });
 
       document.addEventListener('keydown', handleKeydown);
       shareToggleBtn.addEventListener('click', toggleShareForm);
