@@ -1,485 +1,322 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gibberishdle - by GvYoutube</title>
+  <title>Gibberishdle</title>
   <style>
     :root {
       --bg: #121213;
-      --panel: #1b1b1d;
-      --text: #f8f8f8;
-      --muted: #b8b8c0;
-      --tile: #2f2f33;
-      --tile-border: #44444a;
-      --key: #3a3a3f;
-      --correct: #538d4e;
-      --present: #b59f3b;
-      --absent: #3a3a3c;
-      --focus: #6aa9ff;
+      --text: #ffffff;
+      --muted: #b5b5b5;
+      --tile-border: #3a3a3c;
+      --tile-filled-border: #565758;
+      --btn: #818384;
+      --btn-hover: #939598;
     }
 
     * { box-sizing: border-box; }
 
     body {
+      font-family: Arial, sans-serif;
+      text-align: center;
       margin: 0;
+      padding: 2rem 1rem;
       background: var(--bg);
       color: var(--text);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      min-height: 100vh;
     }
-
-    .app {
-      max-width: 560px;
-      margin: 0 auto;
-      padding: 1rem;
-      display: grid;
-      gap: 1rem;
-    }
-
-    .header { text-align: center; }
 
     h1 {
-      margin: 0 0 .2rem;
-      font-size: 2rem;
-      letter-spacing: .04em;
+      margin-bottom: 0.25rem;
     }
 
     .subtitle {
-      margin: 0;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
       color: var(--muted);
-      font-size: .95rem;
-    }
-
-    .status {
-      min-height: 1.4rem;
-      text-align: center;
-      font-weight: 600;
-      color: var(--muted);
+      font-size: 1rem;
     }
 
     .board {
       display: grid;
       grid-template-rows: repeat(6, 1fr);
-      gap: .35rem;
-      max-width: 340px;
-      margin: 0 auto;
+      gap: 8px;
+      width: min(96vw, 430px);
+      margin: 0 auto 1.5rem;
     }
 
     .row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: .35rem;
+      gap: 8px;
     }
 
     .tile {
       width: 100%;
       aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      text-transform: uppercase;
-      font-size: 1.35rem;
-      font-weight: 700;
       border: 2px solid var(--tile-border);
-      background: var(--tile);
-      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      font-weight: bold;
+      text-transform: uppercase;
+      background: var(--bg);
+      line-height: 1;
     }
 
-    .tile.filled { border-color: #666; }
-    .tile.correct { background: var(--correct); border-color: var(--correct); }
-    .tile.present { background: var(--present); border-color: var(--present); }
-    .tile.absent  { background: var(--absent);  border-color: var(--absent); }
-
-    .keyboard {
-      display: grid;
-      gap: .4rem;
-      margin-top: .4rem;
+    .tile.filled {
+      border-color: var(--tile-filled-border);
     }
 
-    .kb-row {
+    .tile.correct {
+      background: #538d4e;
+      border-color: #538d4e;
+      color: white;
+    }
+
+    .tile.present {
+      background: #b59f3b;
+      border-color: #b59f3b;
+      color: white;
+    }
+
+    .tile.absent {
+      background: #3a3a3c;
+      border-color: #3a3a3c;
+      color: white;
+    }
+
+    .controls {
       display: flex;
       justify-content: center;
-      gap: .35rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
     }
 
-    .key {
+    button {
+      background: var(--btn);
+      color: white;
       border: none;
-      border-radius: .35rem;
-      background: var(--key);
-      color: #fff;
-      padding: .75rem .4rem;
-      min-width: 2rem;
-      font-weight: 700;
+      border-radius: 4px;
+      padding: 0.6rem 1rem;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    .key.wide { min-width: 4.1rem; font-size: .85rem; }
-    .key.correct { background: var(--correct); }
-    .key.present { background: var(--present); }
-    .key.absent  { background: var(--absent); }
-
-    .key:focus-visible {
-      outline: 3px solid var(--focus);
-      outline-offset: 2px;
+    button:hover {
+      background: var(--btn-hover);
     }
 
-    @media (max-width: 480px) {
-      .app { padding: .75rem; }
-      .tile { font-size: 1.15rem; }
-      .key { padding: .7rem .35rem; min-width: 1.7rem; font-size: .84rem; }
-      .key.wide { min-width: 3.5rem; }
+    .share-form {
+      margin: 1rem auto 0;
+      max-width: 340px;
+      display: none;
+      text-align: left;
+    }
+
+    .share-form.visible {
+      display: block;
+    }
+
+    .share-form label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
+      color: #d7dadc;
+    }
+
+    .share-form input {
+      width: 100%;
+      margin-bottom: 0.75rem;
+      padding: 0.55rem 0.6rem;
+      border: 1px solid #3a3a3c;
+      border-radius: 4px;
+      background: #1a1a1b;
+      color: #ffffff;
+    }
+
+    .status {
+      min-height: 1.25rem;
+      margin-top: 1rem;
+      color: #d7dadc;
     }
   </style>
 </head>
 <body>
-  <main class="app">
-    <header class="header">
-      <h1>Gibberishdle</h1>
-      <p class="subtitle">A personal daily gibberish puzzle — your answer is unique to you.</p>
-    </header>
+  <h1>Gibberishdle</h1>
+  <p class="subtitle">wordle but gibberish lmao</p>
 
-    <section id="status" class="status" aria-live="polite"></section>
-    <section id="board" class="board" aria-label="Gibberishdle board"></section>
-    <section id="keyboard" class="keyboard" aria-label="On-screen keyboard"></section>
-  </main>
+  <div id="board" class="board"></div>
 
-  <!-- Only sound used: win.wav -->
-  <audio id="winSound" preload="auto" src="./win.wav"></audio>
+  <div class="controls">
+    <button id="shareToggleBtn" type="button">Share</button>
+  </div>
+
+  <form id="shareForm" class="share-form" onsubmit="return false;">
+    <label for="shareName">Your name</label>
+    <input id="shareName" type="text" placeholder="Enter your name" required />
+
+    <label for="shareEmail">Recipient email</label>
+    <input id="shareEmail" type="email" placeholder="Enter email" required />
+
+    <button id="sendShareBtn" type="button">Send</button>
+  </form>
+
+  <p id="status" class="status"></p>
 
   <script>
-    (() => {
-      const WORD_LENGTH = 5;
-      const MAX_TRIES = 6;
+    const WORD_LENGTH = 5;
+    const MAX_GUESSES = 6;
+    const answer = 'blorf';
 
-      const STORAGE_USER_SEED = "gibberishdle.userSeed";
-      const STORAGE_STATE_PREFIX = "gibberishdle.state.";
+    const boardEl = document.getElementById('board');
+    const statusEl = document.getElementById('status');
+    const shareToggleBtn = document.getElementById('shareToggleBtn');
+    const shareForm = document.getElementById('shareForm');
+    const shareNameInput = document.getElementById('shareName');
+    const shareEmailInput = document.getElementById('shareEmail');
+    const sendShareBtn = document.getElementById('sendShareBtn');
 
-      const boardEl = document.getElementById("board");
-      const keyboardEl = document.getElementById("keyboard");
-      const statusEl = document.getElementById("status");
-      const winSoundEl = document.getElementById("winSound");
+    let guesses = Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
+    let currentRow = 0;
+    let currentCol = 0;
+    let gameOver = false;
 
-      let game;
-      const keyState = {}; // A-Z -> absent/present/correct
+    function buildBoard() {
+      boardEl.innerHTML = '';
+      for (let r = 0; r < MAX_GUESSES; r++) {
+        const row = document.createElement('div');
+        row.className = 'row';
 
-      function todayLocalISO() {
-        const d = new Date();
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        return `${y}-${m}-${day}`;
-      }
-
-      function randomSeedString() {
-        const arr = new Uint32Array(1);
-        crypto.getRandomValues(arr);
-        return `${Date.now()}-${Math.random().toString(36).slice(2)}-${arr[0]}`;
-      }
-
-      function hash32(str) {
-        // FNV-1a 32-bit
-        let h = 0x811c9dc5;
-        for (let i = 0; i < str.length; i++) {
-          h ^= str.charCodeAt(i);
-          h = Math.imul(h, 0x01000193);
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tile = document.createElement('div');
+          tile.className = 'tile';
+          tile.id = `tile-${r}-${c}`;
+          row.appendChild(tile);
         }
-        return h >>> 0;
-      }
 
-      function mulberry32(seed) {
-        let t = seed >>> 0;
-        return function () {
-          t += 0x6D2B79F5;
-          let r = Math.imul(t ^ (t >>> 15), 1 | t);
-          r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
-          return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-        };
+        boardEl.appendChild(row);
       }
+    }
 
-      function ensureUserSeed() {
-        let seed = localStorage.getItem(STORAGE_USER_SEED);
-        if (!seed) {
-          seed = randomSeedString();
-          localStorage.setItem(STORAGE_USER_SEED, seed);
+    function updateBoard() {
+      for (let r = 0; r < MAX_GUESSES; r++) {
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tile = document.getElementById(`tile-${r}-${c}`);
+          const letter = guesses[r][c];
+          tile.textContent = letter;
+          tile.classList.remove('filled');
+          tile.classList.remove('correct', 'present', 'absent');
+          if (letter) tile.classList.add('filled');
         }
-        return seed;
       }
+    }
 
-      function buildDailyAnswer(dateKey) {
-        const userSeed = ensureUserSeed();
-        const combined = `${userSeed}|${dateKey}|gibberishdle-v1`;
-        const rng = mulberry32(hash32(combined));
-        let out = "";
-        for (let i = 0; i < WORD_LENGTH; i++) {
-          out += String.fromCharCode(65 + Math.floor(rng() * 26));
-        }
-        return out;
-      }
+    function scoreGuess(guess, target) {
+      const result = Array(WORD_LENGTH).fill('absent');
+      const targetArr = target.split('');
+      const guessArr = guess.split('');
 
-      function stateKey(dateKey) {
-        return `${STORAGE_STATE_PREFIX}${dateKey}`;
-      }
-
-      function loadState(dateKey) {
-        const raw = localStorage.getItem(stateKey(dateKey));
-        if (!raw) return null;
-        try { return JSON.parse(raw); } catch { return null; }
-      }
-
-      function saveState() {
-        const payload = {
-          guesses: game.guesses,
-          currentGuess: game.currentGuess,
-          row: game.row,
-          ended: game.ended,
-          won: game.won
-        };
-        localStorage.setItem(stateKey(game.dateKey), JSON.stringify(payload));
-      }
-
-      function clearOldStates(keepDateKey) {
-        for (let i = localStorage.length - 1; i >= 0; i--) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith(STORAGE_STATE_PREFIX) && key !== stateKey(keepDateKey)) {
-            localStorage.removeItem(key);
-          }
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        if (guessArr[i] === targetArr[i]) {
+          result[i] = 'correct';
+          targetArr[i] = null;
+          guessArr[i] = null;
         }
       }
 
-      function evaluateGuess(guess, target) {
-        const result = Array.from(guess).map(letter => ({ letter, status: "absent" }));
-        const remaining = {};
-
-        // pass 1: greens
-        for (let i = 0; i < WORD_LENGTH; i++) {
-          if (guess[i] === target[i]) {
-            result[i].status = "correct";
-          } else {
-            remaining[target[i]] = (remaining[target[i]] || 0) + 1;
-          }
-        }
-
-        // pass 2: yellows
-        for (let i = 0; i < WORD_LENGTH; i++) {
-          if (result[i].status === "correct") continue;
-          const ch = guess[i];
-          if ((remaining[ch] || 0) > 0) {
-            result[i].status = "present";
-            remaining[ch]--;
-          }
-        }
-
-        return result;
-      }
-
-      function scorePriority(status) {
-        if (status === "correct") return 3;
-        if (status === "present") return 2;
-        return 1;
-      }
-
-      function updateKeyState(letter, status) {
-        const prev = keyState[letter];
-        if (!prev || scorePriority(status) > scorePriority(prev)) {
-          keyState[letter] = status;
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        if (!guessArr[i]) continue;
+        const idx = targetArr.indexOf(guessArr[i]);
+        if (idx !== -1) {
+          result[i] = 'present';
+          targetArr[idx] = null;
         }
       }
 
-      function setStatus(msg, tone = "info") {
-        statusEl.textContent = msg;
-        statusEl.style.color =
-          tone === "error" ? "#ff8f8f" :
-          tone === "success" ? "#9ff0a8" :
-          "var(--muted)";
+      return result;
+    }
+
+    function revealRow(rowIndex, score) {
+      for (let c = 0; c < WORD_LENGTH; c++) {
+        const tile = document.getElementById(`tile-${rowIndex}-${c}`);
+        tile.classList.add(score[c]);
+      }
+    }
+
+    function submitGuess() {
+      if (currentCol < WORD_LENGTH || gameOver) return;
+
+      const guess = guesses[currentRow].join('').toLowerCase();
+      const score = scoreGuess(guess, answer);
+      revealRow(currentRow, score);
+
+      if (guess === answer) {
+        statusEl.textContent = 'You got it!';
+        gameOver = true;
+        return;
       }
 
-      function refreshStatus() {
-        if (game.ended && game.won) {
-          setStatus("You won! 🎉", "success");
-        } else if (game.ended && !game.won) {
-          setStatus("Out of tries. Answer: " + game.answer, "error");
-        } else {
-          setStatus(`Try ${game.row + 1}/${MAX_TRIES}`);
+      currentRow++;
+      currentCol = 0;
+
+      if (currentRow >= MAX_GUESSES) {
+        statusEl.textContent = `Game over! The word was ${answer.toUpperCase()}.`;
+        gameOver = true;
+      }
+    }
+
+    function handleKeydown(e) {
+      if (gameOver) return;
+
+      const key = e.key;
+
+      if (/^[a-zA-Z]$/.test(key)) {
+        if (currentCol < WORD_LENGTH && currentRow < MAX_GUESSES) {
+          guesses[currentRow][currentCol] = key.toUpperCase();
+          currentCol++;
+          updateBoard();
         }
+      } else if (key === 'Backspace') {
+        if (currentCol > 0) {
+          currentCol--;
+          guesses[currentRow][currentCol] = '';
+          updateBoard();
+        }
+      } else if (key === 'Enter') {
+        submitGuess();
+      }
+    }
+
+    function toggleShareForm() {
+      shareForm.classList.toggle('visible');
+      statusEl.textContent = '';
+    }
+
+    function sendShareInvite() {
+      const name = shareNameInput.value.trim();
+      const email = shareEmailInput.value.trim();
+
+      if (!name || !email) {
+        statusEl.textContent = 'Please enter both a name and an email.';
+        return;
       }
 
-      function renderBoard() {
-        boardEl.innerHTML = "";
-        for (let r = 0; r < MAX_TRIES; r++) {
-          const row = document.createElement("div");
-          row.className = "row";
+      const subject = encodeURIComponent('Play Gibberishdle!');
+      const body = encodeURIComponent(`${name} invited you to play Gibberishdle!\nPlay it at https://gvyoutube.com/gibberishdle/!`);
+      const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
-          const guess = game.guesses[r] || "";
-          const isCommitted = r < game.guesses.length;
-          const evals = isCommitted ? evaluateGuess(guess, game.answer) : null;
+      window.location.href = mailtoLink;
+    }
 
-          for (let c = 0; c < WORD_LENGTH; c++) {
-            const tile = document.createElement("div");
-            tile.className = "tile";
+    document.addEventListener('keydown', handleKeydown);
+    shareToggleBtn.addEventListener('click', toggleShareForm);
+    sendShareBtn.addEventListener('click', sendShareInvite);
 
-            let letter = "";
-            if (isCommitted) letter = guess[c] || "";
-            else if (r === game.row) letter = game.currentGuess[c] || "";
-
-            tile.textContent = letter;
-            if (letter) tile.classList.add("filled");
-            if (isCommitted) tile.classList.add(evals[c].status);
-
-            row.appendChild(tile);
-          }
-
-          boardEl.appendChild(row);
-        }
-      }
-
-      function renderKeyboard() {
-        const rows = [
-          ["Q","W","E","R","T","Y","U","I","O","P"],
-          ["A","S","D","F","G","H","J","K","L"],
-          ["ENTER","Z","X","C","V","B","N","M","BACK"]
-        ];
-
-        keyboardEl.innerHTML = "";
-        for (const r of rows) {
-          const rowEl = document.createElement("div");
-          rowEl.className = "kb-row";
-
-          for (const key of r) {
-            const btn = document.createElement("button");
-            btn.className = "key";
-            btn.type = "button";
-            if (key === "ENTER" || key === "BACK") btn.classList.add("wide");
-
-            btn.textContent = key === "BACK" ? "⌫" : key;
-            btn.setAttribute("aria-label", key === "BACK" ? "Backspace" : key);
-
-            if (key.length === 1 && keyState[key]) btn.classList.add(keyState[key]);
-
-            btn.addEventListener("click", () => onInput(key));
-            rowEl.appendChild(btn);
-          }
-
-          keyboardEl.appendChild(rowEl);
-        }
-      }
-
-      function playWinSound() {
-        // "win.wav" only; fail silently if not available
-        try {
-          winSoundEl.currentTime = 0;
-          const p = winSoundEl.play();
-          if (p && typeof p.catch === "function") p.catch(() => {});
-        } catch (_) {}
-      }
-
-      function normalizeLetterInput(key) {
-        if (/^[a-zA-Z]$/.test(key)) return key.toUpperCase();
-        return null;
-      }
-
-      function onInput(rawKey) {
-        if (game.ended) return;
-
-        const key = rawKey === "Backspace" ? "BACK" : rawKey.toUpperCase();
-
-        if (key === "ENTER") {
-          submitGuess();
-          return;
-        }
-
-        if (key === "BACK") {
-          if (game.currentGuess.length > 0) {
-            game.currentGuess = game.currentGuess.slice(0, -1);
-            renderBoard();
-            saveState();
-          }
-          return;
-        }
-
-        const letter = normalizeLetterInput(key);
-        if (letter && game.currentGuess.length < WORD_LENGTH) {
-          game.currentGuess += letter;
-          renderBoard();
-          saveState();
-        }
-      }
-
-      function submitGuess() {
-        if (game.currentGuess.length !== WORD_LENGTH) {
-          setStatus("Guess must be 5 letters.", "error");
-          return;
-        }
-
-        const guess = game.currentGuess.toUpperCase();
-        if (!/^[A-Z]{5}$/.test(guess)) {
-          setStatus("Only letters A-Z are allowed.", "error");
-          return;
-        }
-
-        game.guesses.push(guess);
-        game.currentGuess = "";
-        game.row++;
-
-        const evals = evaluateGuess(guess, game.answer);
-        for (const e of evals) updateKeyState(e.letter, e.status);
-
-        if (guess === game.answer) {
-          game.ended = true;
-          game.won = true;
-          setStatus("You won! 🎉", "success");
-          playWinSound();
-        } else if (game.row >= MAX_TRIES) {
-          game.ended = true;
-          game.won = false;
-          setStatus("Out of tries. Answer: " + game.answer, "error");
-        } else {
-          setStatus(`Try ${game.row + 1}/${MAX_TRIES}`);
-        }
-
-        renderBoard();
-        renderKeyboard();
-        saveState();
-      }
-
-      function handlePhysicalKeyboard(e) {
-        const key = e.key;
-        if (key === "Enter" || key === "Backspace" || /^[a-zA-Z]$/.test(key)) {
-          e.preventDefault();
-          onInput(key);
-        }
-      }
-
-      function initGame() {
-        const dateKey = todayLocalISO();
-        clearOldStates(dateKey);
-
-        const answer = buildDailyAnswer(dateKey);
-        const persisted = loadState(dateKey);
-
-        game = {
-          dateKey,
-          answer,
-          guesses: persisted?.guesses ?? [],
-          currentGuess: persisted?.currentGuess ?? "",
-          row: persisted?.row ?? 0,
-          ended: persisted?.ended ?? false,
-          won: persisted?.won ?? false
-        };
-
-        Object.keys(keyState).forEach(k => delete keyState[k]);
-        for (const guess of game.guesses) {
-          const evals = evaluateGuess(guess, game.answer);
-          for (const e of evals) updateKeyState(e.letter, e.status);
-        }
-
-        renderBoard();
-        renderKeyboard();
-        refreshStatus();
-      }
-
-      window.addEventListener("keydown", handlePhysicalKeyboard);
-      initGame();
-    })();
+    buildBoard();
+    updateBoard();
   </script>
 </body>
 </html>
