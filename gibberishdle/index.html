@@ -309,6 +309,7 @@
   </div>
 
   <script>
+    console.log("remember: for forceWin func, make sure you interact with page first");
     const WORD_LENGTH = 5;
     const MAX_GUESSES = 6;
     const STORAGE_KEY = 'gibberishdle_state_v2';
@@ -326,8 +327,9 @@
     const modalBody = document.getElementById('modalBody');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
 
-    // Win audio initialization
-    const winSound = new Audio('win.wav');
+    // Pre-load both audio tracks to bypass browser autoplay restrictions
+    const audioWin = new Audio('win.wav');
+    const audioLick = new Audio('the lick.mp3');
 
     let answer = '';
     let guesses = Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
@@ -531,6 +533,19 @@
       }
     }
 
+    function playWinSound() {
+      // 15% chance to trigger the lick easter egg
+      const isEasterEgg = Math.random() < 0.15;
+      const selectedAudio = isEasterEgg ? audioLick : audioWin;
+
+      selectedAudio.currentTime = 0;
+      selectedAudio.play().then(() => {
+        if (isEasterEgg) console.log('THE LICK.');
+      }).catch(err => {
+        console.warn('Audio play blocked:', err);
+      });
+    }
+
     function showModal(isWin) {
       modalTitle.textContent = isWin ? 'Good!' : 'Game Over';
       if (isWin) {
@@ -556,7 +571,7 @@
         if (guess === answer) {
           gameOver = true;
           saveState();
-          winSound.play().catch(e => console.warn('Audio blocked by browser policy:', e));
+          playWinSound();
           showModal(true);
           return;
         }
@@ -638,29 +653,26 @@
         return;
       }
 
-      // literally just gets the answer and pastes it
+      // 1. Fill current row with correct solution
       const correctChars = answer.toUpperCase().split('');
       for (let i = 0; i < WORD_LENGTH; i++) {
         guesses[currentRow][i] = correctChars[i];
       }
       currentCol = WORD_LENGTH;
 
-      // everything, even empty is green
+      // 2. Render tiles directly as correct
       updateBoard();
       revealRow(currentRow, Array(WORD_LENGTH).fill('correct'), false);
 
-      // lock play
+      // 3. Mark game over & lock state in local storage
       gameOver = true;
       saveState();
 
-      // play win audio
-      winSound.currentTime = 0;
-      winSound.play().catch(e => console.warn('Audio blocked by browser policy:', e));
-
-      // win modal
+      // 4. Play audio and trigger victory popup
+      playWinSound();
       showModal(true);
 
-      console.log('Force win triggered. Play locked for today.');
+      console.log('Force win executed. Game locked for the day.');
     };
 
     function toggleShareForm() {
@@ -681,6 +693,18 @@
       window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     }
 
+    function unlockAudioContext() {
+      // Pre-play & pause audio on first user touch/click/keypress to satisfy browser policies
+      [audioWin, audioLick].forEach(a => {
+        a.play().then(() => {
+          a.pause();
+          a.currentTime = 0;
+        }).catch(() => {});
+      });
+      window.removeEventListener('click', unlockAudioContext);
+      window.removeEventListener('keydown', unlockAudioContext);
+    }
+
     function init() {
       todayKey = getTodayKey();
       loadOrInitState();
@@ -695,10 +719,9 @@
         setTimeout(() => showModal(isWin), 500);
       }
 
-      // browser audio
-      document.addEventListener('click', () => {
-        winSound.load();
-      }, { once: true });
+      // Unlock audio hardware on first user interaction
+      window.addEventListener('click', unlockAudioContext, { once: true });
+      window.addEventListener('keydown', unlockAudioContext, { once: true });
 
       document.addEventListener('keydown', handleKeydown);
       shareToggleBtn.addEventListener('click', toggleShareForm);
