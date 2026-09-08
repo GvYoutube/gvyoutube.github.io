@@ -1,1 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gibberishdle</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1>Gibberishdle</h1>
+      <p class="subtitle">A personal daily gibberish puzzle — your answer is unique to you.</p>
+      <div class="header-controls">
+        <button id="sound-toggle" type="button" aria-label="Toggle sound effects">🔊 Sound: On</button>
+        <button id="dev-new-game" type="button" hidden aria-label="Start a new random puzzle">New random puzzle</button>
+      </div>
+    </header>
 
+    <p id="status" class="status" aria-live="polite">Type a 5-letter guess.</p>
+
+    <section id="board" class="board" aria-label="Guess board"></section>
+    <section id="keyboard" class="keyboard" aria-label="On-screen keyboard"></section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
