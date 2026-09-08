@@ -137,6 +137,45 @@
       color: #ffffff;
     }
 
+    /* NEW: on-screen keyboard */
+    .keyboard {
+      width: min(96vw, 500px);
+      margin: 0 auto;
+      display: grid;
+      gap: 8px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .kb-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .kb-key {
+      min-width: 34px;
+      height: 52px;
+      padding: 0 0.45rem;
+      border-radius: 4px;
+      border: none;
+      background: #818384;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .kb-key:hover {
+      background: #939598;
+    }
+
+    .kb-key.wide {
+      min-width: 64px;
+      font-size: 0.85rem;
+    }
+
     .status {
       min-height: 1.25rem;
       margin-top: 1rem;
@@ -164,6 +203,9 @@
     <button id="sendShareBtn" type="button">Send</button>
   </form>
 
+  <!-- NEW: mobile-friendly keyboard -->
+  <div id="keyboard" class="keyboard" aria-label="On-screen keyboard"></div>
+
   <p id="status" class="status"></p>
 
   <script>
@@ -186,6 +228,10 @@
   const shareNameInput = document.getElementById('shareName');
   const shareEmailInput = document.getElementById('shareEmail');
   const sendShareBtn = document.getElementById('sendShareBtn');
+  const keyboardEl = document.getElementById('keyboard');
+
+  // NEW: win sound
+  const winAudio = new Audio('win.wav');
 
   let answer = '';
   let guesses = Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
@@ -288,6 +334,35 @@
     }
   }
 
+  // NEW
+  function buildKeyboard() {
+    const rows = [
+      ['Q','W','E','R','T','Y','U','I','O','P'],
+      ['A','S','D','F','G','H','J','K','L'],
+      ['ENTER','Z','X','C','V','B','N','M','⌫']
+    ];
+
+    keyboardEl.innerHTML = '';
+
+    rows.forEach(rowChars => {
+      const row = document.createElement('div');
+      row.className = 'kb-row';
+
+      rowChars.forEach(key => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'kb-key';
+        if (key === 'ENTER' || key === '⌫') btn.classList.add('wide');
+        btn.textContent = key;
+        btn.dataset.key = key;
+        btn.addEventListener('click', () => handleVirtualKey(key));
+        row.appendChild(btn);
+      });
+
+      keyboardEl.appendChild(row);
+    });
+  }
+
   function updateBoard() {
     for (let r = 0; r < MAX_GUESSES; r++) {
       for (let c = 0; c < WORD_LENGTH; c++) {
@@ -357,7 +432,10 @@
     revealRow(currentRow, score);
 
     if (guess === answer) {
-      endGame('You got it! Come back tomorrow for a new word.');
+      // NEW: play win sound
+      winAudio.currentTime = 0;
+      winAudio.play().catch(() => {});
+      endGame('You got it! Come back tomorrow for a new gibberish word.');
       return;
     }
 
@@ -372,8 +450,15 @@
     saveState();
   }
 
+  // NEW: ignore game key input while typing in share fields
+  function isTypingInShareInput() {
+    const active = document.activeElement;
+    return active === shareNameInput || active === shareEmailInput;
+  }
+
   function handleKeydown(e) {
     if (gameOver || lockedForToday) return;
+    if (isTypingInShareInput()) return;
 
     const key = e.key;
 
@@ -396,6 +481,35 @@
     }
   }
 
+  // NEW: input handler for on-screen keyboard
+  function handleVirtualKey(key) {
+    if (gameOver || lockedForToday) return;
+
+    if (key === 'ENTER') {
+      submitGuess();
+      return;
+    }
+
+    if (key === '⌫') {
+      if (currentCol > 0) {
+        currentCol--;
+        guesses[currentRow][currentCol] = '';
+        updateBoard();
+        saveState();
+      }
+      return;
+    }
+
+    if (/^[A-Z]$/.test(key)) {
+      if (currentCol < WORD_LENGTH && currentRow < MAX_GUESSES) {
+        guesses[currentRow][currentCol] = key;
+        currentCol++;
+        updateBoard();
+        saveState();
+      }
+    }
+  }
+
   function toggleShareForm() {
     shareForm.classList.toggle('visible');
     if (!gameOver) statusEl.textContent = '';
@@ -412,7 +526,7 @@
 
     const subject = encodeURIComponent('Play Gibberishdle!');
     const body = encodeURIComponent(
-      `${name} invited you to play Gibberishdle!\nPlay it at https://gvyoutube.com/gibberishdle/`
+      `${name} invited you to play Gibberishdle!\nPlay it at https://gvyoutube.com/gibberishdle/*  *Gibberishdle is not endorsed by your email provider, or anyone in your orginization, if you're in one. If you keep\nreciving these messages, talk to\nthe person who's sending them.`
     );
     const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
     window.location.href = mailtoLink;
@@ -422,11 +536,12 @@
     todayKey = getTodayKey();
     loadOrInitState();
     buildBoard();
+    buildKeyboard(); // NEW
     updateBoard();
     revealPlayedRowsFromState();
 
     if (lockedForToday || gameOver) {
-      statusEl.textContent = 'You already played today. Come back tomorrow for a new word.';
+      statusEl.textContent = 'You already played today. Come back tomorrow for a new wo- er, gibberish word.';
       gameOver = true;
       lockedForToday = true;
     }
