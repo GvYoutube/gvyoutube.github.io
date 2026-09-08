@@ -167,156 +167,277 @@
   <p id="status" class="status"></p>
 
   <script>
-    const WORD_LENGTH = 5;
-    const MAX_GUESSES = 6;
-    const answer = 'blorf';
+  const WORD_LENGTH = 5;
+  const MAX_GUESSES = 6;
+  const STORAGE_KEY = 'gibberishdle_state_v1';
 
-    const boardEl = document.getElementById('board');
-    const statusEl = document.getElementById('status');
-    const shareToggleBtn = document.getElementById('shareToggleBtn');
-    const shareForm = document.getElementById('shareForm');
-    const shareNameInput = document.getElementById('shareName');
-    const shareEmailInput = document.getElementById('shareEmail');
-    const sendShareBtn = document.getElementById('sendShareBtn');
+  // Small gibberish dictionary (must all be 5 letters)
+  const WORD_LIST = [
+    'blorf', 'snarp', 'glint', 'droob', 'flarn',
+    'crint', 'plonk', 'zibby', 'trusk', 'mivor',
+    'quarn', 'vlept', 'jorpy', 'knurl', 'brynt',
+    'thwip', 'grone', 'slorp', 'frizz', 'clunk'
+  ];
 
-    let guesses = Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
-    let currentRow = 0;
-    let currentCol = 0;
-    let gameOver = false;
+  const boardEl = document.getElementById('board');
+  const statusEl = document.getElementById('status');
+  const shareToggleBtn = document.getElementById('shareToggleBtn');
+  const shareForm = document.getElementById('shareForm');
+  const shareNameInput = document.getElementById('shareName');
+  const shareEmailInput = document.getElementById('shareEmail');
+  const sendShareBtn = document.getElementById('sendShareBtn');
 
-    function buildBoard() {
-      boardEl.innerHTML = '';
-      for (let r = 0; r < MAX_GUESSES; r++) {
-        const row = document.createElement('div');
-        row.className = 'row';
+  let answer = '';
+  let guesses = Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
+  let currentRow = 0;
+  let currentCol = 0;
+  let gameOver = false;
+  let lockedForToday = false;
+  let todayKey = getTodayKey();
 
-        for (let c = 0; c < WORD_LENGTH; c++) {
-          const tile = document.createElement('div');
-          tile.className = 'tile';
-          tile.id = `tile-${r}-${c}`;
-          row.appendChild(tile);
-        }
+  function getTodayKey() {
+    // Local date key YYYY-MM-DD
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
 
-        boardEl.appendChild(row);
-      }
+  function hashString(str) {
+    // Simple deterministic hash
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
     }
+    return Math.abs(h >>> 0);
+  }
 
-    function updateBoard() {
-      for (let r = 0; r < MAX_GUESSES; r++) {
-        for (let c = 0; c < WORD_LENGTH; c++) {
-          const tile = document.getElementById(`tile-${r}-${c}`);
-          const letter = guesses[r][c];
-          tile.textContent = letter;
-          tile.classList.remove('filled');
-          tile.classList.remove('correct', 'present', 'absent');
-          if (letter) tile.classList.add('filled');
-        }
-      }
+  function getDailyAnswer(dateKey) {
+    const seed = hashString(`gibberishdle-${dateKey}`);
+    return WORD_LIST[seed % WORD_LIST.length];
+  }
+
+  function emptyGuesses() {
+    return Array.from({ length: MAX_GUESSES }, () => Array(WORD_LENGTH).fill(''));
+  }
+
+  function getSavedState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
     }
+  }
 
-    function scoreGuess(guess, target) {
-      const result = Array(WORD_LENGTH).fill('absent');
-      const targetArr = target.split('');
-      const guessArr = guess.split('');
+  function saveState() {
+    const state = {
+      dateKey: todayKey,
+      guesses,
+      currentRow,
+      currentCol,
+      gameOver,
+      lockedForToday
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
 
-      for (let i = 0; i < WORD_LENGTH; i++) {
-        if (guessArr[i] === targetArr[i]) {
-          result[i] = 'correct';
-          targetArr[i] = null;
-          guessArr[i] = null;
-        }
-      }
+  function loadOrInitState() {
+    const saved = getSavedState();
+    answer = getDailyAnswer(todayKey);
 
-      for (let i = 0; i < WORD_LENGTH; i++) {
-        if (!guessArr[i]) continue;
-        const idx = targetArr.indexOf(guessArr[i]);
-        if (idx !== -1) {
-          result[i] = 'present';
-          targetArr[idx] = null;
-        }
-      }
-
-      return result;
-    }
-
-    function revealRow(rowIndex, score) {
-      for (let c = 0; c < WORD_LENGTH; c++) {
-        const tile = document.getElementById(`tile-${rowIndex}-${c}`);
-        tile.classList.add(score[c]);
-      }
-    }
-
-    function submitGuess() {
-      if (currentCol < WORD_LENGTH || gameOver) return;
-
-      const guess = guesses[currentRow].join('').toLowerCase();
-      const score = scoreGuess(guess, answer);
-      revealRow(currentRow, score);
-
-      if (guess === answer) {
-        statusEl.textContent = 'You got it!';
-        gameOver = true;
-        return;
-      }
-
-      currentRow++;
+    if (!saved || saved.dateKey !== todayKey) {
+      // New day: reset
+      guesses = emptyGuesses();
+      currentRow = 0;
       currentCol = 0;
+      gameOver = false;
+      lockedForToday = false;
+      saveState();
+      return;
+    }
 
-      if (currentRow >= MAX_GUESSES) {
-        statusEl.textContent = `Game over! The word was ${answer.toUpperCase()}.`;
-        gameOver = true;
+    // Restore same-day state
+    guesses = Array.isArray(saved.guesses) ? saved.guesses : emptyGuesses();
+    currentRow = Number.isInteger(saved.currentRow) ? saved.currentRow : 0;
+    currentCol = Number.isInteger(saved.currentCol) ? saved.currentCol : 0;
+    gameOver = !!saved.gameOver;
+    lockedForToday = !!saved.lockedForToday;
+
+    // Safety clamps
+    currentRow = Math.max(0, Math.min(MAX_GUESSES, currentRow));
+    currentCol = Math.max(0, Math.min(WORD_LENGTH, currentCol));
+  }
+
+  function buildBoard() {
+    boardEl.innerHTML = '';
+    for (let r = 0; r < MAX_GUESSES; r++) {
+      const row = document.createElement('div');
+      row.className = 'row';
+
+      for (let c = 0; c < WORD_LENGTH; c++) {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.id = `tile-${r}-${c}`;
+        row.appendChild(tile);
+      }
+
+      boardEl.appendChild(row);
+    }
+  }
+
+  function updateBoard() {
+    for (let r = 0; r < MAX_GUESSES; r++) {
+      for (let c = 0; c < WORD_LENGTH; c++) {
+        const tile = document.getElementById(`tile-${r}-${c}`);
+        const letter = guesses[r][c];
+        tile.textContent = letter;
+        tile.classList.remove('filled', 'correct', 'present', 'absent');
+        if (letter) tile.classList.add('filled');
+      }
+    }
+  }
+
+  function scoreGuess(guess, target) {
+    const result = Array(WORD_LENGTH).fill('absent');
+    const targetArr = target.split('');
+    const guessArr = guess.split('');
+
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      if (guessArr[i] === targetArr[i]) {
+        result[i] = 'correct';
+        targetArr[i] = null;
+        guessArr[i] = null;
       }
     }
 
-    function handleKeydown(e) {
-      if (gameOver) return;
-
-      const key = e.key;
-
-      if (/^[a-zA-Z]$/.test(key)) {
-        if (currentCol < WORD_LENGTH && currentRow < MAX_GUESSES) {
-          guesses[currentRow][currentCol] = key.toUpperCase();
-          currentCol++;
-          updateBoard();
-        }
-      } else if (key === 'Backspace') {
-        if (currentCol > 0) {
-          currentCol--;
-          guesses[currentRow][currentCol] = '';
-          updateBoard();
-        }
-      } else if (key === 'Enter') {
-        submitGuess();
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      if (!guessArr[i]) continue;
+      const idx = targetArr.indexOf(guessArr[i]);
+      if (idx !== -1) {
+        result[i] = 'present';
+        targetArr[idx] = null;
       }
     }
 
-    function toggleShareForm() {
-      shareForm.classList.toggle('visible');
-      statusEl.textContent = '';
+    return result;
+  }
+
+  function revealRow(rowIndex, score) {
+    for (let c = 0; c < WORD_LENGTH; c++) {
+      const tile = document.getElementById(`tile-${rowIndex}-${c}`);
+      tile.classList.add(score[c]);
+    }
+  }
+
+  function revealPlayedRowsFromState() {
+    for (let r = 0; r < MAX_GUESSES; r++) {
+      const guess = guesses[r].join('').toLowerCase();
+      if (guess.length === WORD_LENGTH && /^[a-z]{5}$/.test(guess)) {
+        revealRow(r, scoreGuess(guess, answer));
+      }
+    }
+  }
+
+  function endGame(message) {
+    statusEl.textContent = message;
+    gameOver = true;
+    lockedForToday = true; // Prevent replay today
+    saveState();
+  }
+
+  function submitGuess() {
+    if (gameOver || lockedForToday) return;
+    if (currentCol < WORD_LENGTH) return;
+
+    const guess = guesses[currentRow].join('').toLowerCase();
+    const score = scoreGuess(guess, answer);
+    revealRow(currentRow, score);
+
+    if (guess === answer) {
+      endGame('You got it! Come back tomorrow for a new word.');
+      return;
     }
 
-    function sendShareInvite() {
-      const name = shareNameInput.value.trim();
-      const email = shareEmailInput.value.trim();
+    currentRow++;
+    currentCol = 0;
 
-      if (!name || !email) {
-        statusEl.textContent = 'Please enter both a name and an email.';
-        return;
+    if (currentRow >= MAX_GUESSES) {
+      endGame(`Game over! The word was ${answer.toUpperCase()}. Come back tomorrow.`);
+      return;
+    }
+
+    saveState();
+  }
+
+  function handleKeydown(e) {
+    if (gameOver || lockedForToday) return;
+
+    const key = e.key;
+
+    if (/^[a-zA-Z]$/.test(key)) {
+      if (currentCol < WORD_LENGTH && currentRow < MAX_GUESSES) {
+        guesses[currentRow][currentCol] = key.toUpperCase();
+        currentCol++;
+        updateBoard();
+        saveState();
       }
+    } else if (key === 'Backspace') {
+      if (currentCol > 0) {
+        currentCol--;
+        guesses[currentRow][currentCol] = '';
+        updateBoard();
+        saveState();
+      }
+    } else if (key === 'Enter') {
+      submitGuess();
+    }
+  }
 
-      const subject = encodeURIComponent('Play Gibberishdle!');
-      const body = encodeURIComponent(`${name} invited you to play Gibberishdle!\nPlay it at https://gvyoutube.com/gibberishdle/!`);
-      const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+  function toggleShareForm() {
+    shareForm.classList.toggle('visible');
+    if (!gameOver) statusEl.textContent = '';
+  }
 
-      window.location.href = mailtoLink;
+  function sendShareInvite() {
+    const name = shareNameInput.value.trim();
+    const email = shareEmailInput.value.trim();
+
+    if (!name || !email) {
+      statusEl.textContent = 'Please enter both a name and an email.';
+      return;
+    }
+
+    const subject = encodeURIComponent('Play Gibberishdle!');
+    const body = encodeURIComponent(
+      `${name} invited you to play Gibberishdle!\nPlay it at https://gvyoutube.com/gibberishdle/`
+    );
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoLink;
+  }
+
+  function init() {
+    todayKey = getTodayKey();
+    loadOrInitState();
+    buildBoard();
+    updateBoard();
+    revealPlayedRowsFromState();
+
+    if (lockedForToday || gameOver) {
+      statusEl.textContent = 'You already played today. Come back tomorrow for a new word.';
+      gameOver = true;
+      lockedForToday = true;
     }
 
     document.addEventListener('keydown', handleKeydown);
     shareToggleBtn.addEventListener('click', toggleShareForm);
     sendShareBtn.addEventListener('click', sendShareInvite);
+  }
 
-    buildBoard();
-    updateBoard();
-  </script>
+  init();
+</script>
+ 
 </body>
 </html>
