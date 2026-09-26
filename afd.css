@@ -57,7 +57,7 @@ line-height:0;
 main.card > p:nth-child(4)::before {
 visibility:visible;
 line-height:1.6;
-content:"though GRAISON IS good at html, some javascript, and scratch, HE suckS at CSS, BUT PAULO DOESNT. this is why the styling DOESNT LOOK LIKE AI, because it ISNT. anyways look at theese cool images/gifs :D! yes, that last one is deltarune working natively on windows vista on real hardware.";
+content:"though GRAISON IS good at html, some javascript, and scratch, SHE suckS at CSS, BUT PAULO DOESNT. this is why the styling DOESNT LOOK LIKE AI, because it ISNT. anyways look at theese cool images/gifs :D! yes, that last one is deltarune working natively on windows vista on real hardware.";
     }
 /*fun*/
 main.card > h1:nth-child(5) {
