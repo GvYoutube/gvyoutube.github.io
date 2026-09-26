@@ -5,42 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GvYoutube</title>
   <meta name="description" content="GvYoutube's website" />
-  <script>
-    (function() {
-    // checks if afd
-    function checkAndApplyAFD() {
-        const today = new Date();
-        if (today.getMonth() === 3 && today.getDate() === 1) {
-            injectAFDStylesheet();
-        }
-    }
-
-    // inject afd.css
-    function injectAFDStylesheet() {
-        // no dual inject
-        if (document.getElementById('afd-theme')) return;
-
-        const link = document.createElement('link');
-        link.id = 'afd-theme';
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = 'afd.css'; 
-        document.head.appendChild(link);
-        console.log("afd style applied!");
-    }
-
-    // run check
-    checkAndApplyAFD();
-
-    // console testing, for dev
-    window.testAFD = function() {
-        console.clear();
-        console.log("testing afd style");
-        injectAFDStylesheet();
-    };
-})();
-
-  </script>
   <style>
     :root {
       --bg: #0b0d10;
@@ -164,6 +128,40 @@
       color: var(--text);
     }
   </style>
+  <script>
+    (function() {
+    function injectAFDStylesheet(forcedPath = null) {
+        // Remove old test instance if it exists to allow re-testing
+        const existingNode = document.getElementById('afd-theme');
+        if (existingNode) { existingNode.remove(); }
+
+        const link = document.createElement('link');
+        link.id = 'afd-theme';
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = forcedPath || 'afd.css';
+        
+        link.onerror = function() {
+            console.error(`❌ [AFD Error]: Could not load stylesheet at: "${link.href}".`);
+        };
+        link.onload = function() {
+            console.log("✅ [AFD Success]: afd.css injected at the bottom of <head>.");
+        };
+
+        // Appending to head ensures it comes AFTER your internal <style> blocks
+        document.head.appendChild(link);
+    }
+
+    const today = new Date();
+    if (today.getMonth() === 3 && today.getDate() === 1) {
+        injectAFDStylesheet();
+    }
+
+    window.testAFD = function(customPath) {
+        injectAFDStylesheet(customPath);
+    };
+})();
+  </script>
 </head>
 <body>
   <main class="card">
