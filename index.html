@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GvYoutube</title>
   <meta name="description" content="GvYoutube's website" />
+  <script>
+    console.log("Hey! What are you doin' here!?")
+ </script>
   <style>
     :root {
       --bg: #0b0d10;
@@ -130,35 +133,44 @@
   </style>
   <script>
     (function() {
-    function injectAFDStylesheet(forcedPath = null) {
-        // Remove old test instance if it exists to allow re-testing
-        const existingNode = document.getElementById('afd-theme');
-        if (existingNode) { existingNode.remove(); }
+    function swapStylesheets(forcedPath = null) {
+        // 1. Find your existing <style> block
+        // Adjust the selector if your style tag has an ID, e.g., 'style#my-main-style'
+        const existingStyleTag = document.querySelector('style'); 
+        
+        if (!existingStyleTag) {
+            console.warn("⚠️ [AFD System]: No <style> block found to replace.");
+            return;
+        }
 
+        // 2. Create the new April Fools' <link> tag
         const link = document.createElement('link');
         link.id = 'afd-theme';
         link.rel = 'stylesheet';
         link.type = 'text/css';
         link.href = forcedPath || 'afd.css';
-        
+
         link.onerror = function() {
-            console.error(`❌ [AFD Error]: Could not load stylesheet at: "${link.href}".`);
+            console.error(`❌ [AFD Error]: Could not load file at: "${link.href}".`);
         };
         link.onload = function() {
-            console.log("✅ [AFD Success]: afd.css injected at the bottom of <head>.");
+            console.log("✅ [AFD Success]: Embedded style tag swapped out for afd.css.");
         };
 
-        // Appending to head ensures it comes AFTER your internal <style> blocks
-        document.head.appendChild(link);
+        // 3. Swap the nodes directly in the DOM
+        existingStyleTag.parentNode.replaceChild(link, existingStyleTag);
     }
 
+    // Auto-execute on April 1st
     const today = new Date();
     if (today.getMonth() === 3 && today.getDate() === 1) {
-        injectAFDStylesheet();
+        swapStylesheets();
     }
 
+    // Expose to DevTools for manual testing
     window.testAFD = function(customPath) {
-        injectAFDStylesheet(customPath);
+        console.log("🛠️ [AFD Test]: Forcing style tag replacement...");
+        swapStylesheets(customPath);
     };
 })();
   </script>
