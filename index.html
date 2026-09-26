@@ -133,47 +133,145 @@
   </style>
   <script>
     (function() {
-    function swapStylesheets(forcedPath = null) {
-        // 1. Find your existing <style> block
-        // Adjust the selector if your style tag has an ID, e.g., 'style#my-main-style'
-        const existingStyleTag = document.querySelector('style'); 
-        
-        if (!existingStyleTag) {
-            console.warn("⚠️ [AFD System]: No <style> block found to replace.");
+    // PauloPlayzVA's Custom April Fools' Day CSS String
+    const afdStylesRaw = `
+        .card {
+            background:white;
+            border:2px solid #000;
+            border-radius:5px;
+            padding:32px;
+            box-shadow:none;
+        }
+        p {
+            color:#000;
+        }
+        footer{
+            color:#494949;
+        }
+        body {
+            font-family:Lucida Grande,Verdana,Arial,DejaVu Sans,sans-serif;
+            color:#000;
+            line-height:1.6;
+            background:url(data:image/png;base64,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);
+        }
+        .btn{
+            font-family:Tahoma;
+            font-weight:normal;
+            border-image-slice: 2 2 2 2 fill;
+            border-image-width: 2px 2px 2px 2px;
+            border-image-outset: 0px 0px 0px 0px;
+            border-image-repeat: stretch stretch;
+            border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAN0lEQVQImVXMsQ3AIAwAwSOiwvsP4M3MJE5FRL4+/ejudhURJlQVyEzwHLH3/vS8xWmstX5PeAHazQ5Q4cczZgAAAABJRU5ErkJggg==");
+            border-style: solid;
+        }
+        .btn:active{
+            border-image-slice: 2 2 2 2 fill;
+            border-image-width: 2px 2px 2px 2px;
+            border-image-outset: 0px 0px 0px 0px;
+            border-image-repeat: stretch stretch;
+            border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAP0lEQVQImVWMsQ3AQAjETJTqpmAUNmELNmUUalLllbi0LJuk5cPMcANUFQCZCcD1FhFxapO03X2Eu2O7+3sCPCYoDz0flerJAAAAAElFTkSuQmCC");
+            border-style: solid;
+        }
+        .btn.primary,.btn.ghost{
+            color:black;
+        }
+        .btn.gibberishdle{
+            border-image:none;
+            border-radius:0;
+            box-shadow:0px 0px 37px 25px #35d16fa1;
+        }
+        .btn.gibberishdle:hover{
+            box-shadow:0px 0px 100px 50px #35d16f;
+        }
+        main.card > p:nth-child(4){
+            visibility:hidden;
+            line-height:0;
+        }
+        main.card > p:nth-child(4)::before {
+            visibility:visible;
+            line-height:1.6;
+            content:"though GRAISON IS good at html, some javascript, and scratch, SHE suckS at CSS, BUT PAULO DOESNT. this is why the styling DOESNT LOOK LIKE AI, because it ISNT. anyways look at theese cool images/gifs :D! yes, that last one is deltarune working natively on windows vista on real hardware.";
+        }
+        main.card > h1:nth-child(5) {
+            animation:iliketospeeeen 3s infinite linear;
+        }
+        @keyframes iliketospeeeen{
+            from{transform:rotateX(0deg)rotateY(0deg)rotateZ(0deg);}
+            to{transform:rotateX(360deg)rotateY(360deg)rotateZ(360deg);}
+        }
+        #projects,#whereimat{
+            border:none;
+        }
+    `;
+
+    function runAprilFoolsPrank(isForced = false) {
+        swapOriginalStyles(isForced);
+        initAudioLoop();
+    }
+
+    function swapOriginalStyles(isForced) {
+        const targetStyle = document.querySelector('style:not(#afd-block)');
+        if (!targetStyle) {
+            console.warn("no style block. impossible.");
             return;
         }
 
-        // 2. Create the new April Fools' <link> tag
-        const link = document.createElement('link');
-        link.id = 'afd-theme';
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = forcedPath || 'afd.css';
+        // Prevent layout duplication issues
+        if (document.getElementById('afd-block')) return;
 
-        link.onerror = function() {
-            console.error(`❌ [AFD Error]: Could not load file at: "${link.href}".`);
-        };
-        link.onload = function() {
-            console.log("✅ [AFD Success]: Embedded style tag swapped out for afd.css.");
-        };
+        const newStyleBlock = document.createElement('style');
+        newStyleBlock.id = 'afd-block';
 
-        // 3. Swap the nodes directly in the DOM
-        existingStyleTag.parentNode.replaceChild(link, existingStyleTag);
+        // If running inside production on domain, include the exact query string constraint.
+        // Otherwise wrap plain rules so it renders smoothly during local testing.
+        if (!isForced && window.location.hostname === 'gvyoutube.com') {
+            newStyleBlock.innerHTML = `@-moz-document url("https://gvyoutube.com/") {\n${afdStylesRaw}\n}`;
+        } else {
+            newStyleBlock.innerHTML = afdStylesRaw;
+        }
+
+        // Wipe old production style and mount the prank layout element
+        targetStyle.parentNode.replaceChild(newStyleBlock, targetStyle);
+        console.log("yipee it work!1");
     }
 
-    // Auto-execute on April 1st
+    function initAudioLoop() {
+        if (document.getElementById('afd-audio')) return;
+
+        const audio = document.createElement('audio');
+        audio.id = 'afd-audio';
+        audio.src = 'breakcore.mp3';
+        audio.loop = true;
+        audio.style.display = 'none';
+        document.body.appendChild(audio);
+
+        audio.play()
+            .then(() => {
+                console.log("breakcore_to_put_on_a_joke_stylesheet_page.mp3");
+            })
+            .catch(() => {
+                console.warn("autoplay is blocked, try interacting with page");
+                const triggerAudio = () => {
+                    audio.play();
+                    document.removeEventListener('click', triggerAudio);
+                };
+                document.addEventListener('click', triggerAudio);
+            });
+    }
+
+    // auto exec if date is afd
     const today = new Date();
     if (today.getMonth() === 3 && today.getDate() === 1) {
-        swapStylesheets();
+        runAprilFoolsPrank(false);
     }
 
-    // Expose to DevTools for manual testing
-    window.testAFD = function(customPath) {
-        console.log("🛠️ [AFD Test]: Forcing style tag replacement...");
-        swapStylesheets(customPath);
+    // devtools testing
+    window.testAFD = function() {
+        console.log("inject forced!");
+        runAprilFoolsPrank(true);
     };
 })();
-  </script>
+</script>
 </head>
 <body>
   <main class="card">
