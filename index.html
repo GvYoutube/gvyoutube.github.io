@@ -7,7 +7,7 @@
   <meta name="description" content="GvYoutube's website" />
   <script>
     console.log("Hey! What are you doin' here!?")
- </script>
+  </script>
   <style>
     :root {
       --bg: #0b0d10;
@@ -135,6 +135,21 @@
     (function() {
     // PauloPlayzVA's Custom April Fools' Day CSS String
     const afdStylesRaw = `
+        /* Screen shake keyframes */
+        @keyframes screenshake {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          15% { transform: translate(-8px, 6px) rotate(-1deg); }
+          30% { transform: translate(8px, -6px) rotate(1deg); }
+          45% { transform: translate(-6px, -4px) rotate(-0.5deg); }
+          60% { transform: translate(6px, 4px) rotate(0.5deg); }
+          75% { transform: translate(-4px, 2px) rotate(0deg); }
+          100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        body.shake {
+          animation: screenshake 0.25s ease-in-out;
+        }
+
         .card {
             background:white;
             border:2px solid #000;
@@ -152,7 +167,7 @@
             font-family:Lucida Grande,Verdana,Arial,DejaVu Sans,sans-serif;
             color:#000;
             line-height:1.6;
-            background:url(data:image/png;base64,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);
+            background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAdCAYAAADLnm6HAAAAAXNSR0IArs4c6QAACJxJREFUSImtl3twVPUVx7/nd1+7m81mw26eJORBeIgiFWQKIZFHghgZAlg1WBMoVacqDDLqiEhHq8XHtL6tUmuVVoygkECLRYM8BRIYlMdYBSqigFoMwSQk2ezuvb/f6R93RSJBbKdn5jdz596553Pme173Ei5g1cXFojAUwkNr1yoA+tyysovaI5FhaYHA8LjjDPcYxkhT03wdsdgh23FOe03zU69ptp7s6PiiNRLZu2r37gYAih2Hbi0vFy9u2SLP9k8/BL9r0iT9iYYGJxHI9PTk5N8YmnYpEYEACCIwMzhxDQAMnLnHzIja9s5TXV2Pv9bYWAcA2x58kEofeIB/MICSAQNo2+LFoKoqrrzssouK0tMf1TVtqi4EwMwMwBugJ11TihvrWNwEEIiGVQsy2t7d3dz+5dPv21b+dPl37pLlZvbpjB2vfh88pK6P5EydS3h13iHnl5YvSkpNf9uj6T4QQ7LIhvnfQA9jzGQFQgogNXc/zmWbVsNxc3+/efnt96cCBwu/xoEcA144YQbmpqWL2K69gXnn5siTLukPXNA8D8iyH/61R4kghhDI1rXREYb7/1menb/h4w6d0xuGs0aNpSGGhWFBbK+eVly/zW1Y1A3EAxv8I7s1YCEHdkVj3HzauD8eByBkJB+fl0YLaWjlnwoRFSS7cAWD+v+BEBE0XFO2KySFjC8Sc+6aVAokczisvFwtXrFC3jR+/wG9Zi4nIAXBOffw4kAsTmoDQCJToFMd20H6yC1n9w1R9T4V1VfnwhwCY2s2lpWLJli2qprh4WMjvX6VrmmLmH5VvIgIJgiACCQFmhpIKjq0Qi8ThxB2AGabHQDg3FbmD01E5t4RC6SFleiin5VRHk94nEBDzr7ySbceZprmVrgDoPUkAwYUBDGaAFcOOO5COAisX7PFb8KV4kRLyIbMwhKyCMML9UpDWLwh/0Aev6YGChM0RlZXVh6ZUjrxer6mocEPnzuU7J02qJCK3jciVEiAoqaAkQzoSTtxJyEswLB1puUGkhP3IKOiDrP4hpKT5kZHfB0kBDwwyEhlWYChIKMRUHEQAMzSLTAoGkyYSAFSPLh7ZNzXYpAlBdtwRSiooR4EZsHwmLJ+BPlkBpPdLRSgrgOxBaUgJ+xHM9CPZl5SQSYdbs1HYiIKVOwkpMR0IdCapzAydDBw5+pUrtalrk52Y1IQHTigrIAKhJPQdmIZwbhDhnCDS81PhTbJgaVaiNBQAL4AYojICnQy0trVh/ryXcGPNOFRMGoUYItC0s+dUz9qRcFCYl8k6APh0s6zillEYPKKAUvr64Pd68d1QUwkBGTEZO1PpDe/sRH5BBgYPyocmCK3tnXi9div27fsMZWWXnRd+tjGYRPW4MXk6xLCs/mH0LcoWpsdAnG3EVBwx2Y24isNh5copAEsz0NrWicrJizGr5mnoQsBWMfTPy8HY8UPx8UfHsL3xnzDghZSqdzADAgLftHWySPX4Klhy8vEDX0tWNrFSbqEJt5dJkFuQif6OKwepyUGUlAzBvj1HsHvvAehkQRM6bp97NQDgmSfXfjeAew2AocHA4U++IqExXW/oGp/8og0kXPgPmWQJ0/Dhxpljwcz4y8ubIMhEXEVwdcXlyC9Ix7sNe3Dw8BFYwgOl+BwfRFAMiUgktltoRBcLndB8rFXYykn0+vlNIwFGNyZPHomkJA/qVjbim/YWAIDfG8TsmyYiGrVRu2wrCCa4lwA0EqorFsGuXZ+sEVHbadGEoFNftnN7Syc0aHC3bu9GghCTceRm56DqhlI0N7dh46b9MIUPjopg1uwJSPJ78MLz69DW2QJTN3r4Y2bWoIsT/26z17+z9x9CQb0CnSKl1w7jYCjAjpIXTINrCjfWjAUA/GlJAyQkbI4jLzsH1/xsNL451YH6uiYIWF9LA0kJKfbv/7xu6+YP94slGzc/gUt8c4urLtV0jdSP2X1CEBzuRnHxEBQNyMKWzR/i4L8+g0fzQrGNO++eDgBY+vIGSCnhONLdE4rZJJM++vho9Mnfr1nM3Ejac7ffLO576rXDU6eOmp2THU52WDJdQAIigqiosk3H0A330A330A330M030S8KAE46+N1pI1O9vA/7t3//8/GTSvXq3i9/9e3N3373m594P+i3v3+s1/S/51/pA0A/3O3b934sA3gH9m5/+A9x0E/17i129486c/wE4/m1X/vK8v1e4/v/0212p07f24L/4P06p83/p5+f8s/6134X5u3v2G238yv0xM20b1+O01+/N5105/m01931a7428f5AAB1m6S02zT8/w9/2179a/9a1/1/9uG+c0d4m59t+a7/A0/9a2/w8a411v83f4x7/2u216y9+f///0s01t/m192e4e+5P6X3p027//f/wB3v/v84b06Y9a02d冲/v49/7p39726+e0+4d1s7i/vXp+249/aN+6v3uL240d1v61v3m13/v6999mO69p964p744e2/a3m2r/m0/1S2577+/f3+M9b009s4k4e4j9f52A0=);
         }
         .btn{
             font-family:Tahoma;
@@ -169,7 +184,7 @@
             border-image-width: 2px 2px 2px 2px;
             border-image-outset: 0px 0px 0px 0px;
             border-image-repeat: stretch stretch;
-            border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAP0lEQVQImVWMsQ3AQAjETJTqpmAUNmELNmUUalLllbi0LJuk5cPMcANUFQCZCcD1FhFxapO03X2Eu2O7+3sCPCYoDz0flerJAAAAAElFTkSuQmCC");
+            border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAP0lEQVQImVWMsQ3AQAjETJTqpmAUNmELNemUUalLllbi0LJuk5cPMcANUFQCZCcD1FhFxapO03X2Eu2O7+3sCPCYoDz0flerJAAAAAElFTkSuQmCC");
             border-style: solid;
         }
         .btn.primary,.btn.ghost{
@@ -207,13 +222,14 @@
     function runAprilFoolsPrank(isForced = false) {
         swapOriginalStyles(isForced);
         initAudioLoop();
+        bindNoSoundEffect();
     }
 
     function swapOriginalStyles(isForced) {
         const targetStyle = document.querySelector('style:not(#afd-block)');
         if (!targetStyle) {
-            console.warn("no style block. impossible.");
-            return;
+          console.warn("no style block. impossible.");
+          return;
         }
 
         // Prevent layout duplication issues
@@ -225,9 +241,9 @@
         // If running inside production on domain, include the exact query string constraint.
         // Otherwise wrap plain rules so it renders smoothly during local testing.
         if (!isForced && window.location.hostname === 'gvyoutube.com') {
-            newStyleBlock.innerHTML = `@-moz-document url("https://gvyoutube.com/") {\n${afdStylesRaw}\n}`;
+          newStyleBlock.innerHTML = `@-moz-document url("https://gvyoutube.com/") {\n${afdStylesRaw}\n}`;
         } else {
-            newStyleBlock.innerHTML = afdStylesRaw;
+          newStyleBlock.innerHTML = afdStylesRaw;
         }
 
         // Wipe old production style and mount the prank layout element
@@ -246,32 +262,59 @@
         document.body.appendChild(audio);
 
         audio.play()
-            .then(() => {
-                console.log("breakcore_to_put_on_a_joke_stylesheet_page.mp3");
-            })
-            .catch(() => {
-                console.warn("autoplay is blocked, try interacting with page");
-                const triggerAudio = () => {
-                    audio.play();
-                    document.removeEventListener('click', triggerAudio);
-                };
-                document.addEventListener('click', triggerAudio);
-            });
+          .then(() => {
+            console.log("breakcore_to_put_on_a_joke_stylesheet_page.mp3");
+          })
+          .catch(() => {
+            console.warn("autoplay is blocked, try interacting with page");
+            const triggerAudio = () => {
+              audio.play();
+              document.removeEventListener('click', triggerAudio);
+            };
+            document.addEventListener('click', triggerAudio);
+          });
     }
 
-    // auto exec if date is afd
-    const today = new Date();
-    if (today.getMonth() === 3 && today.getDate() === 1) {
-        runAprilFoolsPrank(false);
+    function triggerScreenShake() {
+        document.body.classList.remove('shake');
+        // Force reflow to allow re-triggering animation on rapid clicks
+        void document.body.offsetWidth;
+        document.body.classList.add('shake');
     }
 
-    // devtools testing
+    function bindNoSoundEffect() {
+        const handleInteraction = (e) => {
+          e.preventDefault(); // Stop default action (navigation/button clicks)
+          
+          // Trigger screenshake
+          triggerScreenShake();
+
+          // Play sound
+          const noSfx = new Audio('no.mp3');
+          noSfx.play().catch(err => console.warn("Failed to play no.mp3 sfx:", err));
+        };
+
+        // Attach event handler to all links and buttons across the document
+        document.querySelectorAll('a, button').forEach(element => {
+          element.addEventListener('click', handleInteraction);
+        });
+    }
+
+    // Auto exec if date is April 1st or run on DOM ready for active testing
+    document.addEventListener('DOMContentLoaded', () => {
+        const today = new Date();
+        if (today.getMonth() === 3 && today.getDate() === 1) {
+            runAprilFoolsPrank(false);
+        }
+    });
+
+    // Devtools testing
     window.testAFD = function() {
         console.log("inject forced!");
         runAprilFoolsPrank(true);
     };
 })();
-</script>
+  </script>
 </head>
 <body>
   <main class="card">
