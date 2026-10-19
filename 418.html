@@ -164,6 +164,14 @@
       text-shadow: 0 12px 40px rgba(0,0,0,.55);
     }
 
+    .heygooglehowdoicenteradiv {
+      display: flex;
+      justify-content: center; /* Horizontally center */
+      align-items: center;     /* Vertically center */
+      height: 100vh;           /* Parent needs a height for vertical centering */
+    }
+
+
     .path{
       color: rgba(255,255,255,.9);
       font-weight: 750;
@@ -225,15 +233,16 @@
       <h1 id="title">I'm a teapot.</h1>
 
       <!-- google model viewer -->
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js"></script>
-
-<model-viewer 
-  src="https://gvyoutube.net/teapot.glb" 
-  alt="A teapot." 
-  camera-controls 
-  auto-rotate 
-  shadow-intensity="1">
-</model-viewer>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js"></script>
+    <div class="heygooglehowdoicenteradiv">
+      <model-viewer 
+        src="https://gvyoutube.net/teapot.glb" 
+        alt="A teapot." 
+        camera-controls 
+        auto-rotate 
+        shadow-intensity="1">
+      </model-viewer>
+    </div>
 
       <p class="sub">
         This website has become a teapot. God help us all.
